@@ -1,95 +1,101 @@
-<div align="center">
+<a name="top"></a>
 
-<br>
+<p align="center">
+  <a href="https://aethera-project.netlify.app/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-live-dark.png"><img src="docs/assets/readme/btn-live-light.png" height="34" alt="Live preview"></picture></a>
+  <a href="https://github.com/Kaijove/AETHERA/blob/main/index.html"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-source-dark.png"><img src="docs/assets/readme/btn-source-light.png" height="34" alt="Source code"></picture></a>
+  <a href="#under-the-hood"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-docs-dark.png"><img src="docs/assets/readme/btn-docs-light.png" height="34" alt="Documentation"></picture></a>
+</p>
 
-# AETHERA
+<p align="center">
+  <a href="https://aethera-project.netlify.app/"><img src="docs/assets/readme/hero.webp" width="100%" alt="AETHERA. How many more times will you see the people you love? The experience on a laptop and a phone."></a>
+</p>
 
-**How many more times will you see the people you love?**
+<p align="center">
+  An interactive piece about time, and the people you still have it with.<br>
+  <sub>In your browser &nbsp;·&nbsp; 8 languages &nbsp;·&nbsp; No sign-up &nbsp;·&nbsp; Best with the sound on</sub>
+</p>
 
-<sub>Your life in weeks. Theirs, in the times you appear in it.</sub>
+<p align="center">
+  <a href="#experience"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-explore-dark.png"><img src="docs/assets/readme/btn-explore-light.png" height="34" alt="Explore"></picture></a>
+</p>
 
-<br>
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/divider-dark.png"><img src="docs/assets/readme/divider-light.png" width="100%" alt=""></picture></p>
 
-<a href="https://aethera-project.netlify.app/">
-  <img src="docs/assets/hero.webp" alt="AETHERA on a laptop and a phone" width="100%">
-</a>
+<a name="idea"></a>
+<h3 align="center"><sub>01 &nbsp;/&nbsp; THE IDEA</sub><br>Two words for time.</h3>
 
-<br>
-<br>
+<p align="center">
+  AETHERA starts in Chronos, counting your life in weeks.<br>
+  It ends in Kairós, with a message you can send today.
+</p>
 
-### [Live experience →](https://aethera-project.netlify.app/)
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/idea-dark.webp"><img src="docs/assets/readme/idea-light.webp" width="100%" alt="Chronos, the time that passes: a grid of weeks, all filled. Kairós, the moment that matters: an empty grid with a few weeks lit."></picture></p>
 
-<sub>In your browser · 8 languages · No sign-up</sub>
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/divider-dark.png"><img src="docs/assets/readme/divider-light.png" width="100%" alt=""></picture></p>
 
-<br>
+<h3 align="center"><sub>02 &nbsp;/&nbsp; WHY AETHERA</sub><br>We think there's always time.</h3>
 
-</div>
+<p align="center">
+  <i>“That they will always be there.”</i><br>
+  <i>“That friendship keeps itself going, without dates.”</i><br>
+  <i>“That there will be a better moment than this one.”</i>
+</p>
 
-## ✦ About
+<p align="center">
+  That's what we usually think. It's why <i>another day</i> always wins.<br>
+  AETHERA does the maths instead, quietly, for a few minutes.<br>
+  Then it hands the moment back to you.
+</p>
 
-AETHERA starts with a subtraction.
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/divider-dark.png"><img src="docs/assets/readme/divider-light.png" width="100%" alt=""></picture></p>
 
-Your age. Their age. How often you *really* see each other: a meal, a proper visit, a conversation without hurry.
+<a name="experience"></a>
+<h3 align="center"><sub>03 &nbsp;/&nbsp; THE EXPERIENCE</sub><br>Seven chapters. One question.</h3>
 
-What comes out is a number: the times you probably still have together. Before you begin, the page warns you that *you might not like the result.*
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/chapters-dark.webp"><img src="docs/assets/readme/chapters-light.webp" width="100%" alt="The seven chapters: the subtraction, the split, the count, the other side, the decision, the message, the balance."></picture></p>
 
-AETHERA exists because we put off the people who matter, as if there were always more time. For a few minutes, it shows you how much there actually is.
+<p align="center">
+  <img src="docs/assets/readme/shot-gate.webp" width="48.5%" alt="Entry screen: You might not like the result.">
+  <img src="docs/assets/readme/shot-interlude.webp" width="48.5%" alt="A dark pause between chapters: The other side.">
+  <br>
+  <sub><b>BEFORE</b> &nbsp;·&nbsp; a warning, and a counter that keeps running &emsp;&emsp; <b>BETWEEN</b> &nbsp;·&nbsp; the screen goes dark and speaks to you by name</sub>
+</p>
 
-Then it hands the moment back to you.
+<p align="center">
+  <img src="docs/assets/readme/shot-split.webp" width="100%" alt="Chart of the hours a day people spend with family, friends, partner, children and colleagues, by age.">
+  <br>
+  <sub><b>02 · THE SPLIT</b> &nbsp;·&nbsp; who people spend their days with, year by year</sub>
+</p>
 
-<br>
+<p align="center">
+  <img src="docs/assets/readme/shot-weeks.webp" width="48.5%" alt="Your life drawn as 4,680 weekly squares, with the people you added.">
+  <img src="docs/assets/readme/shot-their-clock.webp" width="48.5%" alt="Their life in weeks, with the weeks you will spend together.">
+  <br>
+  <sub><b>03 · THE COUNT</b> &nbsp;·&nbsp; your life in weeks &emsp;&emsp; <b>04 · THE OTHER SIDE</b> &nbsp;·&nbsp; theirs, and the times you appear in it</sub>
+</p>
 
-## ⏳ Chronos → Kairós
+<p align="center">
+  <img src="docs/assets/readme/shot-decision.webp" width="48.5%" alt="Frequency sliders lighting up new weeks together.">
+  <img src="docs/assets/readme/shot-message.webp" width="48.5%" alt="Editable messages with WhatsApp and calendar buttons.">
+  <br>
+  <sub><b>05 · THE DECISION</b> &nbsp;·&nbsp; every new square is seven more meetings &emsp;&emsp; <b>06 · THE MESSAGE</b> &nbsp;·&nbsp; warm or direct, sent today</sub>
+</p>
 
-The ancient Greeks had two words for time.
+<p align="center">
+  <img src="docs/assets/readme/shot-reflection.webp" width="100%" alt="The final screen: only the weeks you still share stay lit.">
+  <br>
+  <sub><b>07 · THE BALANCE</b> &nbsp;·&nbsp; everything else switches off, and only the weeks you still share stay lit</sub>
+</p>
 
-<table>
-<tr>
-<td valign="top">
+<p align="center">
+  <a href="https://aethera-project.netlify.app/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-experience-dark.png"><img src="docs/assets/readme/btn-experience-light.png" height="34" alt="View experience"></picture></a>
+</p>
 
-### Chronos
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/divider-dark.png"><img src="docs/assets/readme/divider-light.png" width="100%" alt=""></picture></p>
 
-**The time that passes.**
+<h3 align="center"><sub>04 &nbsp;/&nbsp; FEATURES</sub><br>Small numbers. Real people.</h3>
 
-Weeks, birthdays, calendars.<br>
-It keeps running either way.
-
-</td>
-<td valign="top">
-
-### Kairós
-
-**The moment that matters.**
-
-The afternoon you stayed.<br>
-The call you finally made.
-
-</td>
-</tr>
-</table>
-
-AETHERA starts in Chronos. It counts your life in weeks, one square at a time.
-
-It ends in Kairós. With a message you can send today.
-
-<br>
-
-## 👥 What AETHERA shows you
-
-**⌛ The time you've had, and the time that's left**<br>
-Ninety years drawn as a single sheet, one square per week. The filled squares don't come back. The empty ones are the only ones you can still do something with.
-
-**🌊 How a life gets shared out**<br>
-Who people spend their hours with at every age. Family fades when you leave home. Friends start to depend on a calendar. Nobody chooses it. Age does.
-
-**👥 The people who matter**<br>
-Add up to five people. For each one you see the weeks you still share, and how many of those you'll actually spend together. Then you see it from their side: their whole life, and the room you take up in it.
-
-**🎚️ What happens if you change**<br>
-Move one slider. Once a month becomes once a week, and new squares light up. The numbers turn back into things: coffees, meals, afternoons.
-
-**✉️ From a number to a message**<br>
-The last step writes a message for each person. Warm or direct, yours to edit, ready to open in WhatsApp or to block a date in your calendar. A number changes nothing. A message does.
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/features-dark.webp"><img src="docs/assets/readme/features-light.webp" width="100%" alt="Time: your life as 4,680 weeks. The split: who fills your days, age by age. People: up to five people who matter. Perspective: their life, seen from their side. Decision: change how often you meet. Message: from a number to a message."></picture></p>
 
 <details>
 <summary><b>How the count works</b></summary>
@@ -105,130 +111,26 @@ The time-use curves follow the shape of population data. These are averages, not
 
 </details>
 
-<br>
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/divider-dark.png"><img src="docs/assets/readme/divider-light.png" width="100%" alt=""></picture></p>
 
-## ✦ The Experience
+<h3 align="center"><sub>05 &nbsp;/&nbsp; PRIVACY</sub><br>Nothing leaves your browser unless you send it.</h3>
 
-### 🌌 The beginning
-
-<img src="docs/assets/gate.webp" alt="Entry screen: You might not like the result" width="100%">
-
-<sub>A warning, and a counter that keeps running while you decide.</sub>
-
-<br>
-
-### 🌊 The way time is shared
-
-<img src="docs/assets/split.webp" alt="Chart of the daily hours spent with each group, by age" width="100%">
-
-<sub>Hours a day with family, friends, partner, children and colleagues, age by age.</sub>
-
-<br>
-
-### ⏳ Your time
-
-<img src="docs/assets/weeks.webp" alt="A life drawn as 4,680 weekly squares" width="100%">
-
-<sub>One square per week. The dark ones are already lived.</sub>
-
-<br>
-
-### 👥 The people who matter
-
-<img src="docs/assets/their-clock.webp" alt="Their life in weeks, with the weeks you will spend together" width="100%">
-
-<sub>Their life, seen from their side. The coloured squares are the times you appear in it.</sub>
-
-<br>
-
-### 🌑 The pauses
-
-<img src="docs/assets/interlude.webp" alt="Dark interlude between chapters" width="100%">
-
-<sub>Between chapters the screen goes dark and speaks to you by name.</sub>
-
-<br>
-
-### 🎚️ The decision
-
-<img src="docs/assets/decision.webp" alt="Frequency sliders adding new weeks together" width="100%">
-
-<sub>Change how often you meet. Every yellow square is seven more meetings.</sub>
-
-<br>
-
-### ✉️ The message
-
-<img src="docs/assets/message.webp" alt="Editable messages with WhatsApp and calendar buttons" width="100%">
-
-<sub>Copy it, open it in WhatsApp, or block the date.</sub>
-
-<br>
-
-### ✦ What stays lit
-
-<img src="docs/assets/reflection.webp" alt="Final screen where only the shared weeks stay lit" width="100%">
-
-<sub>Everything else switches off. Only the weeks you still share remain.</sub>
-
-<br>
-
-## 🔒 Privacy by design
-
-AETHERA has no backend, no accounts and no database. Its code uses no cookies, no storage and no analytics.
-
-- Your name, your age and the people you add are processed **only in your browser**.
-- Nothing is saved, not even on your device. **Close the tab and it's gone.**
-- Nothing leaves the page unless you decide it should: the WhatsApp button opens WhatsApp with your message, and *Block the date* downloads a calendar file.
-
-<sub>The typeface loads from Google Fonts, and the hosting (Netlify) adds a small badge script of its own. AETHERA's code sends nothing to either.</sub>
-
-<br>
-
-## 🌅 The message
-
-Nobody knows how much time they have left.
-
-AETHERA doesn't pretend to. Its numbers are rough averages, and it says so. It's a warning, not a verdict.
-
-What it changes is the unit.
-
-A life counted in years feels long.<br>
-The same life counted in the meals you still have with your parents doesn't.
-
-That count goes down every day, whether you look at it or not.<br>
-It only goes up one way: by showing up.
-
-<br>
-
-<div align="center">
-
-### Chronos keeps counting. Kairós is up to you.
-
-</div>
-
-<br>
-
-## 🛠️ Built with
-
-<p>
-<img src="https://img.shields.io/badge/HTML_·_CSS_·_JavaScript-single_file-0D1522?style=flat-square" alt="HTML, CSS and JavaScript in a single file">
-<img src="https://img.shields.io/badge/dependencies-none-0D1522?style=flat-square" alt="No dependencies">
-<img src="https://img.shields.io/badge/hosted_on-Netlify-0D1522?style=flat-square" alt="Hosted on Netlify">
-<img src="https://img.shields.io/badge/license-MIT-0D1522?style=flat-square" alt="MIT license">
+<p align="center">
+  No backend. No accounts. No database.<br>
+  No cookies, no storage and no analytics in the code.<br>
+  <b>Close the tab and it's gone.</b>
 </p>
 
-One `index.html`. No framework, no build step, nothing to install. Open it in a browser and it works.
+<p align="center">
+  <sub>The typeface loads from Google Fonts, and Netlify adds its own badge script to the hosted page.<br>The WhatsApp and calendar buttons only act when you press them.</sub>
+</p>
 
-| Piece | Made with |
-|---|---|
-| **Weeks grid** | `<canvas>`, redrawn vertically on narrow screens |
-| **Chart and ruler** | Inline SVG |
-| **Soundtrack** | Web Audio API: a generative score (Am–F–G–Em pads, bass, random bells), no audio files |
-| **Numbers** | `Intl.NumberFormat`, formatted for each language |
-| **Sharing** | Clipboard API, WhatsApp links, `.ics` calendar files built with `Blob` |
-| **Languages** | Castellano · Català · English · Français · Deutsch · Italiano · 日本語 · 中文 |
-| **Typeface** | [Archivo](https://fonts.google.com/specimen/Archivo) |
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/divider-dark.png"><img src="docs/assets/readme/divider-light.png" width="100%" alt=""></picture></p>
+
+<a name="under-the-hood"></a>
+<h3 align="center"><sub>06 &nbsp;/&nbsp; BUILT WITH</sub><br>One file. No dependencies.</h3>
+
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/built-dark.webp"><img src="docs/assets/readme/built-light.webp" width="100%" alt="File: index.html, no build, no dependencies. Weeks grid: Canvas 2D. Chart and ruler: inline SVG. Sound: Web Audio API, a generative score. Numbers: Intl.NumberFormat. Sharing: Clipboard and Blob. Languages: 8. Type: Archivo. Hosting: Netlify."></picture></p>
 
 <details>
 <summary><b>Make it yours</b>: texts, languages, music</summary>
@@ -262,31 +164,43 @@ Key groups: `sec0`–`sec7` top-bar sections · `in2t`/`in2s` … `in7t`/`in7s` 
 
 </details>
 
+<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/divider-dark.png"><img src="docs/assets/readme/divider-light.png" width="100%" alt=""></picture></p>
+
+<h3 align="center"><sub>07 &nbsp;/&nbsp; THE THOUGHT</sub><br>It only changes the unit.</h3>
+
+<p align="center">
+  Nobody knows how much time they have left.<br>
+  AETHERA doesn't pretend to. Its numbers are averages, and it says so.
+</p>
+
+<p align="center">
+  A life counted in years feels long.<br>
+  The same life counted in the meals you still have with your parents doesn't.
+</p>
+
+<p align="center"><img src="docs/assets/readme/quote.webp" width="100%" alt="Chronos keeps counting. Kairós is up to you."></p>
+
 <br>
 
-<div align="center">
+<h2 align="center">How many more times will you see<br>the people you love?</h2>
 
-## 🌐 Experience AETHERA
+<p align="center">
+  <a href="https://aethera-project.netlify.app/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-live-dark.png"><img src="docs/assets/readme/btn-live-light.png" height="34" alt="Live preview"></picture></a>
+  <a href="https://github.com/Kaijove/AETHERA/blob/main/index.html"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-source-dark.png"><img src="docs/assets/readme/btn-source-light.png" height="34" alt="Source code"></picture></a>
+</p>
 
-### [aethera-project.netlify.app](https://aethera-project.netlify.app/)
-
-<sub>Find somewhere quiet. Turn the sound up. Think of someone.</sub>
+<p align="center">
+  <a href="#top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-top-dark.png"><img src="docs/assets/readme/btn-top-light.png" height="34" alt="Back to top"></picture></a>
+</p>
 
 <br>
 
-</div>
-
-## ✦ Credits
-
-Inspired by **Kairós Project**, the original experience by [@javiyawe](https://www.instagram.com/javiyawe) · [more of their work](https://links.javiyawe.es/).<br>
-If you liked the idea, the idea is theirs. Go and see it.
-
-Made by **Kai**, written from scratch. Code, words, design, palette, sound and structure are its own, with nothing reused from the original: the same question, asked a different way.
-
-Counting a life in weeks comes from a long tradition: *life in weeks* notebooks and Tim Urban's essay [The Tail End](https://waitbutwhy.com/2015/12/the-tail-end.html).
-
-Time-use curves approximated from the [American Time Use Survey](https://www.bls.gov/tus/) (U.S. Bureau of Labor Statistics) and [Our World in Data](https://ourworldindata.org/time-use).
-
-## License
-
-Code and text under the [MIT License](LICENSE). Linked data belongs to its sources. If you add music or images, make sure you can license them.
+<p align="center">
+  <sub>
+    Made by <b>Kai</b>. Inspired by <b>Kairós Project</b>, the original experience by <a href="https://www.instagram.com/javiyawe">@javiyawe</a> · <a href="https://links.javiyawe.es/">more of their work</a>.<br>
+    If you liked the idea, the idea is theirs. This version was written from scratch: its own code, words, design, palette, sound and structure.<br>
+    Counting a life in weeks comes from <i>life in weeks</i> notebooks and Tim Urban's <a href="https://waitbutwhy.com/2015/12/the-tail-end.html">The Tail End</a>.<br>
+    Time-use curves approximated from the <a href="https://www.bls.gov/tus/">American Time Use Survey</a> and <a href="https://ourworldindata.org/time-use">Our World in Data</a>.<br>
+    Code and text under the <a href="LICENSE">MIT License</a>. Linked data belongs to its sources.
+  </sub>
+</p>
