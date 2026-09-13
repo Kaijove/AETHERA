@@ -181,7 +181,6 @@ Key groups: `sec0`–`sec7` top-bar sections · `in2t`/`in2s` … `in7t`/`in7s` 
   The same life counted in the meals you still have with your parents doesn't.
 </p>
 
-<p align="center"><img src="docs/assets/readme/quote.webp" width="100%" alt="Chronos keeps counting. Kairós is up to you."></p>
 
 <br>
 
