@@ -45,7 +45,7 @@ The ancient Greeks had two words for time.
 
 <table>
 <tr>
-<td width="50%" valign="top">
+<td valign="top">
 
 ### Chronos
 
@@ -55,7 +55,7 @@ Weeks, birthdays, calendars.<br>
 It keeps running either way.
 
 </td>
-<td width="50%" valign="top">
+<td valign="top">
 
 ### Kairós
 
