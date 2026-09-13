@@ -1,0 +1,3632 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VECES — cuántas veces más vas a ver a la gente que quieres</title>
+<meta name="description" content="Una calculadora del tiempo compartido que os queda. Tu edad, la suya y cada cuánto os veis. Todo se calcula en tu navegador: no se envía ni se guarda nada.">
+<meta name="author" content="Kai">
+<meta name="theme-color" content="#E8EBED">
+<meta name="color-scheme" content="light">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
+<meta property="og:type" content="website">
+<meta property="og:title" content="VECES">
+<meta property="og:description" content="Cuántas veces más vas a ver a la gente que quieres. Una resta con tu edad, la suya y la frecuencia real.">
+<meta property="og:locale" content="es_ES">
+<meta property="og:locale:alternate" content="ca_ES">
+<meta property="og:locale:alternate" content="en_GB">
+<!-- al publicar, añade una captura de 1200x630 px y descomenta:
+<meta property="og:image" content="https://TU-DOMINIO/portada.png">
+<meta name="twitter:card" content="summary_large_image"> -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="VECES">
+<meta name="twitter:description" content="Cuántas veces más vas a ver a la gente que quieres.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Crect width='36' height='36' fill='%23E8EBED'/%3E%3Cpath d='M8 7v22M14 7v22M20 7v22M26 7v22M5 28 29 9' stroke='%230D1522' stroke-width='2.6' fill='none'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Crect width='36' height='36' fill='%23E8EBED'/%3E%3Cpath d='M8 7v22M14 7v22M20 7v22M26 7v22M5 28 29 9' stroke='%230D1522' stroke-width='2.6' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   VECES — auditoría del tiempo que os queda · un proyecto de Kai
+   Todo se calcula en el navegador. Nada sale de aquí.
+   ============================================================ */
+:root{
+  --paper:#E8EBED; --panel:#FBFCFC;
+  --ink:#0D1522; --ink-2:#1E2E43; --ink-soft:#374A5E; --muted:#6E7D8B;
+  --rule:#C5CFD6; --rule-soft:#D8DFE4;
+  --blue:#2457C5; --blue-soft:#9DB4E8; --yellow:#D9A400; --green:#1B6E52; --red:#B33A2B;
+  --c-solo:#0D1522; --c-familia:#2457C5; --c-amigos:#B58200;
+  --c-pareja:#A82F49; --c-hijos:#1B6E52; --c-trabajo:#7C8B99;
+  --f:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --maxw:1340px; --e:cubic-bezier(.16,.84,.34,1);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f);font-size:16px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;overflow-x:hidden;
+  overscroll-behavior-y:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{touch-action:manipulation}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+/* nada de azul al hacer doble clic sobre la interfaz */
+button,canvas,svg,h1,h2,.chrome,.scale,.legend,.lg,.axis,.metrics,.big,.read,.stat,.eyeline,
+.gridwrap,.lifebar,.tabs,.chips,.frow,.wipe,.mark,.ticks,.brow,.sub,.hrule,.toneb,.picker,.people{
+  -webkit-user-select:none;-moz-user-select:none;user-select:none}
+input,textarea,.lede,.fine,.note__b,.reflect p,.msg__t,.prog,.src{
+  -webkit-user-select:text;user-select:text}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* chrome */
+.chrome{position:fixed;inset:0 0 auto 0;z-index:40;display:flex;align-items:center;gap:18px;
+  padding:calc(14px + env(safe-area-inset-top)) clamp(16px,4vw,44px) 20px;background:linear-gradient(var(--paper) 58%,rgba(232,235,237,0))}
+.icb{width:36px;height:36px;flex:none;border:1px solid var(--rule);background:transparent;cursor:pointer;
+  display:grid;place-items:center;color:var(--ink-soft);transition:border-color .2s,color .2s,transform .2s var(--e)}
+.icb:hover{border-color:var(--ink);color:var(--ink);transform:translateX(-3px)}
+.icb[hidden]{display:none}
+.scale{flex:1;min-width:0;display:flex;border-top:1px solid var(--rule);padding-top:8px}
+.seg{flex:1;font-size:11px;color:var(--muted);border-left:1px solid var(--rule);padding-left:8px;position:relative;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:none;border-top:0;border-right:0;border-bottom:0;
+  text-align:left;font-family:inherit;transition:color .25s}
+.seg:first-child{border-left:0;padding-left:0}
+.seg::before{content:"";position:absolute;top:-9px;left:0;width:0;height:2px;background:var(--ink);transition:width .55s var(--e)}
+.seg[data-done]{cursor:pointer}
+.seg[data-done]:hover{color:var(--ink)}
+.seg[data-done]::before{width:100%}
+.seg[data-now]{color:var(--ink);font-weight:600}
+.seg[data-now]::before{width:100%;background:var(--blue)}
+.sound{flex:none;border:1px solid var(--rule);background:transparent;padding:7px 12px;font-size:12px;cursor:pointer;
+  color:var(--muted);display:flex;align-items:center;gap:8px;transition:border-color .2s,color .2s}
+.sound:hover,.sound[aria-pressed="true"]{border-color:var(--ink);color:var(--ink)}
+.wv{display:flex;align-items:flex-end;gap:2px;height:11px}
+.wv i{width:2px;height:3px;background:currentColor}
+.sound[aria-pressed="true"] .wv i{animation:wv 1.1s ease-in-out infinite}
+.sound[aria-pressed="true"] .wv i:nth-child(2){animation-delay:.16s}
+.sound[aria-pressed="true"] .wv i:nth-child(3){animation-delay:.32s}
+@keyframes wv{0%,100%{height:3px}50%{height:11px}}
+
+.stage{position:relative;z-index:2;padding:82px clamp(16px,4vw,44px) 70px;min-height:100vh}
+.screen{display:none;max-width:var(--maxw);margin:0 auto}
+.screen[data-on]{display:block}
+.rise{opacity:0;transform:translateY(14px);animation:rise .6s var(--e) forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+.eyeline{font-size:12px;color:var(--muted);margin:0 0 8px;display:flex;align-items:center;gap:9px}
+.eyeline::before{content:"";width:22px;height:1px;background:var(--rule)}
+h1,h2{font-weight:800;letter-spacing:-.035em;line-height:1;margin:0}
+h1{font-size:clamp(38px,6.6vw,80px);max-width:15ch}
+h2{font-size:clamp(27px,4.1vw,46px)}
+.lede{font-size:clamp(16px,1.6vw,19px);color:var(--ink-soft);max-width:56ch;margin:20px 0 0}
+.fine{font-size:13px;color:var(--muted);max-width:62ch}
+.kin span{display:inline-block;opacity:0;transform:translateY(.5em) rotate(2deg);animation:kin .7s var(--e) forwards}
+@keyframes kin{to{opacity:1;transform:none}}
+
+.btn{display:inline-flex;align-items:center;gap:12px;background:var(--ink);color:var(--paper);border:1px solid var(--ink);
+  padding:14px 24px;font-size:15px;font-weight:600;cursor:pointer;transition:transform .22s var(--e),background .2s}
+.btn:hover{background:var(--ink-2);transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.32;cursor:not-allowed;transform:none}
+.btn--ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+.btn--ghost:hover{background:transparent;border-color:var(--ink)}
+.btn--sm{padding:9px 16px;font-size:13px}
+.k{width:20px;height:1px;background:currentColor;position:relative;flex:none;transition:transform .25s var(--e)}
+.k::after{content:"";position:absolute;right:0;top:-3.5px;width:8px;height:8px;
+  border-right:1px solid currentColor;border-top:1px solid currentColor;transform:rotate(45deg)}
+.btn:hover .k{transform:translateX(4px)}
+
+.mark{display:flex;align-items:baseline;gap:13px;margin-bottom:30px}
+.mark b{font-size:19px;font-weight:900;letter-spacing:.2em}
+.tally{width:36px;height:17px}
+.tally path{stroke-dasharray:22;stroke-dashoffset:22;animation:draw .55s var(--e) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.foot{margin-top:56px;border-top:1px solid var(--rule);padding-top:16px;display:flex;flex-wrap:wrap;
+  gap:6px 30px;font-size:12.5px;color:var(--muted)}
+
+.form{max-width:720px;margin-top:36px}
+.field{margin-bottom:34px}
+.q{font-size:15px;font-weight:600;margin:0 0 4px}
+.hint{font-size:13px;color:var(--muted);margin:0 0 14px}
+.txt{width:100%;background:transparent;border:0;border-bottom:1px solid var(--rule);padding:8px 0;
+  font-size:clamp(24px,3.6vw,36px);font-weight:700;letter-spacing:-.025em;transition:border-color .25s}
+.txt::placeholder{color:#B0BAC2;font-weight:400}
+.txt:focus{outline:0;border-bottom-color:var(--ink)}
+.read{font-size:clamp(44px,7.6vw,76px);font-weight:800;letter-spacing:-.05em;line-height:1}
+.read span{font-size:16px;font-weight:400;color:var(--muted);letter-spacing:0;margin-left:11px}
+
+/* slider genérico */
+.rg{-webkit-appearance:none;appearance:none;width:100%;background:transparent;margin:16px 0 0;height:26px;cursor:grab;display:block}
+.rg:active{cursor:grabbing}
+.rg::-webkit-slider-runnable-track{height:2px;background:var(--rule)}
+.rg::-moz-range-track{height:2px;background:var(--rule)}
+.rg::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:26px;background:var(--ink);margin-top:-12px;border:0;
+  transition:transform .16s var(--e)}
+.rg::-moz-range-thumb{width:14px;height:26px;background:var(--ink);border:0;border-radius:0}
+.rg:hover::-webkit-slider-thumb{transform:scaleY(1.12)}
+.rg:active::-webkit-slider-thumb{transform:scaleY(1.24)}
+.ticks{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:2px}
+
+.split{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:clamp(20px,3.4vw,52px);align-items:start;margin-top:26px}
+.rail{border-top:1px solid var(--ink);padding-top:16px}
+.big{font-size:clamp(40px,5.4vw,56px);font-weight:800;letter-spacing:-.045em;line-height:1}
+.big small{font-size:15px;font-weight:400;color:var(--muted);letter-spacing:0;margin-left:9px}
+.sub{font-size:13px;color:var(--muted);margin:3px 0 20px}
+.railread{font-size:16px;line-height:1.45;margin:20px 0 0;max-width:34ch;min-height:4.4em}
+.bars{margin:0;padding:0;list-style:none}
+.bars li{margin-bottom:11px;cursor:pointer;transition:opacity .2s}
+.brow{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-soft);margin-bottom:4px}
+.brow b{font-weight:700;color:var(--ink)}
+.btrack{height:4px;background:var(--rule-soft)}
+.bfill{height:4px;transition:width .3s var(--e)}
+.bars.dim li{opacity:.26}
+.bars.dim li[data-hot]{opacity:1}
+
+/* gráfico */
+.chartwrap{position:relative}
+.chart{width:100%;height:auto;display:block;touch-action:none;cursor:ew-resize}
+.chart text{font-size:11px;fill:var(--muted);font-family:var(--f)}
+.gl{stroke:var(--rule-soft);stroke-width:1}
+.series{fill:none;stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round;transition:opacity .22s,stroke-width .22s}
+.chart.dim .series{opacity:.14}
+.chart .series[data-hot]{opacity:1;stroke-width:3.6}
+.cursor{stroke:var(--ink);stroke-width:1}
+.knob{fill:var(--ink)}
+.dot{stroke:var(--paper);stroke-width:2}
+.mine{stroke:var(--red);stroke-width:1;stroke-dasharray:3 3}
+.legend{display:flex;flex-wrap:wrap;gap:8px 9px;margin-top:14px}
+.legend button{background:transparent;border:1px solid var(--rule-soft);padding:6px 12px;font-size:12.5px;
+  cursor:pointer;display:flex;align-items:center;gap:8px;transition:border-color .2s,transform .18s var(--e),background .2s}
+.legend button:hover{border-color:var(--ink);transform:translateY(-1px)}
+.legend button[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.legend i{width:14px;height:3px;flex:none}
+.lg{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:16px;font-size:12.5px;color:var(--ink-soft)}
+.sw{display:inline-block;width:11px;height:11px;margin-right:8px;vertical-align:-1px;border:1px solid var(--rule)}
+
+/* rejilla */
+.gridwrap{position:relative;touch-action:none}
+.gridcanvas{width:100%;height:auto;display:block;cursor:crosshair}
+.gx,.gy{position:absolute;background:rgba(13,21,34,.3);opacity:0;pointer-events:none;transition:opacity .12s}
+.gx{top:0;bottom:0;width:1px}
+.gy{left:0;right:0;height:1px}
+.gridwrap[data-hover] .gx,.gridwrap[data-hover] .gy{opacity:1}
+.pin{position:absolute;border:1.6px solid var(--red);opacity:0;pointer-events:none;transition:opacity .15s}
+.pin[data-on]{opacity:1}
+.tip{position:absolute;z-index:12;pointer-events:none;opacity:0;transform:translate(-50%,-124%);
+  background:var(--ink);color:var(--paper);padding:7px 11px;font-size:12px;white-space:nowrap;
+  transition:opacity .12s;line-height:1.35}
+.tip[data-on]{opacity:1}
+.axis{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:7px}
+
+/* personas */
+.people{list-style:none;margin:16px 0 0;padding:0}
+.people li{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--rule-soft);
+  font-size:14px;animation:rise .45s var(--e) both}
+.pdot{width:9px;height:9px;flex:none}
+.pmeta{margin-left:auto;color:var(--muted);font-size:12.5px;text-align:right}
+.people li button{background:none;border:0;color:var(--muted);cursor:pointer;font-size:12px;padding:3px 5px;transition:color .2s}
+.people li button:hover{color:var(--red)}
+.empty{border:1px dashed var(--rule);padding:20px;font-size:13.5px;color:var(--muted);margin-top:16px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px;padding:0;list-style:none}
+.tabs button{background:transparent;border:1px solid var(--rule);padding:9px 14px;cursor:pointer;font-size:13.5px;
+  display:flex;gap:9px;align-items:center;transition:border-color .18s,transform .18s var(--e)}
+.tabs button:hover{border-color:var(--ink);transform:translateY(-1px)}
+.tabs button[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.note{border-left:2px solid var(--rule);padding:2px 0 2px 15px;margin:20px 0}
+.note--hard{border-left-color:var(--blue)}
+.note__t{font-size:12px;color:var(--muted);margin:0 0 4px}
+.note__b{margin:0;font-size:15px;line-height:1.42}
+
+/* fila de frecuencia */
+.frow{padding:16px 0;border-bottom:1px solid var(--rule-soft)}
+.frow__h{display:flex;align-items:center;gap:10px;font-size:14px}
+.frow__h b{font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.frow__h .gain{margin-left:auto;font-size:13px;color:var(--yellow);font-weight:800;white-space:nowrap;
+  transition:transform .28s var(--e);transform-origin:right center}
+.frow__h .gain.pop{transform:scale(1.4)}
+.frow__l{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:-2px}
+.frow__l b{color:var(--ink);font-weight:700;font-size:12.5px}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;align-items:center}
+.src{font-size:12px;color:var(--muted);margin-top:12px}
+
+/* mensajes */
+.msgs{display:grid;gap:16px;margin-top:26px}
+.msg{border:1px solid var(--rule);background:var(--panel);padding:20px 22px;animation:rise .5s var(--e) both;
+  transition:border-color .3s,opacity .3s}
+.msg[data-done]{border-color:var(--green);opacity:.6}
+.msg__h{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.msg__h b{font-size:15px;font-weight:700}
+.msg__h em{margin-left:auto;font-style:normal;font-size:12px;color:var(--muted)}
+.msg__t{width:100%;border:0;border-left:2px solid var(--blue-soft);background:transparent;resize:vertical;
+  padding:2px 0 2px 15px;font-size:15px;line-height:1.5;color:var(--ink-soft);min-height:82px;font-family:inherit}
+.msg__t:focus{outline:0;border-left-color:var(--ink)}
+.msg__a{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+.tiny{background:transparent;border:1px solid var(--rule);padding:7px 13px;font-size:12.5px;cursor:pointer;
+  transition:border-color .2s,background .2s,color .2s}
+.tiny:hover{border-color:var(--ink)}
+.tiny[data-active]{background:var(--green);border-color:var(--green);color:#fff}
+.toneb{display:flex;border:1px solid var(--rule)}
+.toneb button{background:transparent;border:0;padding:7px 14px;font-size:12.5px;cursor:pointer;color:var(--muted)}
+.toneb button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.prog{font-size:13px;color:var(--muted);margin-top:24px}
+
+.reflect{max-width:60ch;margin:40px 0 0}
+.reflect p{font-size:clamp(18px,2.2vw,25px);line-height:1.4;letter-spacing:-.015em;margin:0 0 22px;
+  opacity:0;transform:translateY(12px)}
+.reflect p[data-on]{animation:rise .8s var(--e) forwards}
+.stat{font-size:clamp(58px,12.5vw,146px);font-weight:800;letter-spacing:-.055em;line-height:.88;margin:14px 0 4px}
+.sign{margin-top:44px;padding-top:18px;border-top:1px solid var(--ink);max-width:52ch}
+.sign__b{margin:0;font-size:17px;font-weight:800;letter-spacing:-.02em}
+.sign__s{margin:4px 0 0;font-size:14.5px;color:var(--ink-soft);line-height:1.45}
+
+@keyframes fade{from{opacity:0}to{opacity:1}}
+/* transición de columnas: el mismo material que la rejilla */
+.wipe{position:fixed;inset:0;z-index:58;display:none;pointer-events:none}
+.wipe[data-on]{display:block}
+.wipe[data-text]{pointer-events:auto}
+.wipe__bars{position:absolute;inset:-1px;display:flex}
+.wipe__bars i{flex:1;background:var(--ink);transform:scaleY(0);transform-origin:top;
+  transition:transform .38s cubic-bezier(.66,0,.24,1)}
+.wipe__in{position:relative;height:100%;max-width:var(--maxw);margin:0 auto;width:100%;
+  padding:0 clamp(16px,4vw,44px) clamp(44px,11vh,96px);display:flex;flex-direction:column;
+  justify-content:flex-end;opacity:0;transition:opacity .45s var(--e)}
+.wipe[data-text] .wipe__in{opacity:1}
+/* selector de idioma */
+.langw{position:relative;flex:none}
+.langb{display:flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--rule);
+  padding:6px 10px;font-size:12px;color:var(--muted);cursor:pointer;transition:border-color .2s,color .2s}
+.langb:hover,.langb[aria-expanded="true"]{border-color:var(--ink);color:var(--ink)}
+.flg{width:20px;height:14px;flex:none;display:block;overflow:hidden;border:1px solid rgba(13,21,34,.18)}
+.flg svg{width:100%;height:100%;display:block}
+.langm{position:absolute;top:calc(100% + 7px);right:0;z-index:50;margin:0;padding:5px;list-style:none;
+  background:var(--panel);border:1px solid var(--ink);min-width:186px;display:none;
+  box-shadow:0 14px 34px rgba(13,21,34,.16)}
+.langm[data-on]{display:block;animation:pop .2s var(--e)}
+.langm button{width:100%;display:flex;align-items:center;gap:11px;background:transparent;border:0;
+  padding:9px 10px;font-size:13.5px;cursor:pointer;text-align:left;transition:background .15s}
+.langm button:hover{background:var(--paper)}
+.langm button[aria-current="true"]{background:var(--ink);color:var(--panel)}
+.langm button i{margin-left:auto;font-style:normal;font-size:11px;opacity:.55;letter-spacing:.08em;text-transform:uppercase}
+
+/* frases entre pantallas */
+.wipe__rule{width:64px;height:4px;margin-bottom:22px;background:var(--acc,#2457C5);transform:scaleX(0);
+  transform-origin:left;transition:transform .6s var(--e) .15s}
+.wipe[data-text] .wipe__rule{transform:scaleX(1)}
+.wipe__idx{position:absolute;top:clamp(70px,12vh,120px);left:0;font-size:clamp(90px,20vw,220px);
+  font-weight:800;letter-spacing:-.06em;line-height:1;color:#18283C;pointer-events:none;
+  opacity:0;transition:opacity .8s var(--e) .2s}
+.wipe[data-text] .wipe__idx{opacity:1}
+.wipe__t{font-size:clamp(40px,9.4vw,112px);font-weight:800;letter-spacing:-.05em;line-height:.92;
+  margin:0;color:var(--paper);position:relative}
+.wipe__s{font-size:clamp(17px,1.95vw,23px);color:#A6B8C6;max-width:44ch;margin:24px 0 42px;line-height:1.5;position:relative}
+.wipe__s .ln{display:block;opacity:0;transform:translateY(16px);filter:blur(5px);
+  animation:lnIn .95s var(--e) forwards}
+@keyframes lnIn{to{opacity:1;transform:none;filter:blur(0)}}
+.wipe__cells{display:flex;gap:7px;margin-bottom:15px;position:relative}
+.wipe__cells i{width:17px;height:17px;border:1px solid #3A4B5E;background:transparent;
+  transition:background .35s var(--e),border-color .35s var(--e),transform .35s var(--e)}
+.wipe__cells i[data-on]{background:var(--acc,#2457C5);border-color:var(--acc,#2457C5);transform:translateY(-3px)}
+.wipe__note{font-size:12px;color:#67798A;margin:0 0 20px;position:relative}
+.skip{background:none;border:0;color:#67798A;cursor:pointer;font-size:13px;padding:0;align-self:flex-start;position:relative}
+.skip:hover{color:var(--paper)}
+/* regla de portada — mide sin enseñar todavía */
+.hrule{width:100%;height:54px;display:block;margin:6px 0 30px;overflow:visible}
+.hrule line{stroke:var(--rule);stroke-width:1;vector-effect:non-scaling-stroke;
+  stroke-dashoffset:var(--l);animation:tk .55s var(--e) both}
+.hrule line.d{stroke:var(--ink-soft)}
+.hrule text{font-size:10px;fill:var(--muted);font-family:var(--f);opacity:0;animation:rise .6s var(--e) both}
+@keyframes tk{to{stroke-dashoffset:0}}
+
+/* barra de vida */
+.lifebar{position:relative;height:58px;margin:16px 0 4px;cursor:ew-resize;touch-action:none;
+  -webkit-user-select:none;user-select:none}
+.lifebar__track{position:absolute;left:0;right:0;top:26px;height:2px;background:var(--rule)}
+.lifebar__fill{position:absolute;left:0;top:26px;height:2px;background:var(--ink)}
+.lifebar__ticks{position:absolute;inset:0;pointer-events:none}
+.lifebar__ticks i{position:absolute;top:19px;width:1px;height:7px;background:var(--rule)}
+.lifebar__ticks i.big{top:13px;height:13px;background:var(--ink-soft)}
+.lifebar__ticks span{position:absolute;top:33px;font-size:10px;color:var(--muted);transform:translateX(-50%)}
+.lifebar__head{position:absolute;top:15px;width:2px;height:24px;background:var(--red)}
+.lifebar__head::after{content:"";position:absolute;left:-4px;top:-7px;width:10px;height:10px;background:var(--red)}
+
+/* métricas */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:1px;
+  background:var(--rule-soft);border:1px solid var(--rule-soft);margin-top:24px}
+.metrics div{background:var(--paper);padding:14px 16px}
+.metrics b{display:block;font-size:clamp(20px,2.4vw,26px);font-weight:800;letter-spacing:-.03em;line-height:1.12}
+.metrics span{font-size:11.5px;color:var(--muted);line-height:1.3;display:block}
+
+/* detalle del gráfico */
+.chart .area{opacity:0;transition:opacity .25s}
+.chart .area[data-hot]{opacity:.12}
+.chart .past{fill:#0D1522;opacity:.035}
+.chart .ann{stroke:var(--rule);stroke-width:1;stroke-dasharray:2 4}
+.chart .annT{font-size:9.5px;fill:var(--muted);letter-spacing:.02em}
+.chart .endL{font-size:10.5px;font-weight:700}
+.chart .zoneT{font-size:10px;fill:var(--muted)}
+.chart.narrow text{font-size:12.5px}
+.chart.narrow .zoneT{font-size:11px}
+/* revelado de titulares */
+.lift{animation:lift .75s var(--e) both}
+@keyframes lift{from{opacity:0;clip-path:inset(0 0 108% 0);transform:translateY(10px)}
+                to{opacity:1;clip-path:inset(0 0 -12% 0);transform:none}}
+
+.modal{position:fixed;inset:0;z-index:70;display:none;place-items:center;background:rgba(13,21,34,.34);padding:20px}
+.modal[data-on]{display:grid;animation:fade .2s ease}
+.box{background:var(--panel);border:1px solid var(--ink);padding:clamp(22px,3vw,34px);width:min(540px,100%);
+  max-height:90vh;overflow:auto;animation:pop .3s var(--e)}
+@keyframes pop{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.box h3{margin:0 0 20px;font-size:23px;font-weight:800;letter-spacing:-.025em}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chips button{background:transparent;border:1px solid var(--rule);padding:9px 15px;font-size:13.5px;cursor:pointer;
+  transition:border-color .18s,transform .18s var(--e)}
+.chips button:hover{border-color:var(--ink);transform:translateY(-1px)}
+.chips button[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.boxact{display:flex;gap:10px;justify-content:flex-end;margin-top:26px}
+.err{color:var(--red);font-size:13px;margin:12px 0 0;min-height:19px}
+
+
+/* pantalla previa */
+.gate{position:fixed;inset:0;z-index:90;background:var(--paper);display:flex;align-items:center;
+  padding:0 clamp(16px,4vw,44px);transition:opacity .6s var(--e),visibility .6s}
+.gate[data-off]{opacity:0;visibility:hidden;pointer-events:none}
+.gate__in{max-width:640px;margin:0 auto;width:100%}
+.gate__mark{display:flex;align-items:baseline;gap:13px;margin-bottom:44px}
+.gate__mark b{font-size:17px;font-weight:900;letter-spacing:.2em}
+.gate h2{margin:0 0 18px}
+.gate p{font-size:clamp(15.5px,1.6vw,18px);color:var(--ink-soft);line-height:1.55;margin:0 0 26px;max-width:52ch}
+.lock{display:flex;gap:10px;align-items:flex-start;font-size:13px !important;color:var(--muted) !important;
+  border-top:1px solid var(--rule);padding-top:14px;margin-bottom:30px !important}
+.lock svg{flex:none;margin-top:2px}
+.gate__tick{font-size:12.5px !important;color:var(--muted) !important;margin:24px 0 0 !important}
+.gate__tick b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
+
+/* alternativa del titular */
+.altb{background:none;border:0;color:var(--muted);font-size:13.5px;cursor:pointer;padding:6px 0;
+  text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--rule);transition:color .2s}
+.altb:hover{color:var(--ink)}
+.altmsg{font-size:14px;color:var(--red);margin:10px 0 0;max-width:46ch;display:none}
+.altmsg[data-on]{display:block;animation:rise .5s var(--e)}
+
+/* unidades humanas */
+.unitline{font-size:15px;font-weight:700;color:var(--ink);margin:16px 0 0;line-height:1.35}
+.frow__u{font-size:12px;color:var(--muted);margin-top:1px}
+.frow__u b{color:var(--yellow);font-weight:700}
+.srcnote{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.5;max-width:70ch}
+.srcnote a{color:var(--ink-soft)}
+
+
+/* créditos */
+.credits{margin-top:34px;border-top:1px solid var(--rule);padding-top:16px;max-width:58ch}
+.credits p{margin:0 0 7px;font-size:13px;color:var(--muted);line-height:1.55}
+.credits a{color:var(--ink-soft);text-decoration:underline;text-underline-offset:3px;
+  text-decoration-color:var(--rule);transition:text-decoration-color .2s}
+.credits a:hover{text-decoration-color:var(--ink)}
+.credits .who{font-weight:700;color:var(--ink)}
+.foot a{color:var(--muted);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--rule)}
+.foot a:hover{color:var(--ink)}
+
+@media (max-width:1024px){
+  .split{grid-template-columns:minmax(0,1fr) 290px;gap:28px}
+}
+@media (max-width:880px){
+  .split{grid-template-columns:1fr;gap:26px}
+  .rail{border-top:1px solid var(--rule)}
+  .seg{font-size:0;padding:0}
+  .seg[data-now]{font-size:11px;padding-left:8px;flex:2.6}
+}
+@media (max-width:620px){
+  .stage{padding:74px 14px 56px}
+  .chrome{padding:12px 14px 18px;gap:12px}
+  h1{font-size:clamp(33px,9.6vw,50px);max-width:none}
+  h2{font-size:clamp(24px,7vw,34px)}
+  .lede{font-size:16px}
+  .big{font-size:40px}
+  .stat{font-size:64px}
+  .metrics{grid-template-columns:1fr 1fr}
+  .metrics div{padding:12px 13px}
+  .hrule{height:44px}
+  .legend button{padding:7px 11px}
+  .msg{padding:16px 15px}
+  .msg__a{gap:7px}
+  .tiny{padding:8px 11px;font-size:12px}
+  .btn{padding:14px 20px;width:100%;justify-content:space-between}
+  .btn--sm,.btn--ghost.btn--sm{width:auto;justify-content:center}
+  .actions{gap:10px}
+  .wipe__t{font-size:clamp(38px,13vw,60px)}
+  .wipe__cells i{width:19px;height:19px}
+  .foot{gap:4px 0;flex-direction:column}
+}
+@media (max-width:620px) and (orientation:landscape){
+  .stage{padding-top:66px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="gate" id="gate">
+  <div class="gate__in">
+    <div class="gate__mark">
+      <svg class="tally" viewBox="0 0 36 17" aria-hidden="true">
+        <path d="M2 1.5v14M8 1.5v14M14 1.5v14M20 1.5v14M0 14.5 23 2.5" stroke="#0D1522" stroke-width="1.7" fill="none"/>
+      </svg><b>VECES</b>
+    </div>
+    <h2 data-i18n="gTitle"></h2>
+    <p data-i18n="gBody"></p>
+    <p class="lock">
+      <svg width="14" height="17" viewBox="0 0 14 17" aria-hidden="true">
+        <path d="M3.2 7V4.6a3.8 3.8 0 0 1 7.6 0V7" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <rect x="1" y="7" width="12" height="9" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="7" cy="11.4" r="1.1" fill="currentColor"/>
+      </svg>
+      <span data-i18n="gPriv"></span>
+    </p>
+    <button class="btn" id="gateGo" data-i18n="gBtn"><i class="k"></i></button>
+    <p class="gate__tick"><b id="gateSec">0</b> <span data-i18n="gTick"></span></p>
+  </div>
+</div>
+
+
+<header class="chrome">
+  <button class="icb" id="back" hidden aria-label="Volver">
+    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M9 1 3 7l6 6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+  </button>
+  <nav class="scale" id="scale" aria-label="Progreso"></nav>
+  <div class="langw"><button class="langb" id="langB" aria-haspopup="true" aria-expanded="false">
+    <span class="flg" id="langFlag"></span><span id="langName">Castellano</span>
+    <svg width="9" height="6" viewBox="0 0 9 6" aria-hidden="true"><path d="M1 1l3.5 3.5L8 1" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>
+  </button><ul class="langm" id="langM"></ul></div>
+  <button class="sound" id="sound" aria-pressed="false">
+    <span class="wv"><i></i><i></i><i></i></span><span id="soundL">Sonido</span>
+  </button>
+</header>
+
+<main class="stage">
+
+<!-- 0 -->
+<section class="screen" id="s0" data-on>
+  <div class="mark rise">
+    <svg class="tally" viewBox="0 0 36 17" aria-hidden="true">
+      <path d="M2 1.5v14M8 1.5v14M14 1.5v14M20 1.5v14M0 14.5 23 2.5" stroke="#0D1522" stroke-width="1.7" fill="none"/>
+    </svg><b>VECES</b>
+  </div>
+  <svg class="hrule" id="heroRule" viewBox="0 0 1000 54" preserveAspectRatio="none" aria-hidden="true"></svg>
+  <h1 class="kin" id="heroT"></h1>
+  <p class="lede rise" data-i18n="lede" style="animation-delay:.5s"></p>
+  <div class="actions rise" style="animation-delay:.62s">
+    <button class="btn" data-go="1" data-i18n="start"><i class="k"></i></button>
+    <button class="altb" id="heroAlt" data-i18n="heroAlt"></button>
+  </div>
+  <p class="altmsg" id="heroAltMsg" data-i18n="heroAltMsg"></p>
+  <div class="foot rise" style="animation-delay:.72s">
+    <span data-i18n="priv"></span><span data-i18n="credit"></span><span><a href="https://www.instagram.com/javiyawe" target="_blank" rel="noopener" data-i18n="credFoot"></a></span>
+  </div>
+</section>
+
+<!-- 1 -->
+<section class="screen" id="s1">
+  <p class="eyeline" data-i18n="e1"></p>
+  <h2 data-i18n="t1"></h2>
+  <div class="form">
+    <div class="field"><p class="q" data-i18n="qName"></p>
+      <input class="txt" id="fName" type="text" data-i18p="phName" placeholder="Tu nombre" autocomplete="given-name" maxlength="24"></div>
+    <div class="field">
+      <p class="q" data-i18n="qAge"></p>
+      <p class="hint" data-i18n="hAge"></p>
+      <div class="read"><b id="ageRead">30</b><span data-i18n="years"></span></div>
+      <div class="lifebar" id="lifebar" role="slider" tabindex="0" aria-label="Tu edad"
+           aria-valuemin="10" aria-valuemax="95" aria-valuenow="30">
+        <div class="lifebar__track"></div>
+        <div class="lifebar__fill" id="lifeFill"></div>
+        <div class="lifebar__ticks" id="lifeTicks"></div>
+        <div class="lifebar__head" id="lifeHead"></div>
+      </div>
+      <input class="rg" id="fAge" type="range" min="10" max="95" value="30" aria-label="Tu edad en años">
+      <div class="metrics">
+        <div><b id="mW">1.560</b><span data-i18n="m1"></span></div>
+        <div><b id="mD">10.958</b><span data-i18n="m2"></span></div>
+        <div><b id="mR">3.120</b><span data-i18n="m3"></span></div>
+        <div><b id="mP">33,3 %</b><span data-i18n="m4"></span></div>
+      </div>
+    </div>
+    <p class="err" id="e1"></p>
+    <button class="btn" id="go2" data-i18n="cont"><i class="k"></i></button>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="screen" id="s2">
+  <p class="eyeline" data-i18n="e2"></p>
+  <h2 data-i18n="t2"></h2>
+  <div class="split">
+    <div>
+      <div class="chartwrap">
+        <svg class="chart" id="chart" viewBox="0 0 900 440" tabindex="0" role="img"
+             aria-label="Horas al día compartidas con cada grupo según la edad. Flechas para moverte."></svg>
+        <div class="tip" id="cTip"></div>
+      </div>
+      <div class="legend" id="legend"></div>
+      <div class="actions" style="margin-top:16px">
+        <button class="btn btn--ghost btn--sm" id="play"></button>
+        <span class="fine" data-i18n="playNote"></span>
+      </div>
+      <p class="src" data-i18n="src"></p><p class="srcnote"><a href="https://www.bls.gov/tus/" target="_blank" rel="noopener" data-i18n="srcA"></a> &middot; <a href="https://ourworldindata.org/time-use" target="_blank" rel="noopener" data-i18n="srcB"></a></p>
+    </div>
+    <aside class="rail">
+      <div class="big"><span id="cAge">30</span><small data-i18n="years"></small></div>
+      <p class="sub" id="cPhase">—</p>
+      <ul class="bars" id="cBars"></ul>
+      <p class="railread" id="cRead">—</p>
+      <div class="actions"><button class="btn" data-go="3" data-i18n="next2"><i class="k"></i></button></div>
+    </aside>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="screen" id="s3">
+  <p class="eyeline" data-i18n="e3"></p>
+  <h2 id="t3"></h2>
+  <div class="split">
+    <div>
+      <div class="gridwrap">
+        <canvas class="gridcanvas" id="gMine" aria-label="Tu vida en semanas"></canvas>
+        <div class="gx"></div><div class="gy"></div><div class="pin"></div><div class="tip" id="tMine"></div>
+      </div>
+      <div class="axis" id="aMine"></div>
+      <div class="lg">
+        <span><i class="sw" style="background:var(--ink);border-color:var(--ink)"></i><em data-i18n="lgLived"></em></span>
+        <span><i class="sw"></i><em data-i18n="lgTodo"></em></span>
+        <span><i class="sw" style="background:var(--red);border-color:var(--red)"></i><em data-i18n="lgToday"></em></span>
+      </div>
+    </div>
+    <aside class="rail">
+      <div class="big"><span id="wLived">0</span><small data-i18n="of"></small></div>
+      <p class="sub" id="s3det" style="margin-bottom:6px">—</p>
+      <p class="sub" id="pinTxt"></p>
+      <p class="fine" data-i18n="addHint"></p>
+      <ul class="people" id="pList"></ul>
+      <div class="empty" id="pEmpty" data-i18n="empty"></div>
+      <div class="actions"><button class="btn btn--ghost btn--sm" id="addP"></button></div>
+      <div class="actions"><button class="btn" id="go4" disabled data-i18n="next3"><i class="k"></i></button></div>
+    </aside>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="screen" id="s4">
+  <p class="eyeline" data-i18n="e4"></p>
+  <h2 data-i18n="t4"></h2>
+  <div class="split">
+    <div>
+      <div class="gridwrap">
+        <canvas class="gridcanvas" id="gTheirs" aria-label="Su vida en semanas"></canvas>
+        <div class="gx"></div><div class="gy"></div><div class="tip" id="tTheirs"></div>
+      </div>
+      <div class="axis" id="aTheirs"></div>
+      <div class="lg" id="lgTheirs"></div>
+    </div>
+    <aside class="rail">
+      <ul class="tabs" id="tabs"></ul>
+      <p class="q" style="margin-bottom:2px"><em data-i18n="theirAge"></em> <b id="mAgeRead">40</b></p>
+      <input class="rg" id="mAge" type="range" min="0" max="99" value="40" aria-label="Su edad">
+      <div class="big" style="margin-top:14px"><span id="mPct">0</span><small data-i18n="of100"></small></div>
+      <div class="note"><p class="note__t" data-i18n="illT"></p><p class="note__b" id="mIll">—</p></div>
+      <div class="note note--hard"><p class="note__t" data-i18n="realT"></p><p class="note__b" id="mReal">—</p><p class="unitline" id="mUnit"></p></div>
+      <div class="actions"><button class="btn" data-go="5" data-i18n="next4"><i class="k"></i></button></div>
+    </aside>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="screen" id="s5">
+  <p class="eyeline" data-i18n="e5"></p>
+  <h2 data-i18n="t5"></h2>
+  <div class="split">
+    <div>
+      <div class="gridwrap">
+        <canvas class="gridcanvas" id="gRes" aria-label="Semanas recuperadas"></canvas>
+        <div class="gx"></div><div class="gy"></div><div class="tip" id="tRes"></div>
+      </div>
+      <div class="axis" id="aRes"></div>
+      <div class="lg">
+        <span><i class="sw" style="background:var(--ink);border-color:var(--ink)"></i><em data-i18n="lgLived"></em></span>
+        <span><i class="sw" style="background:var(--blue-soft);border-color:var(--blue-soft)"></i><em data-i18n="lgR2"></em></span>
+        <span><i class="sw" style="background:var(--yellow);border-color:var(--yellow)"></i><em data-i18n="lgR3"></em></span>
+      </div>
+    </div>
+    <aside class="rail">
+      <div class="big" style="color:var(--yellow)">+<span id="rW">0</span><small data-i18n="fullW"></small></div>
+      <p class="sub" data-i18n="resSub"></p>
+      <div id="rRows"></div>
+      <div class="actions"><button class="btn" data-go="6" data-i18n="next5"><i class="k"></i></button></div>
+    </aside>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="screen" id="s6">
+  <p class="eyeline" data-i18n="e6"></p>
+  <h2 data-i18n="t6"></h2>
+  <p class="lede" data-i18n="lede6"></p>
+  <div class="actions" style="margin-top:20px">
+    <div class="toneb" id="tone" role="group" aria-label="Tono">
+      <button data-t="calido" data-i18n="warm" aria-pressed="true"></button>
+      <button data-t="directo" data-i18n="direct" aria-pressed="false"></button>
+    </div>
+  </div>
+  <div class="msgs" id="msgs"></div>
+  <p class="prog" id="prog"></p>
+  <div class="actions"><button class="btn" data-go="7" data-i18n="next6"><i class="k"></i></button></div>
+</section>
+
+<!-- 7 -->
+<section class="screen" id="s7">
+  <p class="eyeline" data-i18n="e7"></p>
+  <h2 id="t7"></h2>
+  <div class="gridwrap" style="margin-top:24px">
+    <canvas class="gridcanvas" id="gEnd" aria-label="Solo las semanas compartidas"></canvas>
+    <div class="tip" id="tEnd"></div>
+  </div>
+  <div class="lg" id="lgEnd"></div>
+  <p class="stat" id="endNum">0</p>
+  <p class="sub" id="endSub">—</p>
+  <div class="reflect" id="reflect"></div>
+  <div class="credits">
+    <p><span data-i18n="credOrig"></span>
+      <a class="who" href="https://www.instagram.com/javiyawe" target="_blank" rel="noopener">@javiyawe</a>
+      &middot; <a href="https://links.javiyawe.es/" target="_blank" rel="noopener" data-i18n="credMore"></a></p>
+    <p data-i18n="credMine"></p>
+  </div>
+  <div class="sign">
+    <p class="sign__b" data-i18n="sig1"></p>
+    <p class="sign__s" data-i18n="sig2"></p>
+  </div>
+  <div class="actions">
+    <button class="btn" id="copy"></button>
+    <button class="btn btn--ghost" id="restart" data-i18n="restart"></button>
+  </div>
+  <p class="srcnote" data-i18n="note" style="margin-bottom:24px"></p>
+  <div class="foot"><span data-i18n="gone"></span><span data-i18n="credit"></span><span><a href="https://www.instagram.com/javiyawe" target="_blank" rel="noopener" data-i18n="credFoot"></a></span></div>
+</section>
+
+</main>
+
+<div class="wipe" id="wipe" aria-live="polite">
+  <div class="wipe__bars" id="wipeBars"></div>
+  <div class="wipe__in">
+    <div class="wipe__idx" id="interIdx"></div>
+    <div class="wipe__rule"></div>
+    <h2 class="wipe__t kin" id="interT"></h2>
+    <p class="wipe__s" id="interS"></p>
+    <div class="wipe__cells" id="interCells"></div>
+    <p class="wipe__note" data-i18n="cellNote"></p>
+    <button class="skip" id="skip" data-i18n="skip"></button>
+  </div>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalT">
+  <div class="box">
+    <h3 id="modalT" data-i18n="mTitle"></h3>
+    <div class="field"><p class="q" data-i18n="mWho"></p>
+      <input class="txt" id="pName" type="text" data-i18p="mWhoPh" placeholder="Su nombre" maxlength="24" style="font-size:25px"></div>
+    <div class="field"><p class="q" data-i18n="mWhat"></p><div class="chips" id="pRel"></div></div>
+    <div class="field"><p class="q" data-i18n="mTheirAge"></p>
+      <div class="read" style="font-size:44px"><b id="pAgeRead">40</b><span data-i18n="years"></span></div>
+      <input class="rg" id="pAge" type="range" min="0" max="99" value="40" aria-label="Su edad"></div>
+    <div class="field" style="margin-bottom:0"><p class="q" data-i18n="mFreq"></p>
+      <p class="hint" data-i18n="mFreqH"></p>
+      <div class="frow__l"><span data-i18n="fMin"></span><b id="pFreqL"></b><span data-i18n="fMax"></span></div>
+      <input class="rg" id="pFreq" type="range" min="0" max="7" value="3" aria-label="Frecuencia"></div>
+    <p class="err" id="e2"></p>
+    <div class="boxact">
+      <button class="btn btn--ghost btn--sm" id="mCancel" data-i18n="cancel"></button>
+      <button class="btn btn--sm" id="mSave" data-i18n="add"></button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   VECES · textos de la interfaz
+   Un solo sitio para editarlo todo. Cambia el valor y ya esta.
+   {n} = nombre del usuario. Otras llaves: {p} persona, {a} edad,
+   {s} semanas compartidas, {c} semanas juntos, {m} encuentros,
+   {r} tiempo seguido, {y} anyos, {w} semanas, {d}/{t} enviados, {u} unidad.
+   ============================================================ */
+window.I18N={
+ "es": {
+  "add": "Añadir",
+  "addHint": "Hasta cinco personas. Las que sientas que ves menos de lo que querrías.",
+  "addP": "Añadir persona",
+  "ann1": "sales de casa",
+  "ann2": "pico de los hijos",
+  "ann3": "se apaga el trabajo",
+  "axAge": "edad",
+  "axH": "horas al día",
+  "back": "Volver",
+  "cancel": "Cancelar",
+  "cellNote": "siete encuentros · una semana entera juntos",
+  "cont": "Continuar",
+  "copied": "Copiado",
+  "copy": "Copiar",
+  "copyFail": "Cópialo a mano",
+  "copySum": "Copiar el resumen",
+  "credFoot": "Inspirado en Kairós Project, de @javiyawe",
+  "credMine": "Esta versión está escrita desde cero por Kai: código, textos, diseño y sonido propios. Misma pregunta, tratamiento distinto.",
+  "credMore": "más cosas suyas",
+  "credOrig": "Inspirado en Kairós Project, la experiencia original de",
+  "credit": "Hecho por Kai · para pararse a pensar",
+  "direct": "Directo",
+  "e1": "Punto de partida",
+  "e2": "La corriente",
+  "e3": "La hoja",
+  "e4": "Su reloj",
+  "e5": "La inercia",
+  "e6": "El martes",
+  "e7": "La cuenta",
+  "empty": "Todavía no hay nadie. Empieza por quien menos ves.",
+  "endSub": "Semanas enteras que os quedan juntos. Cada casilla son siete encuentros de verdad.",
+  "endTip": "<b>{n}</b><br>siete encuentros",
+  "endTipNo": "<b>{y} años</b><br>sin nadie apuntado",
+  "errName": "Necesito tu nombre para poder hablarte de tu vida.",
+  "errName2": "Escribe un nombre para poder seguir.",
+  "fMax": "a diario",
+  "fMin": "1/año",
+  "frq_b": "Cada dos meses",
+  "frq_d": "Casi a diario",
+  "frq_m": "Una vez al mes",
+  "frq_m2": "Un par de veces al mes",
+  "frq_q": "Cada dos semanas",
+  "frq_t": "Un par de veces al año",
+  "frq_w": "Una vez por semana",
+  "frq_w3": "Varias veces por semana",
+  "frq_y": "Una vez al año",
+  "fullW": "semanas enteras",
+  "gBody": "Busca un sitio tranquilo y sube el sonido.",
+  "gBtn": "Estoy listo",
+  "gPriv": "Todo se calcula aquí dentro. No sale a ningún servidor y desaparece al cerrar la pestaña.",
+  "gTick": "segundos que llevas aquí. No vuelven.",
+  "gTitle": "Puede que no te guste el resultado.",
+  "gone": "Nada de esto se ha guardado. Al cerrar la pestaña desaparece.",
+  "h1": "Cuántas veces más vas a ver a la gente que quieres.",
+  "hAge": "Los años que tienes son, exactamente, los que ya no tienes.",
+  "heroAlt": "Dejarlo para otro día",
+  "heroAltMsg": "Es exactamente lo que hace todo el mundo. Por eso la inercia gana siempre.",
+  "icsB": "Bloquear la fecha",
+  "icsTitle": "Ver a {n}",
+  "illT": "Lo que sueles pensar",
+  "ill_amigos": "Que la amistad se mantiene sola, sin fechas.",
+  "ill_familia": "Que siempre estará. Nadie te lleva la contraria hasta que ya no se puede.",
+  "ill_hijos": "Que la etapa en la que te buscan va a durar.",
+  "ill_otros": "Que ya habrá un momento mejor que este.",
+  "ill_pareja": "Que vivir juntos ya cuenta como veros.",
+  "in2s": "Antes de calcular lo tuyo, {n}, hace falta un punto de partida. Así reparte su tiempo la gente a cada edad, según los datos. No lo elige nadie: lo elige la edad que tiene.",
+  "in2t": "El reparto",
+  "in3s": "Ahora tú, {n}. Vamos a restar lo que ya has gastado. Cada cuadro es una semana de tu vida: los llenos no vuelven, y los vacíos son lo único con lo que puedes hacer algo.",
+  "in3t": "El recuento",
+  "in4s": "Sal de tu cuenta un momento, {n}, y ponte en la suya. Esto es su vida entera, con todo lo que le queda por delante. Los puntos de color son las veces que apareces tú. Ese es todo el sitio que vas a ocupar en ella.",
+  "in4t": "El otro lado",
+  "in5s": "Hasta aquí eran datos, {n}. Ahora decides tú. Cambia cada cuánto os veis y mira exactamente cuánto tiempo le estás quitando a la inercia.",
+  "in5t": "La decisión",
+  "in6s": "Ya tienes el número, {n}. El número no sirve de nada. Lo que sirve es el mensaje que salga de aquí hoy.",
+  "in6t": "El mensaje",
+  "in7s": "Esto es lo que has salvado, {n}. Apagamos todo lo demás para que se vea solo eso.",
+  "in7t": "El saldo",
+  "lang": "Castellano",
+  "langT": "Idioma",
+  "lede": "A los 18, el reparto ya está hecho: casi todo el tiempo que pasarás con tus padres se consumió antes. Lo que sobra es poco, y es la parte que tú puedes decidir.",
+  "lede6": "Edítalos y mándalos hoy. Mañana la cuenta ya será más corta.",
+  "lgLived": "Vividas",
+  "lgR2": "Al ritmo de ahora",
+  "lgR3": "Lo que ganas",
+  "lgT1": "Lo que ya ha vivido",
+  "lgT2": "Lo que le queda",
+  "lgT3": "Una casilla = 7 encuentros = una semana entera juntos",
+  "lgToday": "Hoy",
+  "lgTodo": "Por escribir",
+  "m1": "semanas gastadas",
+  "m2": "días vividos",
+  "m3": "semanas por delante",
+  "m4": "del horizonte de 90 años",
+  "mFreq": "¿Cada cuánto os veis de verdad?",
+  "mFreqH": "Cuenta solo los ratos de verdad: una comida, una visita, una charla sin prisa. No el cruzaros por casa.",
+  "mReal": "{p} tiene {a}. Os quedan {s} semanas compartidas, pero solo estaréis juntos en {c}: unos {m} encuentros. Puestos seguidos, caben en {r}.",
+  "mReal0": "Con esos años la cuenta ya no da margen. El horizonte de referencia son 90 años.",
+  "mTheirAge": "¿Cuántos años tiene?",
+  "mTitle": "Añadir a alguien",
+  "mWhat": "¿Qué es tuyo?",
+  "mWho": "¿Quién es?",
+  "mWhoPh": "Su nombre",
+  "mark": "Marcar enviado",
+  "maxP": "Ya son cinco",
+  "md_amigos": "{n}, basta de decir que a ver si quedamos. Dime un día de las próximas dos semanas y lo cierro.",
+  "md_familia": "Hola {n}. He calculado las veces que nos quedan por vernos y son menos de las que pensaba. ¿Qué día de este mes te va bien? Lo bloqueo.",
+  "md_hijos": "{n}, quiero una tarde contigo cada semana. Elige tú el día y no lo movemos.",
+  "md_otros": "Hola {n}. ¿Nos vemos este mes? Dime un día y lo dejo apuntado.",
+  "md_pareja": "{n}: propongo una tarde fija a la semana, solo nosotros. Empezamos esta. ¿Jueves o sábado?",
+  "mw_amigos": "{n}, llevamos demasiado tiempo diciendo que tenemos que vernos. Lo pongo yo en el calendario: dime dos días que te vayan bien.",
+  "mw_familia": "Hola {n}. Me he puesto a echar cuentas de las veces que nos vemos al año y me han salido muy pocas. Me apetece cambiarlo. ¿Comemos juntos este mes?",
+  "mw_hijos": "{n}, tengo ganas de hacer algo juntos, tú y yo solos, sin nada más en medio. Dime qué te apetece y lo dejo apuntado.",
+  "mw_otros": "Hola {n}. Me apetece que nos veamos con calma, no de pasada. ¿Te va bien alguna tarde de estas?",
+  "mw_pareja": "{n}, quiero recuperar los ratos en los que estamos de verdad, sin pantallas ni prisa. ¿Nos guardamos una tarde fija esta semana, solo para nosotros?",
+  "next2": "Contar a los míos",
+  "next3": "Verlo desde su lado",
+  "next4": "Recuperar tiempo",
+  "next5": "Dar el primer paso",
+  "next6": "Cerrar la cuenta",
+  "note": "Estimaciones orientativas a partir de datos generales de población. El futuro no está escrito: esto es un aviso, no una sentencia.",
+  "of": "de 4.680",
+  "of100": "de cada 100 semanas que compartís",
+  "ph0n": "Todos a la vez",
+  "ph0r": "Mira qué alto está todo, {n}. Familia y amigos ocupan el mismo día. Es el máximo de tu vida y dura muy poco.",
+  "ph1n": "La dispersión",
+  "ph1r": "Aquí cae la línea de la familia de golpe, {n}. Te vas de casa y esas horas no vuelven a subir nunca.",
+  "ph2n": "El estrechamiento",
+  "ph2r": "Pareja, hijos y trabajo se lo quedan casi todo, {n}. Los amigos pasan a depender de una agenda.",
+  "ph3n": "La meseta",
+  "ph3r": "Durante doce años casi nada se mueve, {n}. Son los años que menos se notan pasar.",
+  "ph4n": "El repliegue",
+  "ph4r": "Bajan los hijos y se apaga el trabajo, {n}. Casi todas las horas que recuperas van a la línea de arriba: solo.",
+  "ph5n": "Lo que regaste",
+  "ph5r": "Queda la pareja y queda estar solo, {n}. Lo demás son visitas que alguien tiene que organizar.",
+  "phName": "Tu nombre",
+  "pinFut": "Fijada: tendrás {y} años. Dentro de {w} semanas.",
+  "pinHint": "Pasa por encima para ver cualquier semana. Haz clic para fijarla.",
+  "pinPast": "Fijada: tenías {y} años. Hace {w} semanas.",
+  "play": "Recorrer una vida entera",
+  "playNote": "O arrastra sobre el gráfico. Toca una serie para verla sola.",
+  "priv": "Todo se calcula en tu navegador. No se envía ni se guarda nada.",
+  "prog": "{d} de {t} enviados.",
+  "progAll": "Ya está: eso es lo único que cambiaba algo.",
+  "progLeft": "Los que faltan siguen contando hacia abajo.",
+  "qAge": "¿Cuántos años tienes?",
+  "qName": "¿Cómo te llamas?",
+  "realT": "Lo que sale la cuenta",
+  "rel_amigos": "Amistad",
+  "rel_familia": "Familia",
+  "rel_hijos": "Hijo o hija",
+  "rel_otros": "Otro vínculo",
+  "rel_pareja": "Pareja",
+  "remove": "quitar",
+  "resSub": "Arrastra una barra y mira cómo se rellena el papel. Cada casilla nueva son siete encuentros más.",
+  "restart": "Volver al presente",
+  "rf1": "El número que acabas de ver no es exacto. Sale de medias de población, y a ti te tocará tu propia versión.",
+  "rf2": "Lo que sí es exacto es la dirección. Baja todos los días, y baja igual si no lo miras.",
+  "rf3": "Y baja sin avisar. La última vez de todas la vivirás sin saber que era esa.",
+  "rf4": "Solo sube de una forma: apareciendo. No hay ningún otro método.",
+  "rf5": "Empieza hoy. Mañana el número de esta pantalla ya es más bajo.",
+  "rfNo": "Hoy no la has subido. Todavía estás a tiempo de volver atrás y mover una sola barra.",
+  "rfUp": "Hoy has decidido subirla {n} semanas. Que no se quede en la pantalla.",
+  "runD": "{n} días seguidos",
+  "runM": "{n} meses seguidos",
+  "runY": "{n} años seguidos",
+  "sec0": "Portada",
+  "sec1": "La resta",
+  "sec2": "El reparto",
+  "sec3": "El recuento",
+  "sec4": "El otro lado",
+  "sec5": "La decisión",
+  "sec6": "El mensaje",
+  "sec7": "El saldo",
+  "sentB": "Enviado",
+  "ser_amigos": "Amigos",
+  "ser_familia": "Familia de origen",
+  "ser_hijos": "Hijos",
+  "ser_pareja": "Pareja",
+  "ser_solo": "Solo",
+  "ser_trabajo": "Compañeros",
+  "sig1": "Hecho por Kai.",
+  "sig2": "No para compartirlo. Para quedarte un rato callado y luego escribir a alguien.",
+  "skip": "Saltar",
+  "sound": "Sonido",
+  "soundOn": "Sonido activo",
+  "src": "Curvas aproximadas a la forma de la American Time Use Survey. Son medias de población, no una predicción.",
+  "srcA": "Encuesta de Uso del Tiempo (ATUS)",
+  "srcB": "Our World in Data",
+  "start": "Empezar",
+  "startNote": "Cinco minutos. Mejor con calma y con sonido.",
+  "stop": "Parar",
+  "t1": "Empecemos por lo que ya has gastado.",
+  "t2": "Con quién pasa sus días la gente, año a año.",
+  "t3": "Aquí está entera.",
+  "t3det": "Te quedan {y} veranos y {w} sábados.",
+  "t3n": "Aquí está entera, {n}.",
+  "t4": "La misma cuenta, con sus años.",
+  "t5": "La inercia decide por defecto. Cámbiala.",
+  "t6": "Un número no cambia nada. Un mensaje sí.",
+  "t7": "Lo que queda cuando se apaga todo lo demás.",
+  "t7n": "{n}, esto es lo que queda encendido.",
+  "theirAge": "Su edad:",
+  "tipFree": "<b>{y} años</b><br>libre",
+  "tipFut": "<b>{y} años</b><br>dentro de {w} semanas",
+  "tipGain": "<b>Lo que ganas</b><br>siete encuentros más",
+  "tipMeet": "<b>Aquí os veis</b><br>siete encuentros vuestros",
+  "tipNow": "<b>Ya lo hacéis</b>",
+  "tipPast": "<b>{y} años</b><br>hace {w} semanas",
+  "tipTF": "<b>{y} años</b><br>sin vosotros dentro",
+  "tipTP": "<b>{y} años</b><br>ya lo ha vivido",
+  "unitLine": "≈ {n} {u} más",
+  "unit_amigos": "cafés",
+  "unit_familia": "comidas juntos",
+  "unit_hijos": "tardes contigo",
+  "unit_otros": "conversaciones",
+  "unit_pareja": "noches a su lado",
+  "wa": "Abrir en WhatsApp",
+  "warm": "Cálido",
+  "years": "años",
+  "you": "tú",
+  "zLived": "ya vivido",
+  "zToLive": "por vivir"
+ },
+ "ca": {
+  "add": "Afegeix",
+  "addHint": "Fins a cinc persones. Les que sentis que veus menys del que voldries.",
+  "addP": "Afegeix persona",
+  "ann1": "marxes de casa",
+  "ann2": "pic dels fills",
+  "ann3": "s'apaga la feina",
+  "axAge": "edat",
+  "axH": "hores al dia",
+  "back": "Enrere",
+  "cancel": "Cancel·la",
+  "cellNote": "set trobades · una setmana sencera junts",
+  "cont": "Continua",
+  "copied": "Copiat",
+  "copy": "Copia",
+  "copyFail": "Copia'l a mà",
+  "copySum": "Copia el resum",
+  "credFoot": "Inspirat en Kairós Project, de @javiyawe",
+  "credMine": "Aquesta versió està escrita des de zero per Kai: codi, textos, disseny i so propis. Mateixa pregunta, tractament diferent.",
+  "credMore": "més coses seves",
+  "credOrig": "Inspirat en Kairós Project, l'experiència original de",
+  "credit": "Fet per Kai · per aturar-se a pensar",
+  "direct": "Directe",
+  "e1": "Punt de partida",
+  "e2": "El corrent",
+  "e3": "El full",
+  "e4": "El seu rellotge",
+  "e5": "La inèrcia",
+  "e6": "El dimarts",
+  "e7": "El compte",
+  "empty": "Encara no hi ha ningú. Comença per qui menys veus.",
+  "endSub": "Setmanes senceres que us queden junts. Cada casella són set trobades de veritat.",
+  "endTip": "<b>{n}</b><br>set trobades",
+  "endTipNo": "<b>{y} anys</b><br>sense ningú apuntat",
+  "errName": "Necessito el teu nom per poder parlar-te de la teva vida.",
+  "errName2": "Escriu un nom per poder continuar.",
+  "fMax": "cada dia",
+  "fMin": "1/any",
+  "frq_b": "Cada dos mesos",
+  "frq_d": "Gairebé cada dia",
+  "frq_m": "Un cop al mes",
+  "frq_m2": "Un parell de cops al mes",
+  "frq_q": "Cada dues setmanes",
+  "frq_t": "Un parell de cops l'any",
+  "frq_w": "Un cop per setmana",
+  "frq_w3": "Uns quants cops per setmana",
+  "frq_y": "Un cop l'any",
+  "fullW": "setmanes senceres",
+  "gBody": "Busca un lloc tranquil i puja el so.",
+  "gBtn": "Estic a punt",
+  "gPriv": "Tot es calcula aquí dins. No surt a cap servidor i desapareix en tancar la pestanya.",
+  "gTick": "segons que portes aquí. No tornen.",
+  "gTitle": "Potser no t'agradarà el resultat.",
+  "gone": "Res d'això s'ha desat. En tancar la pestanya desapareix.",
+  "h1": "Quantes vegades més veuràs la gent que estimes.",
+  "hAge": "Els anys que tens són, exactament, els que ja no tens.",
+  "heroAlt": "Deixar-ho per un altre dia",
+  "heroAltMsg": "És exactament el que fa tothom. Per això la inèrcia guanya sempre.",
+  "icsB": "Bloqueja la data",
+  "icsTitle": "Veure {n}",
+  "illT": "El que sols pensar",
+  "ill_amigos": "Que l'amistat es manté sola, sense dates.",
+  "ill_familia": "Que sempre hi serà. Ningú et porta la contrària fins que ja no es pot.",
+  "ill_hijos": "Que l'etapa en què et busquen durarà.",
+  "ill_otros": "Que ja hi haurà un moment millor que aquest.",
+  "ill_pareja": "Que viure junts ja compta com veure-us.",
+  "in2s": "Abans de calcular el teu cas, {n}, cal un punt de partida. Així reparteix el temps la gent a cada edat, segons les dades. No ho tria ningú: ho tria l'edat que té.",
+  "in2t": "El repartiment",
+  "in3s": "Ara tu, {n}. Restarem el que ja has gastat. Cada quadre és una setmana de la teva vida: els plens no tornen, i els buits són l'únic amb què pots fer alguna cosa.",
+  "in3t": "El recompte",
+  "in4s": "Surt del teu compte un moment, {n}, i posa't en el seu. Això és la seva vida sencera, amb tot el que li queda per davant. Els punts de color són les vegades que hi surts tu. Aquest és tot el lloc que hi ocuparàs.",
+  "in4t": "L'altre costat",
+  "in5s": "Fins aquí eren dades, {n}. Ara decideixes tu. Canvia cada quant us veieu i mira exactament quant temps li estàs prenent a la inèrcia.",
+  "in5t": "La decisió",
+  "in6s": "Ja tens el número, {n}. El número no serveix de res. El que serveix és el missatge que surti d'aquí avui.",
+  "in6t": "El missatge",
+  "in7s": "Això és el que has salvat, {n}. Apaguem tota la resta perquè es vegi només això.",
+  "in7t": "El saldo",
+  "lang": "Català",
+  "langT": "Idioma",
+  "lede": "Als 18, el repartiment ja està fet: gairebé tot el temps que passaràs amb els teus pares es va consumir abans. El que en sobra és poc, i és la part que pots decidir tu.",
+  "lede6": "Edita'ls i envia'ls avui. Demà el compte ja serà més curt.",
+  "lgLived": "Viscudes",
+  "lgR2": "Al ritme d'ara",
+  "lgR3": "El que guanyes",
+  "lgT1": "El que ja ha viscut",
+  "lgT2": "El que li queda",
+  "lgT3": "Una casella = 7 trobades = una setmana sencera junts",
+  "lgToday": "Avui",
+  "lgTodo": "Per escriure",
+  "m1": "setmanes gastades",
+  "m2": "dies viscuts",
+  "m3": "setmanes per endavant",
+  "m4": "de l'horitzó de 90 anys",
+  "mFreq": "Cada quant us veieu de veritat?",
+  "mFreqH": "Compta només les estones de debò: un dinar, una visita, una xerrada sense pressa. No el creuar-vos per casa.",
+  "mReal": "{p} té {a}. Us queden {s} setmanes compartides, però només estareu junts en {c}: uns {m} encontres. Posats seguits, caben en {r}.",
+  "mReal0": "Amb aquests anys el compte ja no dona marge. L'horitzó de referència són 90 anys.",
+  "mTheirAge": "Quants anys té?",
+  "mTitle": "Afegeix algú",
+  "mWhat": "Què és teu?",
+  "mWho": "Qui és?",
+  "mWhoPh": "El seu nom",
+  "mark": "Marca enviat",
+  "maxP": "Ja en són cinc",
+  "md_amigos": "{n}, prou de dir que a veure si quedem. Digue'm un dia de les properes dues setmanes i el tanco.",
+  "md_familia": "Hola {n}. He calculat les vegades que ens queden per veure'ns i són menys de les que pensava. Quin dia d'aquest mes et va bé? El bloquejo.",
+  "md_hijos": "{n}, vull una tarda amb tu cada setmana. Tria tu el dia i no el movem.",
+  "md_otros": "Hola {n}. Ens veiem aquest mes? Digue'm un dia i ho apunto.",
+  "md_pareja": "{n}: proposo una tarda fixa a la setmana, només nosaltres. Comencem aquesta. Dijous o dissabte?",
+  "mw_amigos": "{n}, fa massa temps que diem que ens hem de veure. Ho poso jo al calendari: digue'm dos dies que et vagin bé.",
+  "mw_familia": "Hola {n}. M'he posat a fer números de les vegades que ens veiem l'any i m'han sortit molt poques. Em ve de gust canviar-ho. Dinem junts aquest mes?",
+  "mw_hijos": "{n}, tinc ganes de fer alguna cosa junts, tu i jo sols, sense res més pel mig. Digues què et ve de gust i ho apunto.",
+  "mw_otros": "Hola {n}. Em ve de gust que ens veiem amb calma, no de passada. Et va bé alguna tarda d'aquestes?",
+  "mw_pareja": "{n}, vull recuperar les estones en què hi som de veritat, sense pantalles ni pressa. Ens guardem una tarda fixa aquesta setmana, només per a nosaltres?",
+  "next2": "Comptar els meus",
+  "next3": "Veure-ho des del seu costat",
+  "next4": "Recuperar temps",
+  "next5": "Fer el primer pas",
+  "next6": "Tancar el compte",
+  "note": "Estimacions orientatives a partir de dades generals de població. El futur no està escrit: això és un avís, no una sentència.",
+  "of": "de 4.680",
+  "of100": "de cada 100 setmanes que compartiu",
+  "ph0n": "Tots alhora",
+  "ph0r": "Mira que amunt està tot, {n}. Família i amics ocupen el mateix dia. És el màxim de la teva vida i dura molt poc.",
+  "ph1n": "La dispersió",
+  "ph1r": "Aquí cau la línia de la família de cop, {n}. Marxes de casa i aquelles hores no tornen a pujar mai.",
+  "ph2n": "L'estretiment",
+  "ph2r": "Parella, fills i feina s'ho queden gairebé tot, {n}. Els amics passen a dependre d'una agenda.",
+  "ph3n": "El pla",
+  "ph3r": "Durant dotze anys gairebé res es mou, {n}. Són els anys que menys es noten passar.",
+  "ph4n": "El replegament",
+  "ph4r": "Baixen els fills i s'apaga la feina, {n}. Gairebé totes les hores que recuperes van a la línia de dalt: sol.",
+  "ph5n": "El que vas regar",
+  "ph5r": "Queda la parella i queda estar sol, {n}. La resta són visites que algú ha d'organitzar.",
+  "phName": "El teu nom",
+  "pinFut": "Fixada: tindràs {y} anys. D'aquí a {w} setmanes.",
+  "pinHint": "Passa-hi per sobre per veure qualsevol setmana. Fes clic per fixar-la.",
+  "pinPast": "Fixada: tenies {y} anys. Fa {w} setmanes.",
+  "play": "Recórrer una vida sencera",
+  "playNote": "O arrossega sobre el gràfic. Toca una sèrie per veure-la sola.",
+  "priv": "Tot es calcula al teu navegador. No s'envia ni es desa res.",
+  "prog": "{d} de {t} enviats.",
+  "progAll": "Ja està: això és l'únic que canviava alguna cosa.",
+  "progLeft": "Els que falten segueixen comptant enrere.",
+  "qAge": "Quants anys tens?",
+  "qName": "Com et dius?",
+  "realT": "El que surt del compte",
+  "rel_amigos": "Amistat",
+  "rel_familia": "Família",
+  "rel_hijos": "Fill o filla",
+  "rel_otros": "Un altre vincle",
+  "rel_pareja": "Parella",
+  "remove": "treu",
+  "resSub": "Arrossega una barra i mira com s'omple el paper. Cada casella nova són set trobades més.",
+  "restart": "Tornar al present",
+  "rf1": "El número que acabes de veure no és exacte. Surt de mitjanes de població, i a tu et tocarà la teva pròpia versió.",
+  "rf2": "El que sí és exacte és la direcció. Baixa cada dia, i baixa igual si no ho mires.",
+  "rf3": "I baixa sense avisar. L'última vegada de totes la viuràs sense saber que era aquella.",
+  "rf4": "Només puja d'una manera: apareixent. No hi ha cap altre mètode.",
+  "rf5": "Comença avui. Demà el número d'aquesta pantalla ja és més baix.",
+  "rfNo": "Avui no l'has pujat. Encara ets a temps de tornar enrere i moure una sola barra.",
+  "rfUp": "Avui has decidit pujar-lo {n} setmanes. Que no es quedi a la pantalla.",
+  "runD": "{n} dies seguits",
+  "runM": "{n} mesos seguits",
+  "runY": "{n} anys seguits",
+  "sec0": "Portada",
+  "sec1": "La resta",
+  "sec2": "El repartiment",
+  "sec3": "El recompte",
+  "sec4": "L'altre costat",
+  "sec5": "La decisió",
+  "sec6": "El missatge",
+  "sec7": "El saldo",
+  "sentB": "Enviat",
+  "ser_amigos": "Amics",
+  "ser_familia": "Família d'origen",
+  "ser_hijos": "Fills",
+  "ser_pareja": "Parella",
+  "ser_solo": "Sol",
+  "ser_trabajo": "Companys",
+  "sig1": "Fet per Kai.",
+  "sig2": "No per compartir-ho. Per quedar-te una estona en silenci i després escriure a algú.",
+  "skip": "Salta",
+  "sound": "So",
+  "soundOn": "So actiu",
+  "src": "Corbes aproximades a la forma de l'American Time Use Survey. Són mitjanes de població, no una predicció.",
+  "srcA": "Enquesta d'Ús del Temps (ATUS)",
+  "srcB": "Our World in Data",
+  "start": "Comença",
+  "startNote": "Cinc minuts. Millor amb calma i amb so.",
+  "stop": "Atura",
+  "t1": "Comencem pel que ja has gastat.",
+  "t2": "Amb qui passa els dies la gent, any rere any.",
+  "t3": "Aquí la tens sencera.",
+  "t3det": "Et queden {y} estius i {w} dissabtes.",
+  "t3n": "Aquí la tens sencera, {n}.",
+  "t4": "El mateix compte, amb els seus anys.",
+  "t5": "La inèrcia decideix per defecte. Canvia-la.",
+  "t6": "Un número no canvia res. Un missatge sí.",
+  "t7": "El que queda quan s'apaga tota la resta.",
+  "t7n": "{n}, això és el que queda encès.",
+  "theirAge": "La seva edat:",
+  "tipFree": "<b>{y} anys</b><br>lliure",
+  "tipFut": "<b>{y} anys</b><br>d'aquí a {w} setmanes",
+  "tipGain": "<b>El que guanyes</b><br>set trobades més",
+  "tipMeet": "<b>Aquí us veieu</b><br>set trobades vostres",
+  "tipNow": "<b>Ja ho feu</b>",
+  "tipPast": "<b>{y} anys</b><br>fa {w} setmanes",
+  "tipTF": "<b>{y} anys</b><br>sense vosaltres a dins",
+  "tipTP": "<b>{y} anys</b><br>ja ho ha viscut",
+  "unitLine": "≈ {n} {u} més",
+  "unit_amigos": "cafès",
+  "unit_familia": "dinars junts",
+  "unit_hijos": "tardes amb tu",
+  "unit_otros": "converses",
+  "unit_pareja": "nits al seu costat",
+  "wa": "Obre al WhatsApp",
+  "warm": "Càlid",
+  "years": "anys",
+  "you": "tu",
+  "zLived": "ja viscut",
+  "zToLive": "per viure"
+ },
+ "en": {
+  "add": "Add",
+  "addHint": "Up to five people. The ones you feel you see less than you would like.",
+  "addP": "Add someone",
+  "ann1": "you leave home",
+  "ann2": "peak of the children",
+  "ann3": "work fades out",
+  "axAge": "age",
+  "axH": "hours per day",
+  "back": "Back",
+  "cancel": "Cancel",
+  "cellNote": "seven meetings · one whole week together",
+  "cont": "Continue",
+  "copied": "Copied",
+  "copy": "Copy",
+  "copyFail": "Copy it by hand",
+  "copySum": "Copy the summary",
+  "credFoot": "Inspired by Kairós Project, by @javiyawe",
+  "credMine": "This version is written from scratch by Kai: its own code, text, design and sound. Same question, different treatment.",
+  "credMore": "more of their work",
+  "credOrig": "Inspired by Kairós Project, the original experience by",
+  "credit": "Made by Kai · to stop and think",
+  "direct": "Direct",
+  "e1": "Starting point",
+  "e2": "The current",
+  "e3": "The sheet",
+  "e4": "Their clock",
+  "e5": "Inertia",
+  "e6": "Tuesday",
+  "e7": "The count",
+  "empty": "Nobody here yet. Start with whoever you see least.",
+  "endSub": "Whole weeks you have left together. Each square is seven real meetings.",
+  "endTip": "<b>{n}</b><br>seven meetings",
+  "endTipNo": "<b>age {y}</b><br>nobody listed",
+  "errName": "I need your name before I can talk to you about your life.",
+  "errName2": "Write a name to continue.",
+  "fMax": "daily",
+  "fMin": "1/year",
+  "frq_b": "Every two months",
+  "frq_d": "Almost daily",
+  "frq_m": "Once a month",
+  "frq_m2": "A couple of times a month",
+  "frq_q": "Every two weeks",
+  "frq_t": "A couple of times a year",
+  "frq_w": "Once a week",
+  "frq_w3": "Several times a week",
+  "frq_y": "Once a year",
+  "fullW": "whole weeks",
+  "gBody": "Find somewhere quiet and turn the sound up.",
+  "gBtn": "I am ready",
+  "gPriv": "Everything is calculated in here. Nothing goes to a server, and it disappears when you close the tab.",
+  "gTick": "seconds you have been here. They do not come back.",
+  "gTitle": "You might not like the result.",
+  "gone": "None of this has been saved. Close the tab and it is gone.",
+  "h1": "How many more times you will see the people you love.",
+  "hAge": "The years you have are, precisely, the ones you no longer have.",
+  "heroAlt": "Leave it for another day",
+  "heroAltMsg": "That is exactly what everybody does. It is why inertia always wins.",
+  "icsB": "Block the date",
+  "icsTitle": "See {n}",
+  "illT": "What you usually think",
+  "ill_amigos": "That friendship keeps itself going, without dates.",
+  "ill_familia": "That they will always be there. Nobody contradicts it until it is no longer possible.",
+  "ill_hijos": "That the stage where they seek you out will last.",
+  "ill_otros": "That there will be a better moment than this one.",
+  "ill_pareja": "That living together already counts as seeing each other.",
+  "in2s": "Before we work out your case, {n}, we need a starting point. This is how people split their time at each age, according to the data. Nobody chooses it: their age chooses it.",
+  "in2t": "The split",
+  "in3s": "Now you, {n}. We are going to subtract what you have already spent. Each square is a week of your life: the full ones do not come back, and the empty ones are the only thing you can do anything with.",
+  "in3t": "The count",
+  "in4s": "Step out of your own count for a moment, {n}, and into theirs. This is their entire life, with everything still ahead of them. The coloured squares are the times you appear in it. That is all the room you are going to take up.",
+  "in4t": "The other side",
+  "in5s": "Up to here it was data, {n}. Now you decide. Change how often you meet and see exactly how much time you are taking back from inertia.",
+  "in5t": "The decision",
+  "in6s": "You have the number, {n}. The number is useless. What is useful is the message that leaves here today.",
+  "in6t": "The message",
+  "in7s": "This is what you saved, {n}. We turn everything else off so that only this is visible.",
+  "in7t": "The balance",
+  "lang": "English",
+  "langT": "Language",
+  "lede": "By 18, the split is already settled: almost all the time you will spend with your parents was used up earlier. What is left over is little, and it is the part you can decide.",
+  "lede6": "Edit them and send them today. Tomorrow the count is already shorter.",
+  "lgLived": "Lived",
+  "lgR2": "At today's rate",
+  "lgR3": "What you gain",
+  "lgT1": "What they have lived",
+  "lgT2": "What they have left",
+  "lgT3": "One square = 7 meetings = one whole week together",
+  "lgToday": "Today",
+  "lgTodo": "Still to write",
+  "m1": "weeks spent",
+  "m2": "days lived",
+  "m3": "weeks ahead",
+  "m4": "of the 90-year horizon",
+  "mFreq": "How often do you really see each other?",
+  "mFreqH": "Count only the real ones: a meal, a proper visit, an unhurried talk. Not passing each other at home.",
+  "mReal": "{p} is {a}. You have {s} shared weeks left, but you will only be together in {c} of them: around {m} meetings. Laid end to end, they fit into {r}.",
+  "mReal0": "At that age the count leaves no margin. The reference horizon is 90 years.",
+  "mTheirAge": "How old are they?",
+  "mTitle": "Add someone",
+  "mWhat": "What are they to you?",
+  "mWho": "Who are they?",
+  "mWhoPh": "Their name",
+  "mark": "Mark as sent",
+  "maxP": "That is five",
+  "md_amigos": "{n}, enough of saying we should catch up. Give me a day in the next two weeks and I will lock it in.",
+  "md_familia": "Hi {n}. I worked out how many times we have left to see each other and it is fewer than I thought. What day this month works? I will block it.",
+  "md_hijos": "{n}, I want one afternoon with you every week. You pick the day and we do not move it.",
+  "md_otros": "Hi {n}. Shall we meet this month? Give me a day and I will put it in.",
+  "md_pareja": "{n}: I am proposing one fixed evening a week, just us. Starting this one. Thursday or Saturday?",
+  "mw_amigos": "{n}, we have been saying we should meet up for far too long. I am putting it in the calendar: give me two days that work for you.",
+  "mw_familia": "Hi {n}. I sat down and worked out how many times we actually see each other in a year, and it came out very low. I want to change that. Lunch this month?",
+  "mw_hijos": "{n}, I would like to do something together, just you and me, nothing else in the way. Tell me what you fancy and I will put it in.",
+  "mw_otros": "Hi {n}. I would like to see you properly, not in passing. Does an evening this week work?",
+  "mw_pareja": "{n}, I want to get back the moments where we are really there, no screens and no rush. Shall we keep one evening this week just for us?",
+  "next2": "Count my people",
+  "next3": "See it from their side",
+  "next4": "Take time back",
+  "next5": "Take the first step",
+  "next6": "Close the count",
+  "note": "Rough estimates based on general population data. The future is not written: this is a warning, not a verdict.",
+  "of": "of 4,680",
+  "of100": "of every 100 weeks you share",
+  "ph0n": "Everyone at once",
+  "ph0r": "Look how high everything is, {n}. Family and friends fill the same day. This is the peak of your life and it lasts very little.",
+  "ph1n": "The scattering",
+  "ph1r": "This is where the family line drops, {n}. You leave home and those hours never climb back up.",
+  "ph2n": "The narrowing",
+  "ph2r": "Partner, children and work take nearly all of it, {n}. Friends start depending on a calendar.",
+  "ph3n": "The plateau",
+  "ph3r": "For twelve years almost nothing moves, {n}. These are the years you notice least.",
+  "ph4n": "The retreat",
+  "ph4r": "The children line falls and work fades, {n}. Almost every hour you get back goes to the top line: alone.",
+  "ph5n": "What you watered",
+  "ph5r": "What is left is your partner, and being alone, {n}. The rest are visits somebody has to arrange.",
+  "phName": "Your name",
+  "pinFut": "Pinned: you will be {y}. That is {w} weeks from now.",
+  "pinHint": "Hover to read any week. Click to pin it.",
+  "pinPast": "Pinned: you were {y}. That was {w} weeks ago.",
+  "play": "Run through a whole life",
+  "playNote": "Or drag across the chart. Tap a line to see it alone.",
+  "priv": "Everything is calculated in your browser. Nothing is sent or stored.",
+  "prog": "{d} of {t} sent.",
+  "progAll": "That is it: that was the only part that changed anything.",
+  "progLeft": "The ones left are still counting down.",
+  "qAge": "How old are you?",
+  "qName": "What is your name?",
+  "realT": "What the count says",
+  "rel_amigos": "Friend",
+  "rel_familia": "Family",
+  "rel_hijos": "Child",
+  "rel_otros": "Someone else",
+  "rel_pareja": "Partner",
+  "remove": "remove",
+  "resSub": "Drag a bar and watch the paper fill. Every new square is seven more meetings.",
+  "restart": "Back to the present",
+  "rf1": "The number you just saw is not exact. It comes from population averages, and you will get your own version.",
+  "rf2": "What is exact is the direction. It drops every day, and it drops just the same if you never look.",
+  "rf3": "And it drops without warning. The very last time, you will live it without knowing it was that one.",
+  "rf4": "It only goes up one way: by showing up. There is no other method.",
+  "rf5": "Start today. Tomorrow the number on this screen is already lower.",
+  "rfNo": "Today you did not raise it. There is still time to go back and move a single bar.",
+  "rfUp": "Today you decided to raise it by {n} weeks. Do not let that stay on the screen.",
+  "runD": "{n} days in a row",
+  "runM": "{n} months in a row",
+  "runY": "{n} years in a row",
+  "sec0": "Cover",
+  "sec1": "The subtraction",
+  "sec2": "The split",
+  "sec3": "The count",
+  "sec4": "The other side",
+  "sec5": "The decision",
+  "sec6": "The message",
+  "sec7": "The balance",
+  "sentB": "Sent",
+  "ser_amigos": "Friends",
+  "ser_familia": "Family of origin",
+  "ser_hijos": "Children",
+  "ser_pareja": "Partner",
+  "ser_solo": "Alone",
+  "ser_trabajo": "Colleagues",
+  "sig1": "Made by Kai.",
+  "sig2": "Not to be shared. To sit with for a moment, and then write to someone.",
+  "skip": "Skip",
+  "sound": "Sound",
+  "soundOn": "Sound on",
+  "src": "Curves approximated to the shape of the American Time Use Survey. Population averages, not a prediction.",
+  "srcA": "American Time Use Survey",
+  "srcB": "Our World in Data",
+  "start": "Begin",
+  "startNote": "Five minutes. Better slowly, and with sound.",
+  "stop": "Stop",
+  "t1": "Let us begin with what you have already spent.",
+  "t2": "Who people spend their days with, year by year.",
+  "t3": "Here it is, whole.",
+  "t3det": "You have {y} summers and {w} Saturdays left.",
+  "t3n": "Here it is, whole, {n}.",
+  "t4": "The same count, using their years.",
+  "t5": "Inertia decides by default. Change it.",
+  "t6": "A number changes nothing. A message does.",
+  "t7": "What remains when everything else goes dark.",
+  "t7n": "{n}, this is what stays lit.",
+  "theirAge": "Their age:",
+  "tipFree": "<b>age {y}</b><br>free",
+  "tipFut": "<b>age {y}</b><br>{w} weeks from now",
+  "tipGain": "<b>What you gain</b><br>seven more meetings",
+  "tipMeet": "<b>You meet here</b><br>seven of your meetings",
+  "tipNow": "<b>You already do this</b>",
+  "tipPast": "<b>age {y}</b><br>{w} weeks ago",
+  "tipTF": "<b>age {y}</b><br>without you in it",
+  "tipTP": "<b>age {y}</b><br>already lived",
+  "unitLine": "≈ {n} more {u}",
+  "unit_amigos": "coffees",
+  "unit_familia": "meals together",
+  "unit_hijos": "afternoons with you",
+  "unit_otros": "conversations",
+  "unit_pareja": "nights beside them",
+  "wa": "Open in WhatsApp",
+  "warm": "Warm",
+  "years": "years old",
+  "you": "you",
+  "zLived": "already lived",
+  "zToLive": "still to live"
+ },
+ "fr": {
+  "add": "Ajouter",
+  "addHint": "Jusqu'à cinq personnes. Celles que tu sens voir moins que tu ne voudrais.",
+  "addP": "Ajouter quelqu'un",
+  "ann1": "tu quittes la maison",
+  "ann2": "pic des enfants",
+  "ann3": "le travail s'éteint",
+  "axAge": "âge",
+  "axH": "heures par jour",
+  "back": "Retour",
+  "cancel": "Annuler",
+  "cellNote": "sept rencontres · une semaine entière ensemble",
+  "cont": "Continuer",
+  "copied": "Copié",
+  "copy": "Copier",
+  "copyFail": "Copie-le à la main",
+  "copySum": "Copier le résumé",
+  "credFoot": "Inspiré de Kairós Project, de @javiyawe",
+  "credMine": "Cette version est écrite de zéro par Kai : code, textes, design et son propres. Même question, traitement différent.",
+  "credMore": "ses autres projets",
+  "credOrig": "Inspiré de Kairós Project, l'expérience originale de",
+  "credit": "Fait par Kai · pour s'arrêter et réfléchir",
+  "direct": "Direct",
+  "e1": "Point de départ",
+  "e2": "Le courant",
+  "e3": "La feuille",
+  "e4": "Son horloge",
+  "e5": "L'inertie",
+  "e6": "Le mardi",
+  "e7": "Le compte",
+  "empty": "Encore personne. Commence par celle que tu vois le moins.",
+  "endSub": "Semaines entières qu'il vous reste ensemble. Chaque case vaut sept vraies rencontres.",
+  "endTip": "<b>{n}</b><br>sept rencontres",
+  "endTipNo": "<b>{y} ans</b><br>personne de noté",
+  "errName": "J'ai besoin de ton prénom pour te parler de ta vie.",
+  "errName2": "Écris un prénom pour continuer.",
+  "fMax": "chaque jour",
+  "fMin": "1/an",
+  "frq_b": "Tous les deux mois",
+  "frq_d": "Presque tous les jours",
+  "frq_m": "Une fois par mois",
+  "frq_m2": "Deux fois par mois",
+  "frq_q": "Toutes les deux semaines",
+  "frq_t": "Deux ou trois fois par an",
+  "frq_w": "Une fois par semaine",
+  "frq_w3": "Plusieurs fois par semaine",
+  "frq_y": "Une fois par an",
+  "fullW": "semaines entières",
+  "gBody": "Trouve un endroit calme et monte le son.",
+  "gBtn": "Je suis prêt",
+  "gPriv": "Tout est calculé ici. Rien ne part vers un serveur, et tout disparaît à la fermeture de l'onglet.",
+  "gTick": "secondes que tu passes ici. Elles ne reviennent pas.",
+  "gTitle": "Le résultat risque de ne pas te plaire.",
+  "gone": "Rien de tout cela n'a été enregistré. En fermant l'onglet, tout disparaît.",
+  "h1": "Combien de fois encore tu verras les gens que tu aimes.",
+  "hAge": "Les années que tu as sont, exactement, celles que tu n'as plus.",
+  "heroAlt": "Remettre à un autre jour",
+  "heroAltMsg": "C'est exactement ce que fait tout le monde. C'est pour ça que l'inertie gagne toujours.",
+  "icsB": "Bloquer la date",
+  "icsTitle": "Voir {n}",
+  "illT": "Ce que tu te dis d'habitude",
+  "ill_amigos": "Que l'amitié tient toute seule, sans dates.",
+  "ill_familia": "Qu'elle sera toujours là. Personne ne te contredit tant que c'est encore possible.",
+  "ill_hijos": "Que la période où ils te cherchent va durer.",
+  "ill_otros": "Qu'il y aura bien un meilleur moment que celui-ci.",
+  "ill_pareja": "Que vivre ensemble compte déjà comme se voir.",
+  "in2s": "Avant de calculer ton cas, {n}, il faut un point de départ. Voici comment les gens partagent leur temps à chaque âge, selon les données. Personne ne le choisit : c'est son âge qui choisit.",
+  "in2t": "Le partage",
+  "in3s": "À toi, {n}. Nous allons soustraire ce que tu as déjà dépensé. Chaque case est une semaine de ta vie : les pleines ne reviennent pas, et les vides sont la seule chose avec laquelle tu peux agir.",
+  "in3t": "Le décompte",
+  "in4s": "Sors de ton compte un instant, {n}, et entre dans le sien. Voici sa vie entière, avec tout ce qui lui reste devant. Les cases colorées sont les fois où tu y apparais. C'est toute la place que tu vas y occuper.",
+  "in4t": "L'autre côté",
+  "in5s": "Jusqu'ici c'étaient des données, {n}. Maintenant c'est toi qui décides. Change la fréquence de vos rencontres et vois exactement ce que tu reprends à l'inertie.",
+  "in5t": "La décision",
+  "in6s": "Tu as le chiffre, {n}. Le chiffre ne sert à rien. Ce qui sert, c'est le message qui part d'ici aujourd'hui.",
+  "in6t": "Le message",
+  "in7s": "Voilà ce que tu as sauvé, {n}. On éteint tout le reste pour qu'on ne voie que ça.",
+  "in7t": "Le solde",
+  "lang": "Français",
+  "langT": "Langue",
+  "lede": "À 18 ans, le partage est déjà fait : presque tout le temps que tu passeras avec tes parents a été consommé avant. Ce qui reste est peu, et c'est la part que tu peux décider.",
+  "lede6": "Modifie-les et envoie-les aujourd'hui. Demain le compte sera déjà plus court.",
+  "lgLived": "Vécues",
+  "lgR2": "Au rythme actuel",
+  "lgR3": "Ce que tu gagnes",
+  "lgT1": "Ce qu'elle a déjà vécu",
+  "lgT2": "Ce qu'il lui reste",
+  "lgT3": "Une case = 7 rencontres = une semaine entière ensemble",
+  "lgToday": "Aujourd'hui",
+  "lgTodo": "À écrire",
+  "m1": "semaines dépensées",
+  "m2": "jours vécus",
+  "m3": "semaines devant toi",
+  "m4": "de l'horizon de 90 ans",
+  "mFreq": "Vous vous voyez vraiment tous les combien ?",
+  "mFreqH": "Ne compte que les vrais moments : un repas, une vraie visite, une conversation sans hâte. Pas le fait de se croiser.",
+  "mReal": "{p} a {a} ans. Il vous reste {s} semaines communes, mais vous ne serez ensemble que dans {c} : environ {m} rencontres. Mises bout à bout, elles tiennent dans {r}.",
+  "mReal0": "À cet âge le calcul ne laisse plus de marge. L'horizon de référence est de 90 ans.",
+  "mTheirAge": "Quel âge a cette personne ?",
+  "mTitle": "Ajouter quelqu'un",
+  "mWhat": "C'est qui pour toi ?",
+  "mWho": "Qui est-ce ?",
+  "mWhoPh": "Son prénom",
+  "mark": "Marquer envoyé",
+  "maxP": "Cela fait cinq",
+  "md_amigos": "{n}, assez de se dire qu'il faudrait se voir. Donne-moi un jour dans les deux prochaines semaines et je le bloque.",
+  "md_familia": "Salut {n}. J'ai calculé les fois qu'il nous reste à nous voir et c'est moins que je croyais. Quel jour ce mois-ci t'arrange ? Je le bloque.",
+  "md_hijos": "{n}, je veux un après-midi avec toi chaque semaine. Choisis le jour et on n'y touche plus.",
+  "md_otros": "Salut {n}. On se voit ce mois-ci ? Donne-moi un jour et je le note.",
+  "md_pareja": "{n} : je propose une soirée fixe par semaine, rien que nous. On commence cette semaine. Jeudi ou samedi ?",
+  "mw_amigos": "{n}, cela fait bien trop longtemps qu'on dit qu'il faut se voir. Je le mets au calendrier : donne-moi deux jours qui t'arrangent.",
+  "mw_familia": "Salut {n}. J'ai fait le compte des fois où l'on se voit dans l'année et c'est très peu. J'ai envie de changer ça. On déjeune ensemble ce mois-ci ?",
+  "mw_hijos": "{n}, j'ai envie qu'on fasse quelque chose ensemble, toi et moi, sans rien d'autre au milieu. Dis-moi ce qui te plaît et je le note.",
+  "mw_otros": "Salut {n}. J'aimerais qu'on se voie tranquillement, pas en passant. Une soirée cette semaine ?",
+  "mw_pareja": "{n}, je veux retrouver les moments où l'on est vraiment là, sans écrans ni précipitation. On se garde une soirée fixe cette semaine, rien que pour nous ?",
+  "next2": "Compter les miens",
+  "next3": "Le voir de son côté",
+  "next4": "Récupérer du temps",
+  "next5": "Faire le premier pas",
+  "next6": "Fermer le compte",
+  "note": "Estimations indicatives à partir de données générales de population. L'avenir n'est pas écrit : ceci est un avertissement, pas une sentence.",
+  "of": "sur 4 680",
+  "of100": "sur 100 semaines que vous partagez",
+  "ph0n": "Tout le monde à la fois",
+  "ph0r": "Regarde comme tout est haut, {n}. Famille et amis occupent la même journée. C'est le maximum de ta vie et ça dure très peu.",
+  "ph1n": "La dispersion",
+  "ph1r": "C'est ici que la courbe de la famille chute, {n}. Tu quittes la maison et ces heures ne remontent jamais.",
+  "ph2n": "Le rétrécissement",
+  "ph2r": "Le conjoint, les enfants et le travail prennent presque tout, {n}. Les amis se mettent à dépendre d'un agenda.",
+  "ph3n": "Le plateau",
+  "ph3r": "Pendant douze ans presque rien ne bouge, {n}. Ce sont les années qu'on sent le moins passer.",
+  "ph4n": "Le repli",
+  "ph4r": "Les enfants descendent, le travail s'éteint, {n}. Presque toutes les heures récupérées vont à la courbe du haut : seul.",
+  "ph5n": "Ce que tu as arrosé",
+  "ph5r": "Il reste le conjoint, et le fait d'être seul, {n}. Le reste, ce sont des visites que quelqu'un doit organiser.",
+  "phName": "Ton prénom",
+  "pinFut": "Fixée : tu auras {y} ans. Dans {w} semaines.",
+  "pinHint": "Survole pour lire n'importe quelle semaine. Clique pour la fixer.",
+  "pinPast": "Fixée : tu avais {y} ans. Il y a {w} semaines.",
+  "play": "Parcourir une vie entière",
+  "playNote": "Ou fais glisser sur le graphique. Touche une courbe pour la voir seule.",
+  "priv": "Tout est calculé dans ton navigateur. Rien n'est envoyé ni conservé.",
+  "prog": "{d} sur {t} envoyés.",
+  "progAll": "Voilà : c'était la seule chose qui changeait quelque chose.",
+  "progLeft": "Ceux qui restent continuent de compter à rebours.",
+  "qAge": "Quel âge as-tu ?",
+  "qName": "Comment t'appelles-tu ?",
+  "realT": "Ce que dit le calcul",
+  "rel_amigos": "Ami",
+  "rel_familia": "Famille",
+  "rel_hijos": "Enfant",
+  "rel_otros": "Autre lien",
+  "rel_pareja": "Conjoint",
+  "remove": "retirer",
+  "resSub": "Fais glisser une barre et regarde le papier se remplir. Chaque case nouvelle vaut sept rencontres de plus.",
+  "restart": "Revenir au présent",
+  "rf1": "Le chiffre que tu viens de voir n'est pas exact. Il vient de moyennes de population, et toi tu auras ta propre version.",
+  "rf2": "Ce qui est exact, c'est la direction. Il baisse tous les jours, et il baisse pareil si tu ne le regardes jamais.",
+  "rf3": "Et il baisse sans prévenir. La toute dernière fois, tu la vivras sans savoir que c'était celle-là.",
+  "rf4": "Il ne monte que d'une façon : en venant. Il n'y a pas d'autre méthode.",
+  "rf5": "Commence aujourd'hui. Demain le chiffre de cet écran est déjà plus bas.",
+  "rfNo": "Aujourd'hui tu ne l'as pas monté. Tu as encore le temps de revenir en arrière et de bouger une seule barre.",
+  "rfUp": "Aujourd'hui tu as décidé de le monter de {n} semaines. Que cela ne reste pas sur l'écran.",
+  "runD": "{n} jours d'affilée",
+  "runM": "{n} mois d'affilée",
+  "runY": "{n} ans d'affilée",
+  "sec0": "Couverture",
+  "sec1": "La soustraction",
+  "sec2": "Le partage",
+  "sec3": "Le décompte",
+  "sec4": "L'autre côté",
+  "sec5": "La décision",
+  "sec6": "Le message",
+  "sec7": "Le solde",
+  "sentB": "Envoyé",
+  "ser_amigos": "Amis",
+  "ser_familia": "Famille d'origine",
+  "ser_hijos": "Enfants",
+  "ser_pareja": "Conjoint",
+  "ser_solo": "Seul",
+  "ser_trabajo": "Collègues",
+  "sig1": "Fait par Kai.",
+  "sig2": "Pas pour le partager. Pour rester un moment en silence, puis écrire à quelqu'un.",
+  "skip": "Passer",
+  "sound": "Son",
+  "soundOn": "Son activé",
+  "src": "Courbes approchant la forme de l'American Time Use Survey. Des moyennes de population, pas une prédiction.",
+  "srcA": "American Time Use Survey",
+  "srcB": "Our World in Data",
+  "start": "Commencer",
+  "startNote": "Cinq minutes. Mieux vaut du calme, et le son.",
+  "stop": "Arrêter",
+  "t1": "Commençons par ce que tu as déjà dépensé.",
+  "t2": "Avec qui les gens passent leurs journées, année après année.",
+  "t3": "La voilà, entière.",
+  "t3det": "Il te reste {y} étés et {w} samedis.",
+  "t3n": "La voilà entière, {n}.",
+  "t4": "Le même calcul, avec ses années.",
+  "t5": "L'inertie décide par défaut. Change-la.",
+  "t6": "Un chiffre ne change rien. Un message, si.",
+  "t7": "Ce qui reste quand tout le reste s'éteint.",
+  "t7n": "{n}, voilà ce qui reste allumé.",
+  "theirAge": "Son âge :",
+  "tipFree": "<b>{y} ans</b><br>libre",
+  "tipFut": "<b>{y} ans</b><br>dans {w} semaines",
+  "tipGain": "<b>Ce que tu gagnes</b><br>sept rencontres de plus",
+  "tipMeet": "<b>Vous vous voyez ici</b><br>sept de vos rencontres",
+  "tipNow": "<b>Vous le faites déjà</b>",
+  "tipPast": "<b>{y} ans</b><br>il y a {w} semaines",
+  "tipTF": "<b>{y} ans</b><br>sans vous dedans",
+  "tipTP": "<b>{y} ans</b><br>déjà vécu",
+  "unitLine": "≈ {n} {u} de plus",
+  "unit_amigos": "cafés",
+  "unit_familia": "repas ensemble",
+  "unit_hijos": "après-midi avec toi",
+  "unit_otros": "conversations",
+  "unit_pareja": "nuits à ses côtés",
+  "wa": "Ouvrir dans WhatsApp",
+  "warm": "Chaleureux",
+  "years": "ans",
+  "you": "toi",
+  "zLived": "déjà vécu",
+  "zToLive": "à vivre"
+ },
+ "de": {
+  "add": "Hinzufügen",
+  "addHint": "Bis zu fünf Personen. Die, die du seltener siehst, als du möchtest.",
+  "addP": "Person hinzufügen",
+  "ann1": "du ziehst aus",
+  "ann2": "Höhepunkt der Kinder",
+  "ann3": "die Arbeit verklingt",
+  "axAge": "Alter",
+  "axH": "Stunden pro Tag",
+  "back": "Zurück",
+  "cancel": "Abbrechen",
+  "cellNote": "sieben Begegnungen · eine ganze Woche zusammen",
+  "cont": "Weiter",
+  "copied": "Kopiert",
+  "copy": "Kopieren",
+  "copyFail": "Von Hand kopieren",
+  "copySum": "Zusammenfassung kopieren",
+  "credFoot": "Inspiriert von Kairós Project, von @javiyawe",
+  "credMine": "Diese Fassung ist von Kai von Grund auf neu geschrieben: eigener Code, eigene Texte, eigenes Design und eigener Ton. Gleiche Frage, andere Umsetzung.",
+  "credMore": "mehr von ihm",
+  "credOrig": "Inspiriert von Kairós Project, dem Original von",
+  "credit": "Von Kai · zum Innehalten",
+  "direct": "Direkt",
+  "e1": "Ausgangspunkt",
+  "e2": "Die Strömung",
+  "e3": "Das Blatt",
+  "e4": "Ihre Uhr",
+  "e5": "Die Trägheit",
+  "e6": "Der Dienstag",
+  "e7": "Die Rechnung",
+  "empty": "Noch niemand da. Fang mit dem an, den du am seltensten siehst.",
+  "endSub": "Ganze Wochen, die euch gemeinsam bleiben. Jedes Kästchen sind sieben echte Begegnungen.",
+  "endTip": "<b>{n}</b><br>sieben Begegnungen",
+  "endTipNo": "<b>{y} Jahre</b><br>niemand eingetragen",
+  "errName": "Ich brauche deinen Namen, um über dein Leben sprechen zu können.",
+  "errName2": "Schreib einen Namen, um weiterzumachen.",
+  "fMax": "täglich",
+  "fMin": "1/Jahr",
+  "frq_b": "Alle zwei Monate",
+  "frq_d": "Fast täglich",
+  "frq_m": "Einmal im Monat",
+  "frq_m2": "Ein paarmal im Monat",
+  "frq_q": "Alle zwei Wochen",
+  "frq_t": "Ein paarmal im Jahr",
+  "frq_w": "Einmal pro Woche",
+  "frq_w3": "Mehrmals pro Woche",
+  "frq_y": "Einmal im Jahr",
+  "fullW": "ganze Wochen",
+  "gBody": "Such dir einen ruhigen Ort und dreh den Ton auf.",
+  "gBtn": "Ich bin bereit",
+  "gPriv": "Alles wird hier drin berechnet. Nichts geht an einen Server, und beim Schließen des Tabs ist es weg.",
+  "gTick": "Sekunden bist du schon hier. Sie kommen nicht zurück.",
+  "gTitle": "Das Ergebnis wird dir vielleicht nicht gefallen.",
+  "gone": "Nichts davon wurde gespeichert. Schließt du den Tab, ist es weg.",
+  "h1": "Wie oft du die Menschen, die du liebst, noch sehen wirst.",
+  "hAge": "Die Jahre, die du hast, sind genau die, die du nicht mehr hast.",
+  "heroAlt": "Auf einen anderen Tag verschieben",
+  "heroAltMsg": "Genau das machen alle. Deshalb gewinnt die Trägheit immer.",
+  "icsB": "Termin blocken",
+  "icsTitle": "{n} sehen",
+  "illT": "Was du dir meistens sagst",
+  "ill_amigos": "Dass Freundschaft von allein hält, ohne Termine.",
+  "ill_familia": "Dass sie immer da sein wird. Niemand widerspricht dir, solange es noch geht.",
+  "ill_hijos": "Dass die Zeit, in der sie dich suchen, andauert.",
+  "ill_otros": "Dass es schon einen besseren Moment als diesen geben wird.",
+  "ill_pareja": "Dass Zusammenwohnen schon zählt wie Sehen.",
+  "in2s": "Bevor wir deinen Fall rechnen, {n}, brauchen wir einen Ausgangspunkt. So teilen Menschen ihre Zeit in jedem Alter auf, laut den Daten. Niemand wählt das: das Alter wählt.",
+  "in2t": "Die Aufteilung",
+  "in3s": "Jetzt du, {n}. Wir ziehen ab, was du schon ausgegeben hast. Jedes Kästchen ist eine Woche deines Lebens: die vollen kommen nicht zurück, und die leeren sind das Einzige, womit du etwas tun kannst.",
+  "in3t": "Die Zählung",
+  "in4s": "Verlass deine Rechnung für einen Moment, {n}, und geh in ihre. Das ist ihr ganzes Leben, mit allem, was noch vor ihr liegt. Die farbigen Kästchen sind die Male, in denen du darin vorkommst. Das ist der ganze Platz, den du darin einnehmen wirst.",
+  "in4t": "Die andere Seite",
+  "in5s": "Bis hierher waren es Daten, {n}. Jetzt entscheidest du. Ändere, wie oft ihr euch seht, und sieh genau, wie viel Zeit du der Trägheit abnimmst.",
+  "in5t": "Die Entscheidung",
+  "in6s": "Du hast die Zahl, {n}. Die Zahl nützt nichts. Was nützt, ist die Nachricht, die heute hier hinausgeht.",
+  "in6t": "Die Nachricht",
+  "in7s": "Das hier hast du gerettet, {n}. Wir schalten alles andere aus, damit nur das zu sehen ist.",
+  "in7t": "Der Saldo",
+  "lang": "Deutsch",
+  "langT": "Sprache",
+  "lede": "Mit 18 steht die Aufteilung schon fest: fast die ganze Zeit, die du mit deinen Eltern verbringen wirst, war vorher schon verbraucht. Was übrig bleibt, ist wenig, und es ist der Teil, über den du entscheiden kannst.",
+  "lede6": "Ändere sie und schick sie heute. Morgen ist die Rechnung schon kürzer.",
+  "lgLived": "Gelebt",
+  "lgR2": "Im jetzigen Tempo",
+  "lgR3": "Was du gewinnst",
+  "lgT1": "Was sie schon gelebt hat",
+  "lgT2": "Was ihr bleibt",
+  "lgT3": "Ein Kästchen = 7 Begegnungen = eine ganze Woche zusammen",
+  "lgToday": "Heute",
+  "lgTodo": "Noch zu schreiben",
+  "m1": "verbrauchte Wochen",
+  "m2": "gelebte Tage",
+  "m3": "Wochen vor dir",
+  "m4": "des 90-Jahre-Horizonts",
+  "mFreq": "Wie oft seht ihr euch wirklich?",
+  "mFreqH": "Zähl nur die echten Male: ein Essen, ein richtiger Besuch, ein Gespräch ohne Eile. Nicht das Aneinander-vorbei zu Hause.",
+  "mReal": "{p} ist {a}. Euch bleiben {s} gemeinsame Wochen, aber zusammen seid ihr nur in {c}: etwa {m} Begegnungen. Aneinandergelegt passen sie in {r}.",
+  "mReal0": "In diesem Alter lässt die Rechnung keinen Spielraum. Der Bezugshorizont sind 90 Jahre.",
+  "mTheirAge": "Wie alt ist die Person?",
+  "mTitle": "Jemanden hinzufügen",
+  "mWhat": "Was ist die Person für dich?",
+  "mWho": "Wer ist das?",
+  "mWhoPh": "Ihr Name",
+  "mark": "Als gesendet markieren",
+  "maxP": "Das sind fünf",
+  "md_amigos": "{n}, Schluss damit, dass wir uns mal treffen sollten. Nenn mir einen Tag in den nächsten zwei Wochen, und ich mache ihn fest.",
+  "md_familia": "Hallo {n}. Ich habe ausgerechnet, wie oft wir uns noch sehen, und es sind weniger, als ich dachte. Welcher Tag diesen Monat passt dir? Ich blocke ihn.",
+  "md_hijos": "{n}, ich will jede Woche einen Nachmittag mit dir. Such du den Tag aus, und wir verschieben ihn nicht.",
+  "md_otros": "Hallo {n}. Sehen wir uns diesen Monat? Nenn mir einen Tag und ich trage ihn ein.",
+  "md_pareja": "{n}: Ich schlage einen festen Abend pro Woche vor, nur wir. Wir fangen diese Woche an. Donnerstag oder Samstag?",
+  "mw_amigos": "{n}, wir sagen schon viel zu lange, dass wir uns treffen müssen. Ich trage es ein: nenn mir zwei Tage, die dir passen.",
+  "mw_familia": "Hallo {n}. Ich habe nachgerechnet, wie oft wir uns im Jahr sehen, und es sind sehr wenige Male. Das will ich ändern. Essen wir diesen Monat zusammen?",
+  "mw_hijos": "{n}, ich hätte Lust, etwas mit dir zu machen, nur wir zwei, ohne alles andere dazwischen. Sag mir, worauf du Lust hast, und ich trage es ein.",
+  "mw_otros": "Hallo {n}. Ich würde dich gern in Ruhe sehen, nicht im Vorbeigehen. Passt dir ein Abend diese Woche?",
+  "mw_pareja": "{n}, ich will die Momente zurück, in denen wir wirklich da sind, ohne Bildschirme und ohne Eile. Halten wir uns diese Woche einen festen Abend frei, nur für uns?",
+  "next2": "Meine Menschen zählen",
+  "next3": "Von ihrer Seite ansehen",
+  "next4": "Zeit zurückholen",
+  "next5": "Den ersten Schritt tun",
+  "next6": "Rechnung abschließen",
+  "note": "Grobe Schätzungen auf Basis allgemeiner Bevölkerungsdaten. Die Zukunft steht nicht fest: das hier ist eine Warnung, kein Urteil.",
+  "of": "von 4.680",
+  "of100": "von je 100 Wochen, die ihr teilt",
+  "ph0n": "Alle auf einmal",
+  "ph0r": "Sieh, wie hoch alles steht, {n}. Familie und Freunde füllen denselben Tag. Das ist das Maximum deines Lebens, und es dauert sehr kurz.",
+  "ph1n": "Die Zerstreuung",
+  "ph1r": "Hier fällt die Familienlinie ab, {n}. Du ziehst aus, und diese Stunden steigen nie wieder.",
+  "ph2n": "Die Verengung",
+  "ph2r": "Partner, Kinder und Arbeit nehmen fast alles, {n}. Freunde hängen ab jetzt von einem Kalender ab.",
+  "ph3n": "Das Plateau",
+  "ph3r": "Zwölf Jahre lang bewegt sich fast nichts, {n}. Es sind die Jahre, die man am wenigsten vergehen spürt.",
+  "ph4n": "Der Rückzug",
+  "ph4r": "Die Kinderlinie sinkt, die Arbeit verklingt, {n}. Fast jede zurückgewonnene Stunde geht an die oberste Linie: allein.",
+  "ph5n": "Was du gegossen hast",
+  "ph5r": "Es bleiben der Partner und das Alleinsein, {n}. Der Rest sind Besuche, die jemand organisieren muss.",
+  "phName": "Dein Name",
+  "pinFut": "Festgehalten: da bist du {y}. In {w} Wochen.",
+  "pinHint": "Fahr darüber, um eine Woche zu lesen. Klick, um sie festzuhalten.",
+  "pinPast": "Festgehalten: da warst du {y}. Vor {w} Wochen.",
+  "play": "Ein ganzes Leben durchlaufen",
+  "playNote": "Oder zieh über das Diagramm. Tippe eine Linie an, um sie allein zu sehen.",
+  "priv": "Alles wird in deinem Browser berechnet. Nichts wird gesendet oder gespeichert.",
+  "prog": "{d} von {t} gesendet.",
+  "progAll": "Das war es: nur das hat wirklich etwas geändert.",
+  "progLeft": "Die übrigen zählen weiter rückwärts.",
+  "qAge": "Wie alt bist du?",
+  "qName": "Wie heißt du?",
+  "realT": "Was die Rechnung sagt",
+  "rel_amigos": "Freund",
+  "rel_familia": "Familie",
+  "rel_hijos": "Kind",
+  "rel_otros": "Andere Bindung",
+  "rel_pareja": "Partner",
+  "remove": "entfernen",
+  "resSub": "Zieh an einem Regler und sieh das Papier sich füllen. Jedes neue Kästchen sind sieben Begegnungen mehr.",
+  "restart": "Zurück in die Gegenwart",
+  "rf1": "Die Zahl, die du gerade gesehen hast, ist nicht exakt. Sie kommt aus Bevölkerungsmitteln, und du bekommst deine eigene Version.",
+  "rf2": "Exakt ist die Richtung. Sie sinkt jeden Tag, und sie sinkt genauso, wenn du nie hinsiehst.",
+  "rf3": "Und sie sinkt ohne Warnung. Das allerletzte Mal erlebst du, ohne zu wissen, dass es dieses war.",
+  "rf4": "Sie steigt nur auf eine Weise: indem du auftauchst. Es gibt keine andere Methode.",
+  "rf5": "Fang heute an. Morgen ist die Zahl auf diesem Bildschirm schon niedriger.",
+  "rfNo": "Heute hast du sie nicht erhöht. Du hast noch Zeit, zurückzugehen und einen einzigen Regler zu bewegen.",
+  "rfUp": "Heute hast du beschlossen, sie um {n} Wochen zu erhöhen. Lass das nicht auf dem Bildschirm liegen.",
+  "runD": "{n} Tage am Stück",
+  "runM": "{n} Monate am Stück",
+  "runY": "{n} Jahre am Stück",
+  "sec0": "Titel",
+  "sec1": "Die Subtraktion",
+  "sec2": "Die Aufteilung",
+  "sec3": "Die Zählung",
+  "sec4": "Die andere Seite",
+  "sec5": "Die Entscheidung",
+  "sec6": "Die Nachricht",
+  "sec7": "Der Saldo",
+  "sentB": "Gesendet",
+  "ser_amigos": "Freunde",
+  "ser_familia": "Herkunftsfamilie",
+  "ser_hijos": "Kinder",
+  "ser_pareja": "Partner",
+  "ser_solo": "Allein",
+  "ser_trabajo": "Kollegen",
+  "sig1": "Von Kai gemacht.",
+  "sig2": "Nicht zum Teilen. Um kurz still zu sitzen und danach jemandem zu schreiben.",
+  "skip": "Überspringen",
+  "sound": "Ton",
+  "soundOn": "Ton an",
+  "src": "Kurven, angenähert an die Form der American Time Use Survey. Bevölkerungsmittel, keine Vorhersage.",
+  "srcA": "American Time Use Survey",
+  "srcB": "Our World in Data",
+  "start": "Anfangen",
+  "startNote": "Fünf Minuten. Besser in Ruhe und mit Ton.",
+  "stop": "Anhalten",
+  "t1": "Fangen wir mit dem an, was du schon ausgegeben hast.",
+  "t2": "Mit wem Menschen ihre Tage verbringen, Jahr für Jahr.",
+  "t3": "Hier ist es, ganz.",
+  "t3det": "Dir bleiben {y} Sommer und {w} Samstage.",
+  "t3n": "Hier ist es ganz, {n}.",
+  "t4": "Dieselbe Rechnung, mit ihren Jahren.",
+  "t5": "Die Trägheit entscheidet von selbst. Ändere das.",
+  "t6": "Eine Zahl ändert nichts. Eine Nachricht schon.",
+  "t7": "Was bleibt, wenn alles andere erlischt.",
+  "t7n": "{n}, das hier bleibt an.",
+  "theirAge": "Ihr Alter:",
+  "tipFree": "<b>{y} Jahre</b><br>frei",
+  "tipFut": "<b>{y} Jahre</b><br>in {w} Wochen",
+  "tipGain": "<b>Was du gewinnst</b><br>sieben Begegnungen mehr",
+  "tipMeet": "<b>Hier seht ihr euch</b><br>sieben eurer Begegnungen",
+  "tipNow": "<b>Das macht ihr schon</b>",
+  "tipPast": "<b>{y} Jahre</b><br>vor {w} Wochen",
+  "tipTF": "<b>{y} Jahre</b><br>ohne euch darin",
+  "tipTP": "<b>{y} Jahre</b><br>schon gelebt",
+  "unitLine": "≈ {n} {u} mehr",
+  "unit_amigos": "Kaffees",
+  "unit_familia": "gemeinsame Essen",
+  "unit_hijos": "Nachmittage mit dir",
+  "unit_otros": "Gespräche",
+  "unit_pareja": "Nächte an ihrer Seite",
+  "wa": "In WhatsApp öffnen",
+  "warm": "Warm",
+  "years": "Jahre",
+  "you": "du",
+  "zLived": "schon gelebt",
+  "zToLive": "noch zu leben"
+ },
+ "it": {
+  "add": "Aggiungi",
+  "addHint": "Fino a cinque persone. Quelle che senti di vedere meno di quanto vorresti.",
+  "addP": "Aggiungi persona",
+  "ann1": "esci di casa",
+  "ann2": "picco dei figli",
+  "ann3": "il lavoro si spegne",
+  "axAge": "età",
+  "axH": "ore al giorno",
+  "back": "Indietro",
+  "cancel": "Annulla",
+  "cellNote": "sette incontri · una settimana intera insieme",
+  "cont": "Continua",
+  "copied": "Copiato",
+  "copy": "Copia",
+  "copyFail": "Copialo a mano",
+  "copySum": "Copia il riassunto",
+  "credFoot": "Ispirato a Kairós Project, di @javiyawe",
+  "credMine": "Questa versione è scritta da zero da Kai: codice, testi, design e suono propri. Stessa domanda, trattamento diverso.",
+  "credMore": "altri suoi lavori",
+  "credOrig": "Ispirato a Kairós Project, l'esperienza originale di",
+  "credit": "Fatto da Kai · per fermarsi a pensare",
+  "direct": "Diretto",
+  "e1": "Punto di partenza",
+  "e2": "La corrente",
+  "e3": "Il foglio",
+  "e4": "Il suo orologio",
+  "e5": "L'inerzia",
+  "e6": "Il martedì",
+  "e7": "Il conto",
+  "empty": "Ancora nessuno. Comincia da chi vedi meno.",
+  "endSub": "Settimane intere che vi restano insieme. Ogni casella sono sette incontri veri.",
+  "endTip": "<b>{n}</b><br>sette incontri",
+  "endTipNo": "<b>{y} anni</b><br>nessuno segnato",
+  "errName": "Mi serve il tuo nome per poterti parlare della tua vita.",
+  "errName2": "Scrivi un nome per continuare.",
+  "fMax": "ogni giorno",
+  "fMin": "1/anno",
+  "frq_b": "Ogni due mesi",
+  "frq_d": "Quasi ogni giorno",
+  "frq_m": "Una volta al mese",
+  "frq_m2": "Un paio di volte al mese",
+  "frq_q": "Ogni due settimane",
+  "frq_t": "Un paio di volte all'anno",
+  "frq_w": "Una volta a settimana",
+  "frq_w3": "Più volte a settimana",
+  "frq_y": "Una volta all'anno",
+  "fullW": "settimane intere",
+  "gBody": "Cerca un posto tranquillo e alza il suono.",
+  "gBtn": "Sono pronto",
+  "gPriv": "Tutto viene calcolato qui dentro. Non va a nessun server e sparisce chiudendo la scheda.",
+  "gTick": "secondi che sei qui. Non tornano.",
+  "gTitle": "Il risultato potrebbe non piacerti.",
+  "gone": "Niente di tutto questo è stato salvato. Chiudendo la scheda sparisce.",
+  "h1": "Quante volte ancora vedrai le persone che ami.",
+  "hAge": "Gli anni che hai sono, esattamente, quelli che non hai più.",
+  "heroAlt": "Rimandare a un altro giorno",
+  "heroAltMsg": "È esattamente quello che fanno tutti. Per questo l'inerzia vince sempre.",
+  "icsB": "Blocca la data",
+  "icsTitle": "Vedere {n}",
+  "illT": "Quello che di solito pensi",
+  "ill_amigos": "Che l'amicizia si mantiene da sola, senza date.",
+  "ill_familia": "Che ci sarà sempre. Nessuno ti contraddice finché è ancora possibile.",
+  "ill_hijos": "Che la fase in cui ti cercano durerà.",
+  "ill_otros": "Che ci sarà un momento migliore di questo.",
+  "ill_pareja": "Che vivere insieme conta già come vedersi.",
+  "in2s": "Prima di calcolare il tuo caso, {n}, serve un punto di partenza. Ecco come la gente divide il proprio tempo a ogni età, secondo i dati. Non lo scegle nessuno: lo scegle l'età che ha.",
+  "in2t": "La divisione",
+  "in3s": "Ora tu, {n}. Sottrarremo quello che hai già speso. Ogni quadrato è una settimana della tua vita: quelli pieni non tornano, e quelli vuoti sono l'unica cosa con cui puoi fare qualcosa.",
+  "in3t": "Il conteggio",
+  "in4s": "Esci dal tuo conto per un momento, {n}, ed entra nel suo. Questa è la sua vita intera, con tutto quello che le resta davanti. Le caselle colorate sono le volte in cui ci compari tu. Quello è tutto lo spazio che occuperai.",
+  "in4t": "L'altro lato",
+  "in5s": "Fin qui erano dati, {n}. Adesso decidi tu. Cambia ogni quanto vi vedete e guarda esattamente quanto tempo stai togliendo all'inerzia.",
+  "in5t": "La decisione",
+  "in6s": "Il numero ce l'hai, {n}. Il numero non serve a niente. Serve il messaggio che esce da qui oggi.",
+  "in6t": "Il messaggio",
+  "in7s": "Questo è quello che hai salvato, {n}. Spegniamo tutto il resto perché si veda solo quello.",
+  "in7t": "Il saldo",
+  "lang": "Italiano",
+  "langT": "Lingua",
+  "lede": "A 18 anni, la divisione è già fatta: quasi tutto il tempo che passerai con i tuoi genitori si è consumato prima. Quello che avanza è poco, ed è la parte che puoi decidere tu.",
+  "lede6": "Modificali e mandali oggi. Domani il conto sarà già più corto.",
+  "lgLived": "Vissute",
+  "lgR2": "Al ritmo di adesso",
+  "lgR3": "Quello che guadagni",
+  "lgT1": "Quello che ha già vissuto",
+  "lgT2": "Quello che le resta",
+  "lgT3": "Una casella = 7 incontri = una settimana intera insieme",
+  "lgToday": "Oggi",
+  "lgTodo": "Da scrivere",
+  "m1": "settimane spese",
+  "m2": "giorni vissuti",
+  "m3": "settimane davanti",
+  "m4": "dell'orizzonte di 90 anni",
+  "mFreq": "Ogni quanto vi vedete davvero?",
+  "mFreqH": "Conta solo i momenti veri: un pranzo, una visita vera, una chiacchierata senza fretta. Non l'incrociarsi in casa.",
+  "mReal": "{p} ha {a} anni. Vi restano {s} settimane condivise, ma sarete insieme solo in {c}: circa {m} incontri. Messi di fila, stanno in {r}.",
+  "mReal0": "Con quegli anni il conto non lascia margine. L'orizzonte di riferimento è 90 anni.",
+  "mTheirAge": "Quanti anni ha?",
+  "mTitle": "Aggiungi qualcuno",
+  "mWhat": "Che cosa è per te?",
+  "mWho": "Chi è?",
+  "mWhoPh": "Il suo nome",
+  "mark": "Segna inviato",
+  "maxP": "Sono già cinque",
+  "md_amigos": "{n}, basta dire che dovremmo vederci. Dimmi un giorno delle prossime due settimane e lo chiudo.",
+  "md_familia": "Ciao {n}. Ho calcolato quante volte ci restano da vederci e sono meno di quelle che pensavo. Che giorno di questo mese ti va bene? Lo blocco.",
+  "md_hijos": "{n}, voglio un pomeriggio con te ogni settimana. Scegli tu il giorno e non lo spostiamo.",
+  "md_otros": "Ciao {n}. Ci vediamo questo mese? Dimmi un giorno e lo segno.",
+  "md_pareja": "{n}: propongo una sera fissa a settimana, solo noi. Cominciamo questa. Giovedì o sabato?",
+  "mw_amigos": "{n}, è da troppo tempo che diciamo che dobbiamo vederci. Lo metto io in calendario: dimmi due giorni che ti vanno bene.",
+  "mw_familia": "Ciao {n}. Ho fatto due conti su quante volte ci vediamo in un anno e sono pochissime. Ho voglia di cambiarlo. Pranziamo insieme questo mese?",
+  "mw_hijos": "{n}, ho voglia di fare qualcosa insieme, io e te da soli, senza nient'altro in mezzo. Dimmi cosa ti va e lo segno.",
+  "mw_otros": "Ciao {n}. Mi piacerebbe vederci con calma, non di sfuggita. Ti va una sera di questa settimana?",
+  "mw_pareja": "{n}, voglio recuperare i momenti in cui ci siamo davvero, senza schermi né fretta. Ci teniamo una sera fissa questa settimana, solo per noi?",
+  "next2": "Contare i miei",
+  "next3": "Vederlo dal suo lato",
+  "next4": "Recuperare tempo",
+  "next5": "Fare il primo passo",
+  "next6": "Chiudere il conto",
+  "note": "Stime indicative da dati generali di popolazione. Il futuro non è scritto: questo è un avviso, non una sentenza.",
+  "of": "su 4.680",
+  "of100": "ogni 100 settimane che condividete",
+  "ph0n": "Tutti insieme",
+  "ph0r": "Guarda quanto è alto tutto, {n}. Famiglia e amici occupano lo stesso giorno. È il massimo della tua vita e dura pochissimo.",
+  "ph1n": "La dispersione",
+  "ph1r": "Qui la linea della famiglia crolla, {n}. Esci di casa e quelle ore non risalgono più.",
+  "ph2n": "Il restringimento",
+  "ph2r": "Partner, figli e lavoro si prendono quasi tutto, {n}. Gli amici passano a dipendere da un'agenda.",
+  "ph3n": "L'altopiano",
+  "ph3r": "Per dodici anni non si muove quasi niente, {n}. Sono gli anni che si sentono passare di meno.",
+  "ph4n": "Il ripiegamento",
+  "ph4r": "Scendono i figli e si spegne il lavoro, {n}. Quasi tutte le ore che recuperi vanno alla linea in alto: da solo.",
+  "ph5n": "Quello che hai innaffiato",
+  "ph5r": "Restano il partner e lo stare da solo, {n}. Il resto sono visite che qualcuno deve organizzare.",
+  "phName": "Il tuo nome",
+  "pinFut": "Fissata: avrai {y} anni. Fra {w} settimane.",
+  "pinHint": "Passa sopra per leggere una settimana qualsiasi. Clicca per fissarla.",
+  "pinPast": "Fissata: avevi {y} anni. {w} settimane fa.",
+  "play": "Percorrere una vita intera",
+  "playNote": "Oppure trascina sul grafico. Tocca una linea per vederla da sola.",
+  "priv": "Tutto viene calcolato nel tuo browser. Non viene inviato né salvato nulla.",
+  "prog": "{d} di {t} inviati.",
+  "progAll": "Ecco: era l'unica cosa che cambiava qualcosa.",
+  "progLeft": "Quelli che mancano continuano a contare alla rovescia.",
+  "qAge": "Quanti anni hai?",
+  "qName": "Come ti chiami?",
+  "realT": "Quello che dice il conto",
+  "rel_amigos": "Amicizia",
+  "rel_familia": "Famiglia",
+  "rel_hijos": "Figlio o figlia",
+  "rel_otros": "Altro legame",
+  "rel_pareja": "Partner",
+  "remove": "togli",
+  "resSub": "Trascina una barra e guarda la carta riempirsi. Ogni casella nuova sono sette incontri in più.",
+  "restart": "Tornare al presente",
+  "rf1": "Il numero che hai appena visto non è esatto. Viene da medie di popolazione, e a te toccherà la tua versione.",
+  "rf2": "Quello che è esatto è la direzione. Scende ogni giorno, e scende uguale se non lo guardi mai.",
+  "rf3": "E scende senza avvisare. L'ultima volta di tutte la vivrai senza sapere che era quella.",
+  "rf4": "Sale in un solo modo: presentandosi. Non esiste un altro metodo.",
+  "rf5": "Comincia oggi. Domani il numero di questa schermata è già più basso.",
+  "rfNo": "Oggi non l'hai alzato. Sei ancora in tempo per tornare indietro e muovere una sola barra.",
+  "rfUp": "Oggi hai deciso di alzarlo di {n} settimane. Che non resti sullo schermo.",
+  "runD": "{n} giorni di fila",
+  "runM": "{n} mesi di fila",
+  "runY": "{n} anni di fila",
+  "sec0": "Copertina",
+  "sec1": "La sottrazione",
+  "sec2": "La divisione",
+  "sec3": "Il conteggio",
+  "sec4": "L'altro lato",
+  "sec5": "La decisione",
+  "sec6": "Il messaggio",
+  "sec7": "Il saldo",
+  "sentB": "Inviato",
+  "ser_amigos": "Amici",
+  "ser_familia": "Famiglia d'origine",
+  "ser_hijos": "Figli",
+  "ser_pareja": "Partner",
+  "ser_solo": "Solo",
+  "ser_trabajo": "Colleghi",
+  "sig1": "Fatto da Kai.",
+  "sig2": "Non per condividerlo. Per restare un momento in silenzio e poi scrivere a qualcuno.",
+  "skip": "Salta",
+  "sound": "Suono",
+  "soundOn": "Suono attivo",
+  "src": "Curve approssimate alla forma dell'American Time Use Survey. Medie di popolazione, non una previsione.",
+  "srcA": "American Time Use Survey",
+  "srcB": "Our World in Data",
+  "start": "Comincia",
+  "startNote": "Cinque minuti. Meglio con calma e con il suono.",
+  "stop": "Ferma",
+  "t1": "Cominciamo da quello che hai già speso.",
+  "t2": "Con chi passa le giornate la gente, anno dopo anno.",
+  "t3": "Eccola, intera.",
+  "t3det": "Ti restano {y} estati e {w} sabati.",
+  "t3n": "Eccola intera, {n}.",
+  "t4": "Lo stesso conto, con i suoi anni.",
+  "t5": "L'inerzia decide da sola. Cambiala.",
+  "t6": "Un numero non cambia niente. Un messaggio sì.",
+  "t7": "Quello che resta quando si spegne tutto il resto.",
+  "t7n": "{n}, questo è ciò che resta acceso.",
+  "theirAge": "La sua età:",
+  "tipFree": "<b>{y} anni</b><br>libero",
+  "tipFut": "<b>{y} anni</b><br>fra {w} settimane",
+  "tipGain": "<b>Quello che guadagni</b><br>sette incontri in più",
+  "tipMeet": "<b>Qui vi vedete</b><br>sette dei vostri incontri",
+  "tipNow": "<b>Lo fate già</b>",
+  "tipPast": "<b>{y} anni</b><br>{w} settimane fa",
+  "tipTF": "<b>{y} anni</b><br>senza di voi dentro",
+  "tipTP": "<b>{y} anni</b><br>già vissuti",
+  "unitLine": "≈ {n} {u} in più",
+  "unit_amigos": "caffè",
+  "unit_familia": "pranzi insieme",
+  "unit_hijos": "pomeriggi con te",
+  "unit_otros": "conversazioni",
+  "unit_pareja": "notti al suo fianco",
+  "wa": "Apri in WhatsApp",
+  "warm": "Caldo",
+  "years": "anni",
+  "you": "tu",
+  "zLived": "già vissuto",
+  "zToLive": "da vivere"
+ },
+ "ja": {
+  "add": "追加",
+  "addHint": "最大五人まで。会えている回数が思うより少ない、と感じる人を。",
+  "addP": "人を追加",
+  "ann1": "家を出る",
+  "ann2": "子どもの山",
+  "ann3": "仕事が薄れる",
+  "axAge": "年齢",
+  "axH": "一日あたりの時間",
+  "back": "戻る",
+  "cancel": "やめる",
+  "cellNote": "七回の再会 · 一緒に過ごす一週間ぶん",
+  "cont": "つづける",
+  "copied": "コピーしました",
+  "copy": "コピー",
+  "copyFail": "手でコピーしてください",
+  "copySum": "要約をコピー",
+  "credFoot": "Kairós Project（@javiyawe）に着想を得ています",
+  "credMine": "このバージョンは Kai がゼロから書いたものです。コード、文章、デザイン、音はすべて独自のもの。問いは同じ、扱い方は別です。",
+  "credMore": "ほかの作品",
+  "credOrig": "オリジナルの作品 Kairós Project に着想を得ています。制作：",
+  "credit": "Kai 作 · 立ち止まって考えるために",
+  "direct": "はっきり",
+  "e1": "出発点",
+  "e2": "流れ",
+  "e3": "一枚の紙",
+  "e4": "相手の時計",
+  "e5": "惰性",
+  "e6": "火曜日",
+  "e7": "勘定",
+  "empty": "まだ誰もいません。いちばん会えていない人から。",
+  "endSub": "一緒に残っている週まるごとの数。一マスが本当の七回分です。",
+  "endTip": "<b>{n}</b><br>七回の再会",
+  "endTipNo": "<b>{y}歳</b><br>誰も書かれていない",
+  "errName": "あなたの人生の話をするために、名前が必要です。",
+  "errName2": "続けるには名前を入力してください。",
+  "fMax": "毎日",
+  "fMin": "年1",
+  "frq_b": "二か月に一度",
+  "frq_d": "ほぼ毎日",
+  "frq_m": "月に一度",
+  "frq_m2": "月に数回",
+  "frq_q": "二週に一度",
+  "frq_t": "年に数回",
+  "frq_w": "週に一度",
+  "frq_w3": "週に数回",
+  "frq_y": "年に一度",
+  "fullW": "週まるごと",
+  "gBody": "静かな場所を見つけて、音を上げてください。",
+  "gBtn": "準備できた",
+  "gPriv": "計算はすべてこの中で行われます。サーバーには送られず、タブを閉じれば消えます。",
+  "gTick": "秒、ここにいます。もう戻りません。",
+  "gTitle": "結果は気に入らないかもしれません。",
+  "gone": "何も保存されていません。タブを閉じれば消えます。",
+  "h1": "大切な人に、あと何回会えるのか。",
+  "hAge": "あなたが持っている年齢とは、まさに、もう持っていない年数のことだ。",
+  "heroAlt": "また別の日にする",
+  "heroAltMsg": "みんながそうします。だから惰性がいつも勝つのです。",
+  "icsB": "予定を押さえる",
+  "icsTitle": "{n} に会う",
+  "illT": "ふだん思っていること",
+  "ill_amigos": "友情は日付がなくても続く。",
+  "ill_familia": "いつまでもいてくれる。できなくなるまで、誰もそれを否定しません。",
+  "ill_hijos": "求めてくれるこの時期は続く。",
+  "ill_otros": "今より都合のいい時がきっとある。",
+  "ill_pareja": "同じ家にいれば会っていることになる。",
+  "in2s": "あなたの場合を計算する前に、{n}、基準が必要です。これはデータに基づく、各年齢での時間の配分です。誰も選んでいません。選んでいるのは年齢です。",
+  "in2t": "配分",
+  "in3s": "次はあなたです、{n}。すでに使った分を引きます。一マスがあなたの人生の一週間。埋まったマスは戻らず、空のマスだけが、まだ手を加えられるものです。",
+  "in3t": "数え上げ",
+  "in4s": "少しのあいだ、自分の勘定から離れてください、{n}。これはその人の一生です。これから先の全部が入っています。色のついたマスが、そこにあなたが現れる回数。あなたがその人生で占める場所は、それだけです。",
+  "in4t": "相手の側",
+  "in5s": "ここまではデータでした、{n}。ここからはあなたが決めます。会う頻度を変えて、惰性からどれだけ取り返せるかを正確に見てください。",
+  "in5t": "決断",
+  "in6s": "数字はもう出ました、{n}。数字だけでは何の役にも立ちません。役に立つのは、今日ここから出ていく一通です。",
+  "in6t": "連絡",
+  "in7s": "これがあなたが救った分です、{n}。それだけが見えるように、ほかは全部消します。",
+  "in7t": "残高",
+  "lang": "日本語",
+  "langT": "言語",
+  "lede": "18歳の時点で、配分はもう決まっています。親と過ごす時間のほとんどは、それまでに使い切られている。残りはわずかで、それがあなたに決められる分です。",
+  "lede6": "書き直して、今日送ってください。明日には勘定がもう短くなります。",
+  "lgLived": "生きた週",
+  "lgR2": "今のペース",
+  "lgR3": "増える分",
+  "lgT1": "相手がすでに生きた分",
+  "lgT2": "相手に残る分",
+  "lgT3": "一マス ＝ 七回 ＝ 一緒に過ごす一週間ぶん",
+  "lgToday": "今日",
+  "lgTodo": "これから書く週",
+  "m1": "使った週",
+  "m2": "生きた日数",
+  "m3": "これからの週",
+  "m4": "90年という目安のうち",
+  "mFreq": "本当に会うのはどのくらいの頻度？",
+  "mFreqH": "本当の時間だけ数えてください。食事、きちんとした訪問、急がない会話。家ですれ違うのは含めません。",
+  "mReal": "{p} は {a} 歳。共有する残りは {s} 週、ただし一緒にいるのはそのうち {c} 週分、約 {m} 回です。続けて並べても {r} にしかなりません。",
+  "mReal0": "その年齢では計算に余地がありません。基準は90年です。",
+  "mTheirAge": "その人は何歳？",
+  "mTitle": "人を追加する",
+  "mWhat": "あなたにとって誰？",
+  "mWho": "どなたですか？",
+  "mWhoPh": "その人の名前",
+  "mark": "送信済みにする",
+  "maxP": "もう五人です",
+  "md_amigos": "{n}、そのうち会おう、はもう終わり。二週間以内で一日決めて。押さえます。",
+  "md_familia": "{n}、これから会える回数を計算したら、思っていたより少なかった。今月どの日がいい？押さえます。",
+  "md_hijos": "{n}、毎週きみと過ごす午後がほしい。日はきみが選んで、動かさない。",
+  "md_otros": "{n}、今月会いませんか。日を教えてくれたら押さえます。",
+  "md_pareja": "{n}、週に一度、二人だけの決まった夜をつくろう。今週から。木曜と土曜、どっち？",
+  "mw_amigos": "{n}、会おうと言い続けて長すぎた。こちらで日を押さえます。都合のいい日を二つ教えて。",
+  "mw_familia": "{n}、一年に何回会っているか数えてみたら、驚くほど少なかった。変えたいと思っています。今月、一緒にごはんでもどう？",
+  "mw_hijos": "{n}、ほかに何も挟まずに、二人だけで何かしたい。やりたいことを言ってくれたら予定に入れます。",
+  "mw_otros": "{n}、通りすがりではなく、落ち着いて会いたいです。今週の夜はどうですか？",
+  "mw_pareja": "{n}、画面も急ぎもなく、本当に一緒にいる時間を取り戻したい。今週、二人だけの夜をひとつ空けておかない？",
+  "next2": "自分の人を数える",
+  "next3": "相手の側から見る",
+  "next4": "時間を取り戻す",
+  "next5": "最初の一歩を",
+  "next6": "勘定を閉じる",
+  "note": "一般的な人口データにもとづくおおよその推定です。未来は決まっていません。これは判決ではなく、注意書きです。",
+  "of": "／4,680",
+  "of100": "／共有する100週あたり",
+  "ph0n": "全員が同時にいる時期",
+  "ph0r": "すべてが高い位置にあります、{n}。家族も友人も同じ一日の中にいる。人生の最大値で、続く時間はとても短い。",
+  "ph1n": "散らばり",
+  "ph1r": "ここで家族の線が一気に落ちます、{n}。家を出ると、その時間は二度と上がりません。",
+  "ph2n": "狭まり",
+  "ph2r": "パートナーと子どもと仕事がほとんどを取ります、{n}。友人は予定表に依存するようになります。",
+  "ph3n": "平ら",
+  "ph3r": "十二年ほど、ほとんど何も動きません、{n}。いちばん過ぎたことに気づかない年月です。",
+  "ph4n": "退き",
+  "ph4r": "子どもの線が下がり、仕事が薄れます、{n}。取り戻した時間のほとんどは、いちばん上の線に行きます。ひとりです。",
+  "ph5n": "水をやったもの",
+  "ph5r": "残るのはパートナーと、ひとりでいる時間です、{n}。ほかは誰かが段取りする訪問になります。",
+  "phName": "あなたの名前",
+  "pinFut": "固定：{y}歳のとき。{w}週間後。",
+  "pinHint": "重ねるとその週が読めます。クリックで固定。",
+  "pinPast": "固定：{y}歳のとき。{w}週間前。",
+  "play": "一生を一気に見る",
+  "playNote": "グラフの上をドラッグしても動きます。線をタップすると一本だけ表示。",
+  "priv": "すべてブラウザ内で計算されます。送信も保存もされません。",
+  "prog": "{t} 件中 {d} 件送信。",
+  "progAll": "これで十分です。実際に何かを変えたのはこれだけ。",
+  "progLeft": "残りはいまも減り続けています。",
+  "qAge": "何歳ですか？",
+  "qName": "お名前は？",
+  "realT": "計算が示すこと",
+  "rel_amigos": "友人",
+  "rel_familia": "家族",
+  "rel_hijos": "子ども",
+  "rel_otros": "その他",
+  "rel_pareja": "パートナー",
+  "remove": "削除",
+  "resSub": "バーを動かすと紙が埋まっていきます。新しい一マスは、七回分の再会です。",
+  "restart": "現在に戻る",
+  "rf1": "いま見た数字は正確ではありません。人口の平均から出たもので、あなたにはあなたの版が来ます。",
+  "rf2": "正確なのは向きです。毎日下がり、見なくても同じだけ下がります。",
+  "rf3": "しかも予告なしに下がります。本当の最後の一回は、それが最後だと知らないまま過ぎます。",
+  "rf4": "上がる方法はひとつだけ。顔を出すことです。ほかに手はありません。",
+  "rf5": "今日から始めてください。明日にはこの画面の数字がもう下がっています。",
+  "rfNo": "今日は増やしませんでした。戻ってバーを一本動かす時間はまだあります。",
+  "rfUp": "今日あなたは {n} 週ぶん増やすと決めました。画面の中で終わらせないこと。",
+  "runD": "{n} 日連続",
+  "runM": "{n} か月連続",
+  "runY": "{n} 年連続",
+  "sec0": "表紙",
+  "sec1": "引き算",
+  "sec2": "配分",
+  "sec3": "数え上げ",
+  "sec4": "相手の側",
+  "sec5": "決断",
+  "sec6": "連絡",
+  "sec7": "残高",
+  "sentB": "送信済み",
+  "ser_amigos": "友人",
+  "ser_familia": "生まれた家族",
+  "ser_hijos": "子ども",
+  "ser_pareja": "パートナー",
+  "ser_solo": "ひとり",
+  "ser_trabajo": "同僚",
+  "sig1": "Kai が作りました。",
+  "sig2": "共有するためではなく、少し黙って座り、それから誰かに連絡するために。",
+  "skip": "スキップ",
+  "sound": "音",
+  "soundOn": "音オン",
+  "src": "American Time Use Survey の形に近似した曲線。人口の平均であり、予測ではありません。",
+  "srcA": "American Time Use Survey",
+  "srcB": "Our World in Data",
+  "start": "はじめる",
+  "startNote": "五分ほど。静かな場所で、音を出して。",
+  "stop": "止める",
+  "t1": "まず、すでに使った分から始めよう。",
+  "t2": "人は何歳のとき、誰と一日を過ごしているか。",
+  "t3": "これが一生だ。",
+  "t3det": "残りは {y} 回の夏と {w} 回の土曜日。",
+  "t3n": "{n}、これが一生だ。",
+  "t4": "同じ計算を、相手の年齢で。",
+  "t5": "放っておけば惰性が決める。変えよう。",
+  "t6": "数字は何も変えない。連絡は変える。",
+  "t7": "ほかがすべて消えたとき、残るもの。",
+  "t7n": "{n}、灯ったまま残るのはこれだ。",
+  "theirAge": "相手の年齢：",
+  "tipFree": "<b>{y}歳</b><br>空白",
+  "tipFut": "<b>{y}歳</b><br>{w}週間後",
+  "tipGain": "<b>増える分</b><br>あと七回の再会",
+  "tipMeet": "<b>ここで会う</b><br>七回分の再会",
+  "tipNow": "<b>もうできている</b>",
+  "tipPast": "<b>{y}歳</b><br>{w}週間前",
+  "tipTF": "<b>{y}歳</b><br>あなたはそこにいない",
+  "tipTP": "<b>{y}歳</b><br>もう生きた",
+  "unitLine": "あと約 {n} {u}",
+  "unit_amigos": "杯のコーヒー",
+  "unit_familia": "回の食事",
+  "unit_hijos": "回の午後",
+  "unit_otros": "回の会話",
+  "unit_pareja": "回の夜",
+  "wa": "WhatsApp で開く",
+  "warm": "やわらかく",
+  "years": "歳",
+  "you": "あなた",
+  "zLived": "すでに生きた",
+  "zToLive": "これから"
+ },
+ "zh": {
+  "add": "添加",
+  "addHint": "最多五个人。那些你觉得见得比你想要的少的人。",
+  "addP": "添加一个人",
+  "ann1": "离开家",
+  "ann2": "孩子的高峰",
+  "ann3": "工作退场",
+  "axAge": "年龄",
+  "axH": "每天小时数",
+  "back": "返回",
+  "cancel": "取消",
+  "cellNote": "七次相见 · 在一起整整一周",
+  "cont": "继续",
+  "copied": "已复制",
+  "copy": "复制",
+  "copyFail": "请手动复制",
+  "copySum": "复制摘要",
+  "credFoot": "灵感来自 @javiyawe 的 Kairós Project",
+  "credMine": "这个版本由 Kai 从零写起：代码、文字、设计和声音都是自己的。同一个问题，不同的做法。",
+  "credMore": "他的其他作品",
+  "credOrig": "灵感来自原作 Kairós Project，作者",
+  "credit": "Kai 制作 · 用来停下来想一想",
+  "direct": "直接",
+  "e1": "起点",
+  "e2": "洪流",
+  "e3": "一张纸",
+  "e4": "他的钟",
+  "e5": "惯性",
+  "e6": "星期二",
+  "e7": "这笔账",
+  "empty": "还没有人。从你见得最少的那个开始。",
+  "endSub": "你们还剩的整周数。每一格都是七次真正的相见。",
+  "endTip": "<b>{n}</b><br>七次相见",
+  "endTipNo": "<b>{y} 岁</b><br>没有写下任何人",
+  "errName": "我需要知道你的名字，才能和你谈你的人生。",
+  "errName2": "请写下一个名字才能继续。",
+  "fMax": "每天",
+  "fMin": "一年一次",
+  "frq_b": "每两个月一次",
+  "frq_d": "几乎每天",
+  "frq_m": "一个月一次",
+  "frq_m2": "一个月几次",
+  "frq_q": "每两周一次",
+  "frq_t": "一年几次",
+  "frq_w": "每周一次",
+  "frq_w3": "每周几次",
+  "frq_y": "一年一次",
+  "fullW": "整周",
+  "gBody": "找个安静的地方，把声音打开。",
+  "gBtn": "我准备好了",
+  "gPriv": "所有计算都在这里完成。不会送去任何服务器，关掉标签页就消失。",
+  "gTick": "秒，你已经在这里待了。它们不会回来。",
+  "gTitle": "结果你可能不会喜欢。",
+  "gone": "这些都没有被保存。关掉标签页就消失了。",
+  "h1": "你还能再见几次你在乎的人。",
+  "hAge": "你拥有的年岁，恰恰就是你已经不再拥有的那些。",
+  "heroAlt": "改天再说",
+  "heroAltMsg": "所有人都是这么做的。所以惯性总是赢。",
+  "icsB": "把日期占住",
+  "icsTitle": "去见 {n}",
+  "illT": "你通常这样想",
+  "ill_amigos": "友情不用约，自己就能维持。",
+  "ill_familia": "他会一直都在。在还来得及之前，没有人会反驳你。",
+  "ill_hijos": "他们来找你的这段日子还会持续。",
+  "ill_otros": "以后总会有比现在更合适的时候。",
+  "ill_pareja": "住在一起就等于见过面了。",
+  "in2s": "在算你自己之前，{n}，需要一个起点。这是数据里的人在每个年纪如何分配时间。没有人在选：是年纪在选。",
+  "in2t": "分配",
+  "in3s": "接下来是你，{n}。我们要减掉你已经花完的部分。每一格是你人生的一周：填满的不会回来，空着的才是你唯一还能动的。",
+  "in3t": "清点",
+  "in4s": "先离开你自己的账，{n}，走进他的。这是他完整的一生，包括还没到来的全部。有颜色的格子，是你出现在其中的次数。你在他人生里占的位置，就这些。",
+  "in4t": "对面",
+  "in5s": "到这里都还是数据，{n}。从现在开始由你决定。改一改你们见面的频率，看你到底从惯性手里拿回了多少。",
+  "in5t": "决定",
+  "in6s": "数字你已经有了，{n}。数字本身没有任何用。有用的是今天从这里发出去的那条消息。",
+  "in6t": "消息",
+  "in7s": "这就是你救下来的，{n}。我们把其余的全部关掉，让你只看见这些。",
+  "in7t": "余额",
+  "lang": "中文",
+  "langT": "语言",
+  "lede": "到十八岁，分配就已经定了：你这辈子和父母相处的时间，几乎都已经用完了。剩下的不多，而那是你可以决定的部分。",
+  "lede6": "改一改，今天就发出去。到了明天，这笔账又短了。",
+  "lgLived": "已度过",
+  "lgR2": "照现在的频率",
+  "lgR3": "你多出来的",
+  "lgT1": "他已经过完的",
+  "lgT2": "他还剩下的",
+  "lgT3": "一格 = 7 次相见 = 在一起整整一周",
+  "lgToday": "今天",
+  "lgTodo": "待书写",
+  "m1": "已花掉的周",
+  "m2": "活过的天数",
+  "m3": "还剩的周",
+  "m4": "占九十年这个尺度",
+  "mFreq": "你们真正见面的频率是多少？",
+  "mFreqH": "只算真正的时候：一顿饭，一次认真的探望，一场不赶时间的谈话。在家里擦身而过不算。",
+  "mReal": "{p} 今年 {a} 岁。你们还共有 {s} 周，但真正在一起的只有其中 {c} 周，大约 {m} 次。把它们连起来，也只有 {r}。",
+  "mReal0": "到了这个年纪，这笔账没有余地了。参考尺度是九十年。",
+  "mTheirAge": "他今年多大？",
+  "mTitle": "添加一个人",
+  "mWhat": "他是你的谁？",
+  "mWho": "是谁？",
+  "mWhoPh": "他的名字",
+  "mark": "标记为已发送",
+  "maxP": "已经五个了",
+  "md_amigos": "{n}，别再说改天见了。给我两周内的一天，我把它定下来。",
+  "md_familia": "{n}，我算过我们还剩多少次见面，比我以为的少。这个月哪天方便？我把它占住。",
+  "md_hijos": "{n}，我想每周有一个下午是给你的。日子你挑，挑好就不改。",
+  "md_otros": "{n}，这个月见一面吧？告诉我哪天，我记下来。",
+  "md_pareja": "{n}：我提议每周固定一个晚上，只有我们两个。就从这周开始。周四还是周六？",
+  "mw_amigos": "{n}，我们说要见面已经说太久了。我来定：给我两个你方便的日子。",
+  "mw_familia": "{n}，我算了一下我们一年见几次，少得吓人。我想改改。这个月一起吃顿饭好吗？",
+  "mw_hijos": "{n}，我想和你单独做点什么，中间不夹别的事。你想做什么，告诉我，我记下来。",
+  "mw_otros": "{n}，我想好好见你一面，不是路过打个招呼。这周哪个晚上方便？",
+  "mw_pareja": "{n}，我想把我们真正在一起的时间要回来，不看屏幕，也不赶时间。这周留一个固定的晚上，只属于我们两个？",
+  "next2": "数一数我的人",
+  "next3": "从他那边看",
+  "next4": "把时间要回来",
+  "next5": "迈出第一步",
+  "next6": "结这笔账",
+  "note": "基于一般人口数据的粗略估算。未来并未写定：这是一个提醒，不是判决。",
+  "of": "／4,680",
+  "of100": "／你们共有的每一百周",
+  "ph0n": "所有人同时都在",
+  "ph0r": "看，所有的线都在高处，{n}。家人和朋友装在同一天里。这是你一生的顶点，而且很短。",
+  "ph1n": "散开",
+  "ph1r": "家人那条线在这里陡然下落，{n}。你离开家，那些小时再也没有回升过。",
+  "ph2n": "收窄",
+  "ph2r": "伴侣、孩子和工作几乎拿走了全部，{n}。朋友从这里开始要靠日程表维持。",
+  "ph3n": "平台期",
+  "ph3r": "十二年里几乎什么都不动，{n}。这是最察觉不到流逝的那些年。",
+  "ph4n": "退回",
+  "ph4r": "孩子那条线降下来，工作也在退场，{n}。你拿回来的时间，几乎全都去了最上面那条线：独处。",
+  "ph5n": "你浇过水的",
+  "ph5r": "剩下的是伴侣，和一个人待着，{n}。其余的，是需要有人张罗的探望。",
+  "phName": "你的名字",
+  "pinFut": "已钉住：那时你 {y} 岁。还有 {w} 周。",
+  "pinHint": "移上去可以看任意一周。点一下把它钉住。",
+  "pinPast": "已钉住：那时你 {y} 岁。距今 {w} 周。",
+  "play": "走完一整生",
+  "playNote": "也可以在图上拖动。点一条线可以只看它。",
+  "priv": "一切都在你的浏览器里计算。不发送，也不保存。",
+  "prog": "已发送 {d}／{t}。",
+  "progAll": "就是这样：真正改变了什么的，只有这一步。",
+  "progLeft": "还没发的那些，仍在往下减。",
+  "qAge": "你今年多大？",
+  "qName": "你叫什么名字？",
+  "realT": "账算出来是这样",
+  "rel_amigos": "朋友",
+  "rel_familia": "家人",
+  "rel_hijos": "孩子",
+  "rel_otros": "其他关系",
+  "rel_pareja": "伴侣",
+  "remove": "移除",
+  "resSub": "拖动一条，看纸怎么被填满。每多出一格，就是多七次相见。",
+  "restart": "回到现在",
+  "rf1": "你刚看到的数字并不精确。它来自人口平均值，而你会拿到属于你自己的那一版。",
+  "rf2": "精确的是方向。它每天都在往下走，你不看它也一样在往下走。",
+  "rf3": "而且它不会提前通知。真正的最后一次，你会在不知道那是最后一次的时候度过。",
+  "rf4": "让它上升只有一种办法：出现。没有别的方法。",
+  "rf5": "今天就开始。到了明天，这个屏幕上的数字又低了一点。",
+  "rfNo": "今天你没有抬高它。现在回去动一条，还来得及。",
+  "rfUp": "今天你决定把它抬高 {n} 周。别让它只停在屏幕上。",
+  "runD": "连续 {n} 天",
+  "runM": "连续 {n} 个月",
+  "runY": "连续 {n} 年",
+  "sec0": "封面",
+  "sec1": "减法",
+  "sec2": "分配",
+  "sec3": "清点",
+  "sec4": "对面",
+  "sec5": "决定",
+  "sec6": "消息",
+  "sec7": "余额",
+  "sentB": "已发送",
+  "ser_amigos": "朋友",
+  "ser_familia": "原生家庭",
+  "ser_hijos": "孩子",
+  "ser_pareja": "伴侣",
+  "ser_solo": "独处",
+  "ser_trabajo": "同事",
+  "sig1": "Kai 制作。",
+  "sig2": "不是为了分享。是为了安静地坐一会儿，然后去给某个人写条消息。",
+  "skip": "跳过",
+  "sound": "声音",
+  "soundOn": "声音已开",
+  "src": "曲线依据 American Time Use Survey 的形状近似绘制。是人口平均值，不是预测。",
+  "srcA": "American Time Use Survey",
+  "srcB": "Our World in Data",
+  "start": "开始",
+  "startNote": "五分钟。最好安静一点，把声音打开。",
+  "stop": "停止",
+  "t1": "先从你已经花掉的开始。",
+  "t2": "人在每个年纪，都和谁一起过日子。",
+  "t3": "整整一生，就在这里。",
+  "t3det": "你还剩 {y} 个夏天和 {w} 个星期六。",
+  "t3n": "{n}，整整一生就在这里。",
+  "t4": "同样一笔账，换成他的年岁。",
+  "t5": "什么都不做，惯性就替你决定了。改掉它。",
+  "t6": "一个数字改变不了什么。一条消息可以。",
+  "t7": "当其余一切熄灭之后，剩下的东西。",
+  "t7n": "{n}，还亮着的就是这些。",
+  "theirAge": "他的年龄：",
+  "tipFree": "<b>{y} 岁</b><br>空着",
+  "tipFut": "<b>{y} 岁</b><br>还有 {w} 周",
+  "tipGain": "<b>你多出来的</b><br>再多七次相见",
+  "tipMeet": "<b>你们在这里见面</b><br>七次相见",
+  "tipNow": "<b>你们已经做到了</b>",
+  "tipPast": "<b>{y} 岁</b><br>距今 {w} 周",
+  "tipTF": "<b>{y} 岁</b><br>里面没有你",
+  "tipTP": "<b>{y} 岁</b><br>他已经过完",
+  "unitLine": "约还剩 {n} {u}",
+  "unit_amigos": "杯咖啡",
+  "unit_familia": "顿一起吃的饭",
+  "unit_hijos": "个下午",
+  "unit_otros": "次对话",
+  "unit_pareja": "个夜晚",
+  "wa": "在 WhatsApp 打开",
+  "warm": "温和",
+  "years": "岁",
+  "you": "你",
+  "zLived": "已经过完",
+  "zToLive": "尚未到来"
+ }
+};
+</script>
+<script>
+(function(){
+'use strict';
+
+var HORIZON=90, WPY=52, TOTAL=HORIZON*WPY, PER_CELL=7, MAXP=5;
+var PALETTE=['#2457C5','#A82F49','#1B6E52','#B58200','#6D3FA8'];
+var REL=[{id:'familia',label:'Familia'},{id:'pareja',label:'Pareja'},{id:'hijos',label:'Hijo o hija'},
+         {id:'amigos',label:'Amistad'},{id:'otros',label:'Otro vínculo'}];
+/* de menos a más: el slider crece hacia la derecha */
+var FREQ=[{id:'y',n:1},{id:'t',n:3},{id:'b',n:6},{id:'m',n:12},{id:'m2',n:24},
+          {id:'w',n:52},{id:'w3',n:150},{id:'d',n:320}];
+var FDEF=3;
+/* la unidad humana depende del vinculo */
+function unitOf(p){return t('unit_'+p.rel)||t('unit_otros');}
+function fIdx(id){for(var i=0;i<FREQ.length;i++)if(FREQ[i].id===id)return i;return FDEF;}
+function fN(id){return FREQ[fIdx(id)].n;}
+function fL(id){return t('frq_'+FREQ[fIdx(id)].id);}
+
+var SERIES=[
+ {id:'solo',label:'Solo',v:'--c-solo',pts:[[15,2],[20,3.4],[25,4.3],[30,4.6],[35,4.7],[40,4.9],[45,5.1],[50,5.4],[55,5.8],[60,6.3],[65,6.9],[70,7.3],[75,7.7],[85,8.1]]},
+ {id:'familia',label:'Familia de origen',v:'--c-familia',pts:[[15,4.2],[18,3.3],[20,2.2],[25,1.3],[30,.95],[35,.8],[40,.7],[50,.6],[60,.55],[70,.5],[85,.45]]},
+ {id:'amigos',label:'Amigos',v:'--c-amigos',pts:[[15,2.3],[18,2.6],[20,2.2],[25,1.5],[30,1.1],[35,.85],[40,.75],[50,.65],[60,.6],[70,.68],[85,.6]]},
+ {id:'pareja',label:'Pareja',v:'--c-pareja',pts:[[15,.05],[20,.5],[25,1.7],[30,2.6],[35,2.9],[40,3],[45,3.1],[50,3.3],[55,3.6],[60,4],[65,4.3],[70,4.5],[75,4.4],[85,3.8]]},
+ {id:'hijos',label:'Hijos',v:'--c-hijos',pts:[[15,.05],[20,.3],[25,1.3],[30,2.9],[35,3.6],[40,3.4],[45,2.6],[50,1.6],[55,1],[60,.7],[70,.5],[85,.4]]},
+ {id:'trabajo',label:'Compañeros',v:'--c-trabajo',pts:[[15,.3],[18,1.4],[20,2.4],[25,3.1],[30,3.2],[35,3.2],[40,3.1],[45,3],[50,2.8],[55,2.4],[60,1.7],[65,.9],[70,.4],[85,.2]]}
+];
+var PHASES=[21,28,39,52,66,999];
+
+
+var S={step:0,name:'',age:30,chartAge:30,people:[],mirror:null,tone:'calido',seen:{},total:0,pin:-1};
+var uid=0, maxStep=0;
+
+function $(s){return document.querySelector(s);}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s));}
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function nf(n){return new Intl.NumberFormat('es-ES').format(Math.round(n));}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+var LANGS=['es','ca','en','fr','de','it','ja','zh'];
+var FLAG={
+es:'<svg viewBox="0 0 24 16"><rect width="24" height="16" fill="#AA151B"/><rect y="4" width="24" height="8" fill="#F1BF00"/></svg>',
+ca:'<svg viewBox="0 0 24 16"><rect width="24" height="16" fill="#FCDD09"/><g fill="#DA121A"><rect y="2" width="24" height="2"/><rect y="6" width="24" height="2"/><rect y="10" width="24" height="2"/><rect y="14" width="24" height="2"/></g></svg>',
+en:'<svg viewBox="0 0 24 16"><rect width="24" height="16" fill="#012169"/><path d="M0 0l24 16M24 0L0 16" stroke="#fff" stroke-width="3.2"/><path d="M0 0l24 16M24 0L0 16" stroke="#C8102E" stroke-width="1.6"/><path d="M12 0v16M0 8h24" stroke="#fff" stroke-width="5"/><path d="M12 0v16M0 8h24" stroke="#C8102E" stroke-width="3"/></svg>',
+fr:'<svg viewBox="0 0 24 16"><rect width="8" height="16" fill="#002395"/><rect x="8" width="8" height="16" fill="#F4F5F0"/><rect x="16" width="8" height="16" fill="#ED2939"/></svg>',
+de:'<svg viewBox="0 0 24 16"><rect width="24" height="16" fill="#101010"/><rect y="5.33" width="24" height="5.33" fill="#DD0000"/><rect y="10.66" width="24" height="5.34" fill="#FFCE00"/></svg>',
+it:'<svg viewBox="0 0 24 16"><rect width="8" height="16" fill="#008C45"/><rect x="8" width="8" height="16" fill="#F4F5F0"/><rect x="16" width="8" height="16" fill="#CD212A"/></svg>',
+ja:'<svg viewBox="0 0 24 16"><rect width="24" height="16" fill="#F4F5F0"/><circle cx="12" cy="8" r="4.6" fill="#BC002D"/></svg>',
+zh:'<svg viewBox="0 0 24 16"><rect width="24" height="16" fill="#DE2910"/><g fill="#FFDE00"><circle cx="5" cy="4.6" r="2.4"/><circle cx="9.7" cy="2" r=".95"/><circle cx="11.5" cy="4.2" r=".95"/><circle cx="11.1" cy="7.1" r=".95"/><circle cx="8.9" cy="8.8" r=".95"/></g></svg>'};
+var LANG='es';
+function t(k){var d=window.I18N[LANG]; return (d&&d[k]!==undefined)?d[k]:(window.I18N.es[k]||k);}
+function tf(k,o){var s=t(k),x; for(x in o) s=s.split('{'+x+'}').join(o[x]); return s;}
+function setTx(el,txt){var k=el.querySelector('.k'); el.textContent=txt; if(k)el.appendChild(k);}
+var RM=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function easeOut(t){return 1-Math.pow(1-t,3);}
+function tween(dur,fn,done){
+  if(RM){fn(1); if(done)done(); return function(){};}
+  var stop=false, t0=performance.now();
+  (function f(t){ if(stop)return;
+    var k=clamp((t-t0)/dur,0,1); fn(k);
+    if(k<1)requestAnimationFrame(f); else if(done)done(); })(t0);
+  return function(){stop=true;};
+}
+function countTo(el,to,dur){
+  var from=parseFloat(String(el.textContent).replace(/\./g,''))||0;
+  if(from===to){el.textContent=nf(to);return;}
+  tween(dur||600,function(k){el.textContent=nf(from+(to-from)*easeOut(k));},
+        function(){el.textContent=nf(to);});
+}
+function kinetic(el,text){
+  el.innerHTML=text.split(/(\s+)/).map(function(w){
+    return w.trim()?'<span>'+esc(w)+'</span>':' ';}).join('');
+  el.querySelectorAll('span').forEach(function(s,i){s.style.animationDelay=(0.055*i)+'s';});
+}
+
+function calc(p,freqId){
+  var myLeft=Math.max(0,(HORIZON-S.age)*WPY), theirLeft=Math.max(0,(HORIZON-p.age)*WPY);
+  var shared=Math.min(myLeft,theirLeft), years=shared/WPY;
+  var meets=fN(freqId||p.freq)*years, cells=Math.min(shared,Math.round(meets/PER_CELL));
+  return{myLeft:myLeft,theirLeft:theirLeft,shared:shared,years:years,meets:meets,cells:cells,
+         pct:shared?(cells/shared)*100:0};
+}
+function spread(map,start,span,cells,val){
+  if(cells<=0||span<=0)return;
+  var st=span/cells;
+  for(var k=0;k<cells;k++) map.set(start+Math.floor(k*st),val);
+}
+
+/* ---------- sonido ---------- */
+/* ---------- música: se compone sola en el navegador ----------
+   Si colocas un archivo llamado ambient.mp3 junto a este HTML,
+   sonará ese en su lugar. Si no, suena la partitura generativa. */
+var Snd=(function(){
+  var ctx,master,mus,ui,on=false,booted=false,file=null,useFile=false;
+  var chordT=null,bellT=null,ix=0;
+  /* Am - F - G - Em, lento */
+  var PROG=[[45,52,57,60],[41,48,53,57],[43,50,55,59],[40,47,52,55]];
+  var BELL=[69,72,74,76,79,81];
+  var BAR=13;
+  function hz(m){return 440*Math.pow(2,(m-69)/12);}
+
+  function boot(){
+    if(booted)return; booted=true;
+    var AC=window.AudioContext||window.webkitAudioContext; if(!AC)return;
+    try{ctx=new AC();}catch(e){ctx=null;return;}
+    master=ctx.createGain(); master.gain.value=0; master.connect(ctx.destination);
+    mus=ctx.createGain(); mus.gain.value=.55; mus.connect(master);
+    ui=ctx.createGain();  ui.gain.value=1;    ui.connect(master);
+    /* una pista propia, si existe */
+    try{
+      file=new Audio('ambient.mp3'); file.loop=true; file.volume=.45; file.preload='auto';
+      file.addEventListener('canplaythrough',function(){useFile=true;},{once:true});
+      file.addEventListener('error',function(){useFile=false;file=null;});
+    }catch(e){file=null;}
+  }
+
+  function pad(notes,at,dur){
+    notes.forEach(function(m,i){
+      var o=ctx.createOscillator(), g=ctx.createGain(), f=ctx.createBiquadFilter();
+      o.type=i===0?'sine':'triangle';
+      o.frequency.value=hz(m)*(1+(i-1.5)*0.0014);      /* desafinado mínimo: respira */
+      f.type='lowpass'; f.frequency.value=560; f.Q.value=.6;
+      var peak=(i===0?.16:.085);
+      g.gain.setValueAtTime(.0001,at);
+      g.gain.exponentialRampToValueAtTime(peak,at+5);
+      g.gain.setValueAtTime(peak,at+dur*.55);
+      g.gain.exponentialRampToValueAtTime(.0001,at+dur+5.5);
+      o.connect(f); f.connect(g); g.connect(mus);
+      o.start(at); o.stop(at+dur+6);
+    });
+    /* el bajo, una octava por debajo de la fundamental */
+    var b=ctx.createOscillator(), bg=ctx.createGain();
+    b.type='sine'; b.frequency.value=hz(notes[0]-12);
+    bg.gain.setValueAtTime(.0001,at);
+    bg.gain.exponentialRampToValueAtTime(.1,at+4);
+    bg.gain.exponentialRampToValueAtTime(.0001,at+dur+4);
+    b.connect(bg); bg.connect(mus); b.start(at); b.stop(at+dur+5);
+  }
+
+  function bell(){
+    if(!on||!ctx||useFile)return;
+    var m=BELL[Math.floor(Math.random()*BELL.length)];
+    var o=ctx.createOscillator(), g=ctx.createGain(), pan=ctx.createStereoPanner?ctx.createStereoPanner():null;
+    o.type='sine'; o.frequency.value=hz(m);
+    var t0=ctx.currentTime;
+    g.gain.setValueAtTime(.0001,t0);
+    g.gain.exponentialRampToValueAtTime(.05,t0+.02);
+    g.gain.exponentialRampToValueAtTime(.0001,t0+5.5);
+    o.connect(g);
+    if(pan){pan.pan.value=(Math.random()*1.4)-.7; g.connect(pan); pan.connect(mus);}
+    else g.connect(mus);
+    o.start(t0); o.stop(t0+6);
+    bellT=setTimeout(bell,5000+Math.random()*11000);
+  }
+
+  function air(){
+    var len=ctx.sampleRate*3, buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0),i;
+    for(i=0;i<len;i++) d[i]=(Math.random()*2-1)*.5;
+    var s=ctx.createBufferSource(); s.buffer=buf; s.loop=true;
+    var f=ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=760; f.Q.value=.5;
+    var g=ctx.createGain(); g.gain.value=.012;
+    s.connect(f); f.connect(g); g.connect(mus); s.start();
+  }
+
+  function nextChord(){
+    if(!on||!ctx||useFile)return;
+    pad(PROG[ix%PROG.length],ctx.currentTime+.05,BAR);
+    ix++;
+    chordT=setTimeout(nextChord,BAR*1000);
+  }
+
+  function startMusic(){
+    if(useFile&&file){ var pr=file.play(); if(pr&&pr.catch)pr.catch(function(){useFile=false;startGen();}); return; }
+    startGen();
+  }
+  function startGen(){
+    air(); nextChord();
+    bellT=setTimeout(bell,7000);
+  }
+  function stopMusic(){
+    clearTimeout(chordT); clearTimeout(bellT); chordT=bellT=null;
+    if(file&&!file.paused)file.pause();
+  }
+
+  function woodTick(at,m){
+    if(!ctx)return;
+    var o=ctx.createOscillator(), g=ctx.createGain();
+    o.type='triangle';
+    o.frequency.setValueAtTime(hz(m),at);
+    o.frequency.exponentialRampToValueAtTime(hz(m-14),at+.07);
+    g.gain.setValueAtTime(.0001,at);
+    g.gain.exponentialRampToValueAtTime(.04,at+.004);
+    g.gain.exponentialRampToValueAtTime(.0001,at+.15);
+    o.connect(g); g.connect(ui); o.start(at); o.stop(at+.22);
+  }
+  function blip(m,vol,dur){
+    if(!on||!ctx)return;
+    var o=ctx.createOscillator(), g=ctx.createGain();
+    o.type='sine'; o.frequency.value=hz(m);
+    var t0=ctx.currentTime;
+    g.gain.setValueAtTime(.0001,t0);
+    g.gain.exponentialRampToValueAtTime(vol,t0+.012);
+    g.gain.exponentialRampToValueAtTime(.0001,t0+dur);
+    o.connect(g); g.connect(ui); o.start(t0); o.stop(t0+dur+.05);
+  }
+
+  return{
+    toggle:function(){
+      boot(); if(!ctx)return false;
+      on=!on;
+      if(on){
+        if(ctx.state==='suspended')ctx.resume();
+        master.gain.cancelScheduledValues(ctx.currentTime);
+        master.gain.setValueAtTime(Math.max(.0001,master.gain.value),ctx.currentTime);
+        master.gain.linearRampToValueAtTime(.5,ctx.currentTime+3.5);   /* entra despacio */
+        startMusic();
+      }else{
+        master.gain.cancelScheduledValues(ctx.currentTime);
+        master.gain.setValueAtTime(master.gain.value,ctx.currentTime);
+        master.gain.linearRampToValueAtTime(0,ctx.currentTime+1.6);
+        setTimeout(stopMusic,1700);
+      }
+      return on;
+    },
+    /* los clics están afinados en la misma escala que la música */
+    /* un golpe por bloque de semanas, cada vez mas lento */
+    pulse:function(count,durMs){
+      if(!on||!ctx)return;
+      var t0=ctx.currentTime+.04,i,k,at;
+      for(i=1;i<=count;i++){
+        k=1-Math.pow(1-i/count,1/3);          /* inversa del easing del dibujo */
+        at=t0+k*durMs/1000;
+        woodTick(at,86-(i/count)*13);
+      }
+    },
+    step:function(){blip(69,.06,.7);},
+    tap:function(){blip(76,.03,.2);},
+    good:function(){blip(81,.045,.45);},
+    low:function(){blip(64,.035,.3);}
+  };
+})();
+
+/* ---------- rejilla interactiva: se reorienta según el aparato ---------- */
+function geom(w){
+  if(w<620){                                  /* móvil: los años bajan */
+    var g=Math.max(2,w*.005), pad=20;
+    var c1=(w-pad-3*g)/WPY;
+    return{tall:true,cell:c1,g:g,pad:pad,w:w,h:HORIZON*c1+8*g};
+  }
+  var g2=Math.max(3,w*.006);                  /* pantalla ancha: los años avanzan */
+  var c2=(w-8*g2)/HORIZON;
+  return{tall:false,cell:c2,g:g2,pad:0,w:w,h:WPY*c2};
+}
+function yearPos(yr,gm){return yr*gm.cell+((yr/10)|0)*gm.g;}
+function cellPos(i,gm){
+  var yr=(i/WPY)|0, wk=i%WPY;
+  return gm.tall?[gm.pad+wk*gm.cell+((wk/13)|0)*gm.g, yearPos(yr,gm)]
+                :[yearPos(yr,gm), wk*gm.cell];
+}
+
+function makeGrid(canvasId,cfg){
+  cfg=cfg||{};
+  var canvas=$('#'+canvasId), wrap=canvas.parentElement;
+  var gx=wrap.querySelector('.gx'), gy=wrap.querySelector('.gy');
+  var pin=wrap.querySelector('.pin'), tip=cfg.tip?$(cfg.tip):null;
+  var st={colors:null,today:-1,tipFn:null,pin:-1}, view=null;
+
+  function layout(){
+    var w=Math.max(240,wrap.clientWidth||600);
+    var gm=geom(w), dpr=Math.min(2,window.devicePixelRatio||1);
+    canvas.width=Math.round(w*dpr); canvas.height=Math.round(gm.h*dpr);
+    canvas.style.height=Math.round(gm.h)+'px';
+    var c=canvas.getContext&&canvas.getContext('2d');
+    if(c)c.setTransform(dpr,0,0,dpr,0,0);
+    return{gm:gm,c:c};
+  }
+  function paint(v,reveal,baseAlpha){
+    if(!v||!v.c)return;
+    var gm=v.gm, c=v.c, size=Math.max(1.3,gm.cell-Math.max(.7,gm.cell*.16));
+    var rule=css('--rule'), red=css('--red');
+    c.clearRect(0,0,gm.w,gm.h);
+    var upto=reveal===undefined?TOTAL:Math.floor(reveal*TOTAL);
+    for(var i=0;i<TOTAL;i++){
+      if(i>upto)break;
+      var p=cellPos(i,gm), fill=st.colors?st.colors(i):null;
+      if(fill){c.globalAlpha=1;c.fillStyle=fill;c.fillRect(p[0],p[1],size,size);}
+      else{c.globalAlpha=baseAlpha===undefined?1:baseAlpha;c.strokeStyle=rule;c.lineWidth=1;
+           c.strokeRect(p[0]+.5,p[1]+.5,size-1,size-1);}
+    }
+    c.globalAlpha=1;
+    if(gm.tall){
+      c.fillStyle=css('--muted'); c.font='600 9px Archivo,sans-serif'; c.textAlign='left';
+      for(var d=0;d<=80;d+=10) c.fillText(String(d),0,yearPos(d,gm)+gm.cell*1.1);
+    }
+    if(st.today>=0&&st.today<HORIZON){
+      var t=yearPos(st.today,gm);
+      c.strokeStyle=red;c.lineWidth=1.4;c.setLineDash([3,3]);c.beginPath();
+      if(gm.tall){c.moveTo(gm.pad,t-1);c.lineTo(gm.w,t-1);}
+      else{c.moveTo(t-1,0);c.lineTo(t-1,gm.h);}
+      c.stroke();c.setLineDash([]);
+    }
+  }
+  function hit(e){
+    if(!view)return null;
+    var r=canvas.getBoundingClientRect(), gm=view.gm, a;
+    var sx=(e.clientX-r.left)/r.width*gm.w, sy=(e.clientY-r.top)/r.height*gm.h;
+    var yr=-1, wk=-1;
+    if(gm.tall){
+      for(a=0;a<HORIZON;a++){var y=yearPos(a,gm); if(sy>=y&&sy<y+gm.cell){yr=a;break;}}
+      wk=Math.floor((sx-gm.pad)/gm.cell);
+    }else{
+      for(a=0;a<HORIZON;a++){var x=yearPos(a,gm); if(sx>=x&&sx<x+gm.cell){yr=a;break;}}
+      wk=Math.floor(sy/gm.cell);
+    }
+    if(yr<0||wk<0||wk>=WPY)return null;
+    var p=cellPos(yr*WPY+wk,gm);
+    return{i:yr*WPY+wk,yr:yr,wk:wk,x:p[0],y:p[1],gm:gm};
+  }
+  function placePin(){
+    if(!pin||!view)return;
+    if(st.pin<0){pin.removeAttribute('data-on');return;}
+    var gm=view.gm, p=cellPos(st.pin,gm), s=Math.max(4,gm.cell);
+    pin.style.left=(p[0]/gm.w*100)+'%'; pin.style.top=(p[1]/gm.h*100)+'%';
+    pin.style.width=s+'px'; pin.style.height=s+'px'; pin.setAttribute('data-on','');
+  }
+  canvas.addEventListener('pointermove',function(e){
+    var h=hit(e);
+    if(!h){wrap.removeAttribute('data-hover'); if(tip)tip.removeAttribute('data-on'); return;}
+    wrap.setAttribute('data-hover','');
+    if(gx)gx.style.left=((h.x+h.gm.cell/2)/h.gm.w*100)+'%';
+    if(gy)gy.style.top=((h.y+h.gm.cell/2)/h.gm.h*100)+'%';
+    if(tip&&st.tipFn){
+      tip.style.left=((h.x+h.gm.cell/2)/h.gm.w*100)+'%';
+      tip.style.top=(h.y/h.gm.h*100)+'%';
+      tip.innerHTML=st.tipFn(h.i,h.yr,h.wk); tip.setAttribute('data-on','');
+    }
+    if(cfg.onDrag&&e.buttons===1)cfg.onDrag(h);
+  });
+  canvas.addEventListener('pointerleave',function(){
+    wrap.removeAttribute('data-hover'); if(tip)tip.removeAttribute('data-on');});
+  canvas.addEventListener('pointerdown',function(e){
+    var h=hit(e); if(!h)return;
+    if(canvas.setPointerCapture)canvas.setPointerCapture(e.pointerId);
+    if(cfg.onDrag)cfg.onDrag(h);
+    if(cfg.onPick)cfg.onPick(h);
+  });
+  return{
+    render:function(colorFn,opts){
+      opts=opts||{}; st.colors=colorFn; st.today=opts.today===undefined?-1:opts.today;
+      view=layout();
+      if(opts.reveal&&!RM) tween(opts.revealMs||700,function(k){paint(view,easeOut(k));},placePin);
+      else{paint(view);placePin();}},
+    quick:function(colorFn,today){ st.colors=colorFn;
+      if(today!==undefined)st.today=today;
+      if(!view)view=layout(); paint(view); placePin();},
+    fadeBase:function(dur,done){ if(!view){if(done)done();return;}
+      tween(dur,function(k){paint(view,undefined,1-k);},done);},
+    setTip:function(fn){st.tipFn=fn;},
+    setPin:function(i){st.pin=i;placePin();}
+  };
+}
+function axis(el){
+  if(window.innerWidth<620){
+    el.innerHTML='<span>'+esc(t('axAge'))+' &darr;</span><span>52 &rarr;</span>'; return;
+  }
+  el.innerHTML=[0,10,20,30,40,50,60,70,80,90].map(function(y){return'<span>'+y+'</span>';}).join('');
+}
+
+/* ---------- navegación ---------- */
+function buildScale(){
+  var s='',i;
+  for(i=0;i<8;i++) s+='<button class="seg" data-i="'+i+'">'+esc(t('sec'+i))+'</button>';
+  $('#scale').innerHTML=s;
+  $$('.seg').forEach(function(b){
+    b.onclick=function(){var k=+b.dataset.i; if(k<=maxStep&&k!==S.step)show(k);};});
+  paintScale();
+}
+function paintScale(){
+  $$('.seg').forEach(function(el){
+    var i=+el.dataset.i;
+    el.removeAttribute('data-now'); el.removeAttribute('data-done');
+    if(i<S.step||i<=maxStep&&i<S.step)el.setAttribute('data-done','');
+    if(i<S.step)el.setAttribute('data-done','');
+    if(i===S.step)el.setAttribute('data-now','');
+  });
+}
+function mount(n){
+  S.step=n; if(n>maxStep)maxStep=n;
+  $$('.screen').forEach(function(s){s.removeAttribute('data-on');});
+  var el=$('#s'+n); el.setAttribute('data-on','');
+  el.querySelectorAll('.rise').forEach(function(r){r.style.animation='none';void r.offsetWidth;r.style.animation='';});
+  var hh=el.querySelector('h2');
+  if(hh&&!RM){hh.classList.remove('lift');void hh.offsetWidth;hh.classList.add('lift');}
+  $('#back').hidden=(n===0);
+  paintScale(); window.scrollTo({top:0,behavior:'auto'});
+  if(n===0)hero();
+  if(n===1)lifeUpdate();
+  if(n===2)chart(true);
+  if(n===3)mine();
+  if(n===4)mirror(true);
+  if(n===5)rescue(true);
+  if(n===6)commit();
+  if(n===7)closing();
+}
+
+/* transición: columnas que suben, tapan y bajan — como los años de la rejilla */
+var W_N=30, wbars=[];
+(function(){
+  var s=''; for(var i=0;i<W_N;i++)s+='<i></i>';
+  $('#wipeBars').innerHTML=s;
+  wbars=Array.prototype.slice.call($('#wipeBars').querySelectorAll('i'));
+})();
+function wipeIn(stg,dur,cb){
+  $('#wipe').setAttribute('data-on','');
+  wbars.forEach(function(b,i){
+    b.style.transitionDuration=dur+'ms'; b.style.transformOrigin='top';
+    b.style.transitionDelay=(i*stg)+'ms'; b.style.transform='scaleY(1)';});
+  setTimeout(cb,W_N*stg+dur+20);
+}
+function wipeOut(stg,dur,cb){
+  wbars.forEach(function(b,i){
+    b.style.transitionDuration=dur+'ms'; b.style.transformOrigin='bottom';
+    b.style.transitionDelay=((W_N-1-i)*stg)+'ms'; b.style.transform='scaleY(0)';});
+  setTimeout(function(){$('#wipe').removeAttribute('data-on'); if(cb)cb();},W_N*stg+dur+20);
+}
+function show(n){
+  if(RM){mount(n);Snd.step();return;}
+  Snd.step();
+  wipeIn(2,165,function(){ mount(n); wipeOut(2,165); });
+}
+function go(n){ if(n>=2&&n<=7&&!S.seen[n]){S.seen[n]=true; inter(n);} else show(n); }
+
+var ACC=['#2457C5','#D9A400','#A82F49','#1B6E52','#6D3FA8','#B33A2B'];
+function splitSent(s){
+  var out=[],cur='',i,c;
+  for(i=0;i<s.length;i++){
+    c=s.charAt(i); cur+=c;
+    if('.。！？!?'.indexOf(c)>=0){
+      while(i+1<s.length&&s.charAt(i+1)===' ')i++;
+      if(cur.replace(/\s/g,''))out.push(cur.replace(/^\s+|\s+$/g,''));
+      cur='';
+    }
+  }
+  if(cur.replace(/\s/g,''))out.push(cur.replace(/^\s+|\s+$/g,''));
+  return out;
+}
+function interText(title,body,n){
+  var w=$('#wipe');
+  w.style.setProperty('--acc',ACC[(n-2)%ACC.length]);
+  $('#interIdx').textContent='0'+(n-1);
+  kinetic($('#interT'),title);
+  var parts=splitSent(body);
+  if(parts.length<2)parts=[body];
+  $('#interS').innerHTML=parts.map(function(s,i){
+    return'<span class="ln" style="animation-delay:'+(0.55+i*0.55)+'s">'+esc(s)+'</span>';}).join('');
+  return parts.length;
+}
+function inter(n){
+  if(RM){mount(n);return;}
+  var w=$('#wipe'); Snd.step();
+  wipeIn(6,290,function(){
+    var lines=interText(t('in'+n+'t'),tf('in'+n+'s',{n:S.name||t('you')}),n);
+    w.setAttribute('data-text','');
+    var wrap=$('#interCells'), s='', i;
+    for(i=0;i<7;i++)s+='<i></i>';
+    wrap.innerHTML=s;
+    var cells=Array.prototype.slice.call(wrap.querySelectorAll('i')), k=0, tm, done=false;
+    /* el ritmo se adapta a lo larga que sea la frase */
+    var words=tf('in'+n+'s',{n:S.name||t('you')}).length/5;
+    var total=clamp(3400+words*260+lines*400,4600,9000);
+    var per=total/7;
+    function finish(){
+      if(done)return; done=true; clearTimeout(tm); $('#skip').onclick=null;
+      w.removeAttribute('data-text');
+      setTimeout(function(){ mount(n); wipeOut(6,290); },300);
+    }
+    function tick(){
+      if(k>=cells.length){ tm=setTimeout(finish,420); return; }
+      cells[k].setAttribute('data-on',''); k++; Snd.tap();
+      tm=setTimeout(tick,per);
+    }
+    $('#skip').onclick=finish;
+    tm=setTimeout(tick,700);
+  });
+}
+
+/* ---------- 0 portada: una regla, no la rejilla ---------- */
+function hero(){
+  var o='', i, x;
+  for(i=0;i<=HORIZON;i++){
+    x=(i/HORIZON)*1000;
+    var big=(i%10===0), h=big?22:11, y0=40-h;
+    o+='<line class="'+(big?'d':'')+'" x1="'+x.toFixed(2)+'" y1="'+y0+'" x2="'+x.toFixed(2)+'" y2="40" '+
+       'style="--l:'+h+';stroke-dasharray:'+h+';animation-delay:'+(i*11)+'ms"/>';
+    if(big&&i>0&&i<HORIZON)
+      o+='<text x="'+x.toFixed(2)+'" y="52" text-anchor="middle" style="animation-delay:'+(i*11+260)+'ms">'+i+'</text>';
+  }
+  o+='<line x1="0" y1="40" x2="1000" y2="40" class="d" style="--l:1000;stroke-dasharray:1000;animation-delay:60ms;animation-duration:1.1s"/>';
+  $('#heroRule').innerHTML=o;
+}
+
+/* ---------- 1 edad: barra de vida lineal ---------- */
+function buildLifeTicks(){
+  var o='';
+  for(var a=10;a<=95;a+=5){
+    var f=((a-10)/85*100).toFixed(3), big=(a%10===0);
+    o+='<i class="'+(big?'big':'')+'" style="left:'+f+'%"></i>';
+    if(big)o+='<span style="left:'+f+'%">'+a+'</span>';
+  }
+  $('#lifeTicks').innerHTML=o;
+}
+function setAge(a,quiet){
+  a=clamp(Math.round(a),10,95);
+  if(a===S.age){lifeUpdate();return;}
+  S.age=a; $('#fAge').value=a;
+  if(!quiet)Snd.tap();
+  lifeUpdate();
+}
+function lifeUpdate(){
+  var a=S.age, f=(a-10)/85*100;
+  $('#ageRead').textContent=a;
+  $('#lifeFill').style.width=f+'%';
+  $('#lifeHead').style.left='calc('+f+'% - 1px)';
+  var bar=$('#lifebar'); if(bar)bar.setAttribute('aria-valuenow',a);
+  var w=a*WPY, left=Math.max(0,TOTAL-w);
+  $('#mW').textContent=nf(w);
+  $('#mD').textContent=nf(a*365.25);
+  $('#mR').textContent=nf(left);
+  $('#mP').textContent=(w/TOTAL*100).toFixed(1).replace('.',',')+' %';
+}
+function lifeFromEvent(e){
+  var r=$('#lifebar').getBoundingClientRect();
+  setAge(10+clamp((e.clientX-r.left)/r.width,0,1)*85);
+}
+
+/* ---------- 2 gráfico ---------- */
+function sample(pts,a){
+  if(a<=pts[0][0])return pts[0][1];
+  for(var i=1;i<pts.length;i++) if(a<=pts[i][0]){
+    var x0=pts[i-1][0],y0=pts[i-1][1],x1=pts[i][0],y1=pts[i][1],t=(a-x0)/(x1-x0);
+    return y0+(y1-y0)*(t*t*(3-2*t));
+  }
+  return pts[pts.length-1][1];
+}
+var AX={x0:54,x1:752,y0:24,y1:372,a0:15,a1:85,vmax:9,vbW:900,vbH:440,narrow:false};
+var ANN=[{a:19,k:'ann1'},{a:34,k:'ann2'},{a:63,k:'ann3'}];
+function chartGeom(){
+  var el=$('#chart'), w=(el.parentElement&&el.parentElement.clientWidth)||window.innerWidth||700;
+  if(w<640) AX={x0:36,x1:404,y0:30,y1:316,a0:15,a1:85,vmax:9,vbW:424,vbH:356,narrow:true};
+  else      AX={x0:54,x1:752,y0:24,y1:372,a0:15,a1:85,vmax:9,vbW:900,vbH:440,narrow:false};
+  el.setAttribute('viewBox','0 0 '+AX.vbW+' '+AX.vbH);
+  el.classList.toggle('narrow',AX.narrow);
+}
+function px(a){return AX.x0+(a-AX.a0)/(AX.a1-AX.a0)*(AX.x1-AX.x0);}
+function py(v){return AX.y1-(v/AX.vmax)*(AX.y1-AX.y0);}
+var hot=null, stopPlay=null;
+
+function chart(first){
+  chartGeom();
+  var svg=$('#chart'), o='', v, a;
+
+  /* lo que ya has vivido, sombreado */
+  if(S.age>AX.a0){
+    var mxr=Math.min(px(clamp(S.age,AX.a0,AX.a1)),AX.x1);
+    o+='<rect class="past" x="'+AX.x0+'" y="'+AX.y0+'" width="'+(mxr-AX.x0).toFixed(1)+'" height="'+(AX.y1-AX.y0)+'"/>';
+    if(mxr-AX.x0>70)
+      o+='<text class="zoneT" x="'+(AX.x0+7)+'" y="'+(AX.y1-8)+'">'+esc(t('zLived'))+'</text>';
+    if(AX.x1-mxr>70)
+      o+='<text class="zoneT" x="'+(mxr+7).toFixed(1)+'" y="'+(AX.y1-8)+'">'+esc(t('zToLive'))+'</text>';
+  }
+  /* retícula */
+  for(v=0;v<=9;v+=1.5){
+    o+='<line class="gl" x1="'+AX.x0+'" y1="'+py(v).toFixed(1)+'" x2="'+AX.x1+'" y2="'+py(v).toFixed(1)+'"/>'+
+       '<text x="'+(AX.x0-11)+'" y="'+(py(v)+4).toFixed(1)+'" text-anchor="end">'+v+' h</text>';
+  }
+  /* eje de edad: marca menor cada 5, etiqueta cada 10 */
+  for(a=15;a<=85;a+=5){
+    var big=(a%10===0);
+    o+='<line class="gl" x1="'+px(a).toFixed(1)+'" y1="'+AX.y1+'" x2="'+px(a).toFixed(1)+'" y2="'+(AX.y1+(big?7:4))+'"/>';
+    if(big)o+='<text x="'+px(a).toFixed(1)+'" y="'+(AX.y1+22)+'" text-anchor="middle">'+a+'</text>';
+  }
+  o+='<text x="'+((AX.x0+AX.x1)/2).toFixed(1)+'" y="'+(AX.y1+44)+'" text-anchor="middle">'+esc(t('axAge'))+'</text>'+
+     '<text x="'+(AX.x0-11)+'" y="'+(AX.y0-9)+'" text-anchor="end">'+esc(t('axH'))+'</text>';
+  /* anotaciones */
+  if(!AX.narrow) ANN.forEach(function(n){
+    var x=px(n.a);
+    o+='<line class="ann" x1="'+x.toFixed(1)+'" y1="'+(AX.y0+14)+'" x2="'+x.toFixed(1)+'" y2="'+AX.y1+'"/>'+
+       '<text class="annT" x="'+(x+4).toFixed(1)+'" y="'+(AX.y0+10)+'">'+esc(t(n.k))+'</text>';
+  });
+  /* áreas (solo visibles al aislar) */
+  SERIES.forEach(function(s){
+    var d='M'+AX.x0+' '+AX.y1+' ', x;
+    for(x=AX.a0;x<=AX.a1;x++) d+='L'+px(x).toFixed(1)+' '+py(sample(s.pts,x)).toFixed(1)+' ';
+    d+='L'+AX.x1+' '+AX.y1+' Z';
+    o+='<path class="area" data-s="'+s.id+'" d="'+d+'" fill="'+css(s.v)+'"/>';
+  });
+  /* tu edad */
+  if(S.age>=AX.a0&&S.age<=AX.a1){
+    var mx=px(S.age);
+    o+='<line class="mine" x1="'+mx.toFixed(1)+'" y1="'+AX.y0+'" x2="'+mx.toFixed(1)+'" y2="'+AX.y1+'"/>'+
+       '<text x="'+(mx+5).toFixed(1)+'" y="'+(AX.y1-22)+'" fill="#B33A2B" font-weight="700">'+esc(t('you'))+', '+S.age+'</text>';
+  }
+  /* líneas + etiqueta al final de cada una */
+  var ends=SERIES.map(function(s){return{s:s,y:py(sample(s.pts,AX.a1))};});
+  ends.sort(function(p,q){return p.y-q.y;});
+  for(var i=1;i<ends.length;i++) if(ends[i].y-ends[i-1].y<13) ends[i].y=ends[i-1].y+13;
+  SERIES.forEach(function(s){
+    var d='', x;
+    for(x=AX.a0;x<=AX.a1;x++) d+=(x===AX.a0?'M':'L')+px(x).toFixed(1)+' '+py(sample(s.pts,x)).toFixed(1)+' ';
+    o+='<path class="series" data-s="'+s.id+'" d="'+d+'" stroke="'+css(s.v)+'"/>';
+  });
+  ends.forEach(function(e){
+    if(AX.narrow)return;
+    o+='<line class="gl" x1="'+(AX.x1+2)+'" y1="'+py(sample(e.s.pts,AX.a1)).toFixed(1)+'" x2="'+(AX.x1+12)+'" y2="'+e.y.toFixed(1)+'"/>'+
+       '<text class="endL" x="'+(AX.x1+16)+'" y="'+(e.y+3.5).toFixed(1)+'" fill="'+css(e.s.v)+'">'+esc(t('ser_'+e.s.id))+'</text>';
+  });
+  var ca=clamp(S.chartAge,AX.a0,AX.a1), cx=px(ca);
+  o+='<line class="cursor" x1="'+cx.toFixed(1)+'" y1="'+AX.y0+'" x2="'+cx.toFixed(1)+'" y2="'+AX.y1+'"/>';
+  SERIES.forEach(function(s){
+    o+='<circle class="dot" cx="'+cx.toFixed(1)+'" cy="'+py(sample(s.pts,ca)).toFixed(1)+'" r="4.5" fill="'+css(s.v)+'"/>';
+  });
+  o+='<circle class="knob" cx="'+cx.toFixed(1)+'" cy="'+AX.y1+'" r="5"/>';
+  svg.innerHTML=o;
+  if(first){
+    $('#legend').innerHTML=SERIES.map(function(s){
+      return'<button data-s="'+s.id+'" aria-pressed="false"><i style="background:'+css(s.v)+'"></i>'+esc(t('ser_'+s.id))+'</button>';}).join('');
+    $('#legend').querySelectorAll('[data-s]').forEach(function(b){
+      b.onclick=function(){Snd.tap(); setHot(hot===b.dataset.s?null:b.dataset.s);};
+      b.onmouseenter=function(){if(!hot)dimTo(b.dataset.s);};
+      b.onmouseleave=function(){if(!hot)dimTo(null);};
+    });
+    if(!RM) svg.querySelectorAll('.series').forEach(function(p,i){
+      var L=p.getTotalLength();
+      p.style.strokeDasharray=L; p.style.strokeDashoffset=L;
+      if(p.animate)p.animate([{strokeDashoffset:L},{strokeDashoffset:0}],
+        {duration:1000,delay:i*80,easing:'cubic-bezier(.16,.84,.34,1)',fill:'forwards'});
+      setTimeout(function(){p.style.strokeDasharray='';p.style.strokeDashoffset='';},1000+i*80+80);
+    });
+  }
+  dimTo(hot); rail();
+}
+function dimTo(id){
+  var svg=$('#chart'); svg.classList.toggle('dim',!!id);
+  svg.querySelectorAll('.series,.area').forEach(function(p){
+    if(p.dataset.s===id)p.setAttribute('data-hot',''); else p.removeAttribute('data-hot');});
+  var bars=$('#cBars'); bars.classList.toggle('dim',!!id);
+  bars.querySelectorAll('li').forEach(function(li){
+    if(li.dataset.s===id)li.setAttribute('data-hot',''); else li.removeAttribute('data-hot');});
+}
+function setHot(id){
+  hot=id; dimTo(id);
+  $('#legend').querySelectorAll('[data-s]').forEach(function(b){
+    b.setAttribute('aria-pressed',String(b.dataset.s===id));});
+}
+function rail(){
+  var a=Math.round(clamp(S.chartAge,AX.a0,AX.a1));
+  $('#cAge').textContent=a;
+  var pi=PHASES.length-1;
+  for(var i=0;i<PHASES.length;i++) if(a<=PHASES[i]){pi=i;break;}
+  $('#cPhase').textContent=t('ph'+pi+'n');
+  $('#cRead').textContent=tf('ph'+pi+'r',{n:S.name||t('you')});
+  var rows=SERIES.map(function(s){return{id:s.id,label:t('ser_'+s.id),v:s.v,val:sample(s.pts,a)};});
+  rows.sort(function(x,y){return y.val-x.val;});
+  var max=rows[0].val;
+  $('#cBars').innerHTML=rows.map(function(r){
+    return'<li data-s="'+r.id+'"><div class="brow"><span>'+r.label+'</span><b>'+r.val.toFixed(1)+' h</b></div>'+
+      '<div class="btrack"><div class="bfill" style="width:'+(r.val/max*100).toFixed(1)+'%;background:'+css(r.v)+'"></div></div></li>';
+  }).join('');
+  $('#cBars').querySelectorAll('li').forEach(function(li){
+    li.onclick=function(){Snd.tap(); setHot(hot===li.dataset.s?null:li.dataset.s);};
+    li.onmouseenter=function(){if(!hot)dimTo(li.dataset.s);};
+    li.onmouseleave=function(){if(!hot)dimTo(null);};
+  });
+}
+function chartAt(e){
+  var svg=$('#chart'), r=svg.getBoundingClientRect();
+  var x=(e.clientX-r.left)/r.width*AX.vbW;
+  var a=AX.a0+(x-AX.x0)/(AX.x1-AX.x0)*(AX.a1-AX.a0);
+  var prev=S.chartAge; S.chartAge=clamp(Math.round(a),AX.a0,AX.a1);
+  if(prev!==S.chartAge){chart(false); Snd.tap();}
+  showCTip();
+}
+function showCTip(){
+  var tip=$('#cTip');
+  tip.style.left=((px(S.chartAge)/AX.vbW)*100)+'%'; tip.style.top='5%';
+  tip.innerHTML='<b>'+S.chartAge+' años</b><br>'+SERIES.map(function(s){
+    return t('ser_'+s.id)+': '+sample(s.pts,S.chartAge).toFixed(1)+' h';}).join('<br>');
+  tip.setAttribute('data-on','');
+}
+function playLife(){
+  if(stopPlay){stopPlay();stopPlay=null;$('#play').textContent=t('play');return;}
+  $('#play').textContent=t('stop');
+  stopPlay=tween(9000,function(k){
+    S.chartAge=Math.round(AX.a0+(AX.a1-AX.a0)*k); chart(false);
+  },function(){stopPlay=null;$('#play').textContent=t('play');});
+}
+
+/* ---------- 3 planner ---------- */
+var gMine=makeGrid('gMine',{tip:'#tMine',onPick:function(h){
+  S.pin=h.i; gMine.setPin(h.i); Snd.tap();
+  var yr=h.yr, d=h.i-S.age*WPY;
+  $('#pinTxt').textContent = d<0?tf('pinPast',{y:yr,w:nf(-d)}):tf('pinFut',{y:yr,w:nf(d)});
+}});
+gMine.setTip(function(i,yr){
+  var d=i-S.age*WPY;
+  return d<0?tf('tipPast',{y:yr,w:nf(-d)}):tf('tipFut',{y:yr,w:nf(d)});
+});
+function mine(){
+  var lived=clamp(S.age*WPY,0,TOTAL);
+  $('#t3').textContent=S.name?tf('t3n',{n:S.name}):t('t3');
+  countTo($('#wLived'),lived,1900);
+  $('#s3det').textContent=tf('t3det',{y:nf(HORIZON-S.age),w:nf(TOTAL-lived)});
+  Snd.pulse(26,1900);
+  gMine.render(function(i){return i<lived?css('--ink'):null;},{reveal:true,revealMs:1900,today:S.age});
+  axis($('#aMine')); people();
+}
+function people(){
+  $('#pList').innerHTML=S.people.map(function(p,i){
+    return'<li style="animation-delay:'+(i*.05)+'s"><i class="pdot" style="background:'+p.color+'"></i>'+
+      '<span>'+esc(p.name)+'</span><span class="pmeta">'+p.age+' '+esc(t('years'))+' · '+esc(fL(p.freq))+'</span>'+
+      '<button data-del="'+p.id+'" aria-label="'+esc(t('remove'))+'">'+esc(t('remove'))+'</button></li>';}).join('');
+  $('#pEmpty').style.display=S.people.length?'none':'block';
+  $('#addP').disabled=S.people.length>=MAXP;
+  $('#addP').textContent=S.people.length>=MAXP?t('maxP'):t('addP');
+  $('#go4').disabled=!S.people.length;
+  $('#pList').querySelectorAll('[data-del]').forEach(function(b){
+    b.onclick=function(){
+      S.people=S.people.filter(function(p){return p.id!==+b.dataset.del;});
+      if(!S.people.some(function(p){return p.id===S.mirror;}))
+        S.mirror=S.people.length?S.people[0].id:null;
+      Snd.low(); people();};
+  });
+}
+
+/* ---------- 4 espejo ---------- */
+var gTheirs=makeGrid('gTheirs',{tip:'#tTheirs'});
+function cur(){return S.people.filter(function(x){return x.id===S.mirror;})[0];}
+function illusion(p){ return t('ill_'+p.rel)||t('ill_otros'); }
+function mirror(full){
+  if(!S.mirror&&S.people.length)S.mirror=S.people[0].id;
+  var p=cur(); if(!p)return;
+  if(full){
+    $('#tabs').innerHTML=S.people.map(function(x){
+      return'<li><button data-p="'+x.id+'" aria-pressed="'+(x.id===S.mirror)+'">'+
+        '<i class="pdot" style="background:'+x.color+'"></i>'+esc(x.name)+'</button></li>';}).join('');
+    $('#tabs').querySelectorAll('[data-p]').forEach(function(b){
+      b.onclick=function(){S.mirror=+b.dataset.p;Snd.tap();mirror(true);};});
+    $('#mAge').value=p.age; $('#mAgeRead').textContent=p.age;
+    axis($('#aTheirs'));
+  }
+  mirrorPaint(full);
+}
+function mirrorPaint(reveal){
+  var p=cur(); if(!p)return;
+  var r=calc(p), lived=clamp(p.age*WPY,0,TOTAL);
+  var marks=new Map(); spread(marks,lived,r.shared,r.cells,p.color);
+  var ink=css('--ink');
+  gTheirs.setTip(function(i,yr){
+    if(marks.has(i))return t('tipMeet');
+    return i<lived?tf('tipTP',{y:yr}):tf('tipTF',{y:yr});});
+  var fn=function(i){return i<lived?ink:(marks.get(i)||null);};
+  if(reveal){Snd.pulse(14,700); gTheirs.render(fn,{reveal:true,today:p.age});} else gTheirs.quick(fn,p.age);
+  $('#lgTheirs').innerHTML=
+    '<span><i class="sw" style="background:var(--ink);border-color:var(--ink)"></i>'+esc(t('lgT1'))+'</span>'+
+    '<span><i class="sw"></i>'+esc(t('lgT2'))+'</span>'+
+    '<span><i class="sw" style="background:'+p.color+';border-color:'+p.color+'"></i>'+esc(t('lgT3'))+'</span>';
+  if(reveal)countTo($('#mPct'),Math.round(r.pct),650); else $('#mPct').textContent=nf(r.pct);
+  $('#mIll').textContent=illusion(p);
+  var run=r.meets<60?tf('runD',{n:nf(r.meets)})
+        :(r.meets<730?tf('runM',{n:Math.round(r.meets/30.44)})
+        :tf('runY',{n:(r.meets/365.25).toFixed(1)}));
+  $('#mReal').textContent=r.shared===0?t('mReal0')
+    :tf('mReal',{p:p.name,a:p.age,m:nf(r.meets),c:nf(r.cells),s:nf(r.shared),r:run});
+  $('#mUnit').textContent=r.shared===0?'':tf('unitLine',{n:nf(r.meets),u:unitOf(p)});
+}
+
+/* ---------- 5 rescate ---------- */
+var gRes=makeGrid('gRes',{tip:'#tRes'});
+function rescue(full){
+  if(full){
+    $('#rRows').innerHTML=S.people.map(function(p){
+      var idx=fIdx(p.newFreq||p.freq);
+      return'<div class="frow"><div class="frow__h"><i class="pdot" style="background:'+p.color+'"></i>'+
+        '<b>'+esc(p.name)+'</b><span class="gain" data-g="'+p.id+'">+0</span></div>'+
+        '<div class="frow__u" data-u="'+p.id+'"></div>'+
+        '<input class="rg" type="range" min="0" max="7" value="'+idx+'" data-f="'+p.id+'" '+
+        'aria-label="Frecuencia con '+esc(p.name)+'">'+
+        '<div class="frow__l"><span>'+esc(t('fMin'))+'</span><b data-l="'+p.id+'">'+esc(t('frq_'+FREQ[idx].id))+'</b><span>'+esc(t('fMax'))+'</span></div></div>';
+    }).join('');
+    $('#rRows').querySelectorAll('[data-f]').forEach(function(sl){
+      var last=+sl.value;
+      sl.addEventListener('input',function(){
+        var p=S.people.filter(function(x){return x.id===+sl.dataset.f;})[0]; if(!p)return;
+        var v=+sl.value; p.newFreq=FREQ[v].id;
+        var lab=$('[data-l="'+p.id+'"]'); if(lab)lab.textContent=t('frq_'+FREQ[v].id);
+        if(v!==last){last=v; Snd.tap();}
+        rescuePaint();
+      });
+    });
+    axis($('#aRes'));
+  }
+  rescuePaint(full);
+}
+function rescuePaint(reveal){
+  var lived=clamp(S.age*WPY,0,TOTAL), myLeft=Math.max(0,(HORIZON-S.age)*WPY);
+  var base=new Map(), gain=new Map(), total=0;
+  var soft=css('--blue-soft'), yel=css('--yellow'), ink=css('--ink');
+  S.people.forEach(function(p){
+    var now=calc(p,p.freq), next=calc(p,p.newFreq||p.freq);
+    var d=Math.max(0,next.cells-now.cells); total+=d;
+    spread(gain,lived,myLeft,Math.min(next.cells,myLeft),yel);
+    spread(base,lived,myLeft,Math.min(now.cells,myLeft),soft);
+    var du=$('[data-u="'+p.id+'"]');
+    if(du)du.innerHTML=tf('unitLine',{n:'<b>'+nf(next.meets)+'</b>',u:esc(unitOf(p))});
+    var el=$('[data-g="'+p.id+'"]');
+    if(el){
+      var prev=el.textContent;
+      el.textContent='+'+nf(d);
+      if(prev!==el.textContent&&!RM){el.classList.add('pop');
+        setTimeout(function(){el.classList.remove('pop');},300);}
+    }
+  });
+  gRes.setTip(function(i,yr){
+    if(base.has(i))return t('tipNow');
+    if(gain.has(i))return t('tipGain');
+    return i<lived?('<b>'+t('lgLived')+'</b>'):tf('tipFree',{y:yr});});
+  var fn=function(i){return i<lived?ink:(base.get(i)||gain.get(i)||null);};
+  if(reveal){Snd.pulse(14,700); gRes.render(fn,{reveal:true,today:S.age});} else gRes.quick(fn,S.age);
+  if(reveal)countTo($('#rW'),total,650); else $('#rW').textContent=nf(total);
+  S.total=total;
+}
+
+/* ---------- 6 mensajes ---------- */
+var TPL={
+ calido:{
+  familia:function(n){return'Hola '+n+'. Me he puesto a echar cuentas de las veces que nos vemos al año y me han salido muy pocas. Me apetece cambiarlo. ¿Comemos juntos este mes y me cuentas cómo va todo?';},
+  pareja:function(n){return n+', quiero recuperar los ratos en los que estamos de verdad, sin pantallas ni prisa. ¿Nos guardamos una tarde fija esta semana, solo para nosotros?';},
+  hijos:function(n){return n+', tengo ganas de hacer algo juntos, tú y yo solos, sin nada más en medio. Dime qué te apetece y lo dejo apuntado en el calendario.';},
+  amigos:function(n){return n+', llevamos demasiado tiempo diciendo que tenemos que vernos. Lo pongo yo en el calendario: dime dos días que te vayan bien y cierro uno.';},
+  otros:function(n){return'Hola '+n+'. Me apetece que nos veamos con calma, no de pasada. ¿Te va bien alguna tarde de estas?';}},
+ directo:{
+  familia:function(n){return'Hola '+n+'. He calculado las veces que nos quedan por vernos y son menos de las que pensaba. ¿Qué día de este mes te va bien? Lo bloqueo.';},
+  pareja:function(n){return n+': propongo una tarde fija a la semana, solo nosotros. Empezamos esta. ¿Jueves o sábado?';},
+  hijos:function(n){return n+', quiero una tarde contigo cada semana. Elige tú el día y no lo movemos.';},
+  amigos:function(n){return n+', basta de decir que a ver si quedamos. Dime un día de las próximas dos semanas y lo cierro.';},
+  otros:function(n){return'Hola '+n+'. ¿Nos vemos este mes? Dime un día y lo dejo apuntado.';}}
+};
+function msgFor(p){return tf((S.tone==='calido'?'mw_':'md_')+p.rel,{n:p.name});}
+function commit(){
+  $('#msgs').innerHTML=S.people.map(function(p,i){
+    if(p.msg===undefined||p.msgTone!==S.tone){p.msg=msgFor(p);p.msgTone=S.tone;}
+    return'<div class="msg" '+(p.sent?'data-done':'')+' style="animation-delay:'+(i*.07)+'s">'+
+      '<div class="msg__h"><i class="pdot" style="background:'+p.color+'"></i><b>'+esc(p.name)+'</b>'+
+      '<em>'+fL(p.newFreq||p.freq).toLowerCase()+'</em></div>'+
+      '<textarea class="msg__t" data-txt="'+p.id+'" aria-label="Mensaje para '+esc(p.name)+'">'+esc(p.msg)+'</textarea>'+
+      '<div class="msg__a">'+
+      '<button class="tiny" data-copy="'+p.id+'">'+esc(t('copy'))+'</button>'+
+      '<button class="tiny" data-wa="'+p.id+'">'+esc(t('wa'))+'</button>'+
+      '<button class="tiny" data-ics="'+p.id+'">'+esc(t('icsB'))+'</button>'+
+      '<button class="tiny" data-sent="'+p.id+'" '+(p.sent?'data-active':'')+'>'+
+        (p.sent?esc(t('sentB')):esc(t('mark')))+'</button></div></div>';}).join('');
+  function get(id){return S.people.filter(function(x){return x.id===+id;})[0];}
+  $$('[data-txt]').forEach(function(t){t.oninput=function(){var p=get(t.dataset.txt);if(p)p.msg=t.value;};});
+  $$('[data-copy]').forEach(function(b){b.onclick=function(){
+    var p=get(b.dataset.copy);
+    if(navigator.clipboard&&navigator.clipboard.writeText)
+      navigator.clipboard.writeText(p.msg).then(function(){b.textContent=t('copied');Snd.good();},
+        function(){b.textContent=t('copyFail');});
+    else b.textContent=t('copyFail');
+    setTimeout(function(){b.textContent=t('copy');},1600);};});
+  $$('[data-wa]').forEach(function(b){b.onclick=function(){
+    var p=get(b.dataset.wa);
+    window.open('https://wa.me/?text='+encodeURIComponent(p.msg),'_blank','noopener');};});
+  $$('[data-ics]').forEach(function(b){b.onclick=function(){ics(get(b.dataset.ics));Snd.good();};});
+  $$('[data-sent]').forEach(function(b){b.onclick=function(){
+    var p=get(b.dataset.sent); p.sent=!p.sent; Snd.good(); commit();};});
+  var done=S.people.filter(function(p){return p.sent;}).length;
+  $('#prog').textContent=tf('prog',{d:done,t:S.people.length})+' '+
+    (done===S.people.length&&done>0?t('progAll'):t('progLeft'));
+}
+function ics(p){
+  try{
+    var d=new Date(); d.setDate(d.getDate()+7); d.setHours(19,0,0,0);
+    var end=new Date(d.getTime()+90*60000);
+    function f(x){return x.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';}
+    var body=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Veces//ES','BEGIN:VEVENT','UID:'+Date.now()+'@veces',
+      'DTSTAMP:'+f(new Date()),'DTSTART:'+f(d),'DTEND:'+f(end),'SUMMARY:'+tf('icsTitle',{n:p.name}),
+      'DESCRIPTION:'+String(p.msg).replace(/\n/g,' '),'END:VEVENT','END:VCALENDAR'].join('\r\n');
+    var url=URL.createObjectURL(new Blob([body],{type:'text/calendar'}));
+    var a=document.createElement('a');
+    a.href=url; a.download='ver-a-'+p.name.toLowerCase().replace(/\s+/g,'-')+'.ics'; a.click();
+    setTimeout(function(){URL.revokeObjectURL(url);},1500);
+  }catch(e){}
+}
+
+/* ---------- 7 cierre ---------- */
+var gEnd=makeGrid('gEnd',{tip:'#tEnd'});
+var REFLEX=['rf1','rf2','rf3','rf4','rf5'];
+function closing(){
+  var lived=clamp(S.age*WPY,0,TOTAL), myLeft=Math.max(0,(HORIZON-S.age)*WPY);
+  var marks=new Map(), owner=new Map(), cells=0;
+  S.people.forEach(function(p){
+    var r=calc(p,p.newFreq||p.freq); cells+=r.cells;
+    var before=marks.size;
+    spread(marks,lived,myLeft,Math.min(r.cells,myLeft),p.color);
+    marks.forEach(function(v,k){if(v===p.color)owner.set(k,p.name);});
+    if(before<0)return;
+  });
+  var ink=css('--ink');
+  $('#t7').textContent=S.name?tf('t7n',{n:S.name}):t('t7');
+  $('#lgEnd').innerHTML=S.people.map(function(p){
+    return'<span><i class="sw" style="background:'+p.color+';border-color:'+p.color+'"></i>'+esc(p.name)+'</span>';}).join('');
+  gEnd.setTip(function(i,yr){
+    return owner.has(i)?tf('endTip',{n:esc(owner.get(i))}):tf('endTipNo',{y:yr});});
+  gEnd.render(function(i){return i<lived?ink:(marks.get(i)||null);},{});
+  setTimeout(function(){gEnd.fadeBase(RM?10:2300);},600);
+  $('#endNum').textContent='0'; countTo($('#endNum'),cells,1500);
+  $('#endSub').textContent=t('endSub');
+  var box=$('#reflect');
+  box.innerHTML=REFLEX.map(function(k){return'<p>'+esc(t(k))+'</p>';}).join('')+
+    '<p style="font-weight:700;color:var(--ink)">'+
+    esc(S.total>0?tf('rfUp',{n:nf(S.total)}):t('rfNo'))+'</p>';
+  box.querySelectorAll('p').forEach(function(p,i){
+    p.style.animationDelay=(1.5+i*.8)+'s';
+    setTimeout(function(){p.setAttribute('data-on','');},20);});
+}
+function summary(){
+  var L=['VECES — '+(S.name||'—')+' ('+S.age+' '+t('years')+')',''];
+  S.people.forEach(function(p){
+    var a=calc(p,p.freq), b=calc(p,p.newFreq||p.freq);
+    L.push(p.name+' ('+p.age+'): '+fL(p.freq)+' -> '+fL(p.newFreq||p.freq)+
+      ' · '+nf(a.cells)+' -> '+nf(b.cells)+' '+t('fullW'));});
+  L.push('','+'+nf(S.total||0)+' '+t('fullW'));
+  return L.join('\n');
+}
+
+/* ---------- modal ---------- */
+var draft={rel:'familia'};
+function openModal(){
+  draft={rel:'familia'};
+  $('#pName').value=''; $('#pAge').value=40; $('#pAgeRead').textContent='40';
+  $('#pFreq').value=FDEF; $('#pFreqL').textContent=t('frq_'+FREQ[FDEF].id);
+  $('#pRel').innerHTML=REL.map(function(r){
+    return'<button type="button" data-r="'+r.id+'" aria-pressed="'+(r.id===draft.rel)+'">'+esc(t('rel_'+r.id))+'</button>';}).join('');
+  $('#pRel').querySelectorAll('[data-r]').forEach(function(b){
+    b.onclick=function(){draft.rel=b.dataset.r; Snd.tap();
+      $('#pRel').querySelectorAll('[data-r]').forEach(function(x){
+        x.setAttribute('aria-pressed',String(x.dataset.r===draft.rel));});};});
+  $('#e2').textContent=''; $('#modal').setAttribute('data-on','');
+  setTimeout(function(){$('#pName').focus();},50);
+}
+function closeModal(){$('#modal').removeAttribute('data-on');}
+function saveModal(){
+  var name=$('#pName').value.trim();
+  if(!name){$('#e2').textContent=t('errName2');$('#pName').focus();return;}
+  S.people.push({id:++uid,name:name,rel:draft.rel,age:+$('#pAge').value,freq:FREQ[+$('#pFreq').value].id,
+                 color:PALETTE[S.people.length%PALETTE.length],sent:false});
+  if(!S.mirror)S.mirror=uid;
+  closeModal(); Snd.good(); people();
+}
+
+/* ---------- arranque y eventos ---------- */
+function applyLang(code){
+  LANG=code; document.documentElement.lang=code;
+  $$('[data-i18n]').forEach(function(el){setTx(el,t(el.dataset.i18n));});
+  $$('[data-i18p]').forEach(function(el){el.placeholder=t(el.dataset.i18p);});
+  $('#langFlag').innerHTML=FLAG[code]||'';
+  $('#langName').textContent=t('lang');
+  $('#back').setAttribute('aria-label',t('back'));
+  $('#soundL').textContent=S.sound?t('soundOn'):t('sound');
+  $('#play').textContent=stopPlay?t('stop'):t('play');
+  $('#addP').textContent=S.people.length>=MAXP?t('maxP'):t('addP');
+  $('#copy').textContent=t('copySum');
+  $('#pinTxt').textContent=t('pinHint');
+  kinetic($('#heroT'),t('h1'));
+  buildScale(); mount(S.step);
+}
+(function(){
+  var b=$('#langB'), m=$('#langM');
+  m.innerHTML=LANGS.map(function(c){
+    return'<li><button data-l="'+c+'"><span class="flg">'+FLAG[c]+'</span>'+
+      esc(window.I18N[c].lang)+'<i>'+c+'</i></button></li>';}).join('');
+  function close(){m.removeAttribute('data-on');b.setAttribute('aria-expanded','false');}
+  b.onclick=function(e){
+    e.stopPropagation();
+    var open=m.hasAttribute('data-on');
+    if(open)close(); else{m.setAttribute('data-on','');b.setAttribute('aria-expanded','true');}
+    Snd.tap();
+  };
+  m.querySelectorAll('[data-l]').forEach(function(x){
+    x.onclick=function(e){e.stopPropagation(); close(); Snd.good(); applyLang(x.dataset.l);
+      m.querySelectorAll('[data-l]').forEach(function(y){
+        y.setAttribute('aria-current',String(y.dataset.l===x.dataset.l));});};
+  });
+  document.addEventListener('click',close);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  m.querySelector('[data-l="es"]').setAttribute('aria-current','true');
+})();
+
+buildLifeTicks(); applyLang(LANG);
+
+/* pantalla previa: el contador corre mientras decides */
+(function(){
+  var t0=Date.now(), iv=setInterval(function(){
+    var s=Math.floor((Date.now()-t0)/1000);
+    var el=$('#gateSec'); if(el)el.textContent=nf(s);
+  },1000);
+  $('#gateGo').onclick=function(){
+    clearInterval(iv);
+    $('#gate').setAttribute('data-off','');
+    if(!S.sound){                       /* el gesto del boton permite arrancar el audio */
+      var on=Snd.toggle(); S.sound=on;
+      $('#sound').setAttribute('aria-pressed',String(on));
+      $('#soundL').textContent=on?t('soundOn'):t('sound');
+    }
+    setTimeout(function(){var g=$('#gate'); if(g&&g.parentNode)g.parentNode.removeChild(g);},900);
+  };
+})();
+$('#heroAlt').onclick=function(){ $('#heroAltMsg').setAttribute('data-on',''); Snd.low(); };
+
+$$('[data-go]').forEach(function(b){b.onclick=function(){go(+b.dataset.go);};});
+$('#back').onclick=function(){show(Math.max(0,S.step-1));};
+$('#fAge').addEventListener('input',function(e){setAge(+e.target.value);});
+(function(){
+  var bar=$('#lifebar'), down=false;
+  bar.addEventListener('pointerdown',function(e){
+    down=true; if(bar.setPointerCapture)bar.setPointerCapture(e.pointerId); lifeFromEvent(e);});
+  bar.addEventListener('pointermove',function(e){if(down)lifeFromEvent(e);});
+  bar.addEventListener('pointerup',function(){down=false;});
+  bar.addEventListener('pointercancel',function(){down=false;});
+  bar.addEventListener('keydown',function(e){
+    var d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0; if(!d)return;
+    e.preventDefault(); setAge(S.age+d);});
+})();
+$('#fName').addEventListener('input',function(e){S.name=e.target.value.trim();});
+$('#go2').onclick=function(){
+  if(!S.name){$('#e1').textContent=t('errName');$('#fName').focus();return;}
+  $('#e1').textContent=''; S.chartAge=clamp(S.age,AX.a0,AX.a1); go(2);};
+$('#go4').onclick=function(){go(4);};
+$('#play').onclick=function(){Snd.tap();playLife();};
+$('#addP').onclick=openModal;
+$('#mCancel').onclick=closeModal;
+$('#mSave').onclick=saveModal;
+$('#pAge').addEventListener('input',function(e){$('#pAgeRead').textContent=e.target.value;});
+$('#pFreq').addEventListener('input',function(e){$('#pFreqL').textContent=t('frq_'+FREQ[+e.target.value].id);Snd.tap();});
+$('#mAge').addEventListener('input',function(e){
+  var p=cur(); if(!p)return;
+  p.age=+e.target.value; $('#mAgeRead').textContent=p.age;
+  mirrorPaint(false);
+  var t=$('#tabs').querySelector('[data-p="'+p.id+'"]'); if(t)Snd.tap();
+});
+$('#modal').addEventListener('click',function(e){if(e.target===$('#modal'))closeModal();});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&$('#modal').hasAttribute('data-on'))closeModal();});
+
+var drag=false, cv=$('#chart');
+cv.addEventListener('pointerdown',function(e){
+  drag=true; if(cv.setPointerCapture)cv.setPointerCapture(e.pointerId);
+  if(stopPlay){stopPlay();stopPlay=null;$('#play').textContent=t('play');}
+  chartAt(e);});
+cv.addEventListener('pointermove',function(e){if(drag)chartAt(e);});
+cv.addEventListener('pointerup',function(){drag=false;});
+cv.addEventListener('pointercancel',function(){drag=false;});
+cv.addEventListener('pointerleave',function(){$('#cTip').removeAttribute('data-on');});
+cv.addEventListener('keydown',function(e){
+  var d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0; if(!d)return;
+  e.preventDefault(); S.chartAge=clamp(S.chartAge+d,AX.a0,AX.a1); chart(false); Snd.tap(); showCTip();});
+
+$('#sound').onclick=function(){
+  var on=Snd.toggle(); S.sound=on;
+  $('#sound').setAttribute('aria-pressed',String(on));
+  $('#soundL').textContent=on?t('soundOn'):t('sound');};
+$('#copy').onclick=function(){
+  if(navigator.clipboard&&navigator.clipboard.writeText)
+    navigator.clipboard.writeText(summary()).then(function(){$('#copy').textContent=t('copied');Snd.good();},
+      function(){$('#copy').textContent=t('copyFail');});
+  else $('#copy').textContent=t('copyFail');
+  setTimeout(function(){$('#copy').textContent=t('copySum');},1800);};
+$('#restart').onclick=function(){
+  S.name='';S.age=30;S.chartAge=30;S.people=[];S.mirror=null;S.seen={};S.total=0;S.tone='calido';S.pin=-1;
+  uid=0; maxStep=0;
+  $('#fName').value=''; $('#fAge').value=30; lifeUpdate();
+  show(0); applyLang(LANG);};
+$('#tone').querySelectorAll('[data-t]').forEach(function(b){
+  b.onclick=function(){S.tone=b.dataset.t; Snd.tap();
+    $('#tone').querySelectorAll('[data-t]').forEach(function(x){
+      x.setAttribute('aria-pressed',String(x.dataset.t===S.tone));});
+    commit();};});
+
+var rt;
+window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){
+  if(S.step===1)lifeUpdate(); if(S.step===2)chart(false); if(S.step===3)mine();
+  if(S.step===4)mirrorPaint(false); if(S.step===5)rescuePaint(false); if(S.step===7)closing();
+},170);});
+})();
+</script>
+</body>
+</html>
