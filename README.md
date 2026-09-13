@@ -8,22 +8,30 @@
 
 <sub>Your life in weeks. Theirs, in the times you appear in it.</sub>
 
-<br>
+<br><br>
 
 <a href="https://aethera-project.netlify.app/">
   <img src="docs/assets/hero.webp" alt="AETHERA on a laptop and a phone" width="100%">
 </a>
 
-<br>
-<br>
+<br><br>
 
-### [Live experience →](https://aethera-project.netlify.app/)
+<a href="https://aethera-project.netlify.app/">
+  <img src="https://img.shields.io/badge/LIVE%20EXPERIENCE-FFFFFF?style=for-the-badge&logoColor=000000&labelColor=FFFFFF&color=FFFFFF" alt="Live Experience">
+</a>
+&nbsp;
+<a href="https://github.com/Kaijove">
+  <img src="https://img.shields.io/badge/GITHUB-FFFFFF?style=for-the-badge&logo=github&logoColor=000000&labelColor=FFFFFF&color=FFFFFF" alt="GitHub">
+</a>
+
+<br><br>
 
 <sub>In your browser · 8 languages · No sign-up</sub>
 
 <br>
 
 </div>
+
 
 ## ✦ About
 
