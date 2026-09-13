@@ -885,7 +885,7 @@ window.I18N={
   "progLeft": "Los que faltan siguen contando hacia abajo.",
   "qAge": "¿Cuántos años tienes?",
   "qName": "¿Cómo te llamas?",
-  "realT": "Lo que sale la cuenta",
+  "realT": "Lo que dice la cuenta",
   "rel_amigos": "Amistad",
   "rel_familia": "Familia",
   "rel_hijos": "Hijo o hija",
@@ -1058,7 +1058,7 @@ window.I18N={
   "m4": "de l'horitzó de 90 anys",
   "mFreq": "Cada quant us veieu de veritat?",
   "mFreqH": "Compta només les estones de debò: un dinar, una visita, una xerrada sense pressa. No el creuar-vos per casa.",
-  "mReal": "{p} té {a}. Us queden {s} setmanes compartides, però només estareu junts en {c}: uns {m} encontres. Posats seguits, caben en {r}.",
+  "mReal": "{p} té {a}. Us queden {s} setmanes compartides, però només estareu junts en {c}: unes {m} trobades. Posats seguits, caben en {r}.",
   "mReal0": "Amb aquests anys el compte ja no dona marge. L'horitzó de referència són 90 anys.",
   "mTheirAge": "Quants anys té?",
   "mTitle": "Afegeix algú",
@@ -1924,7 +1924,7 @@ window.I18N={
   "ill_hijos": "Che la fase in cui ti cercano durerà.",
   "ill_otros": "Che ci sarà un momento migliore di questo.",
   "ill_pareja": "Che vivere insieme conta già come vedersi.",
-  "in2s": "Prima di calcolare il tuo caso, {n}, serve un punto di partenza. Ecco come la gente divide il proprio tempo a ogni età, secondo i dati. Non lo scegle nessuno: lo scegle l'età che ha.",
+  "in2s": "Prima di calcolare il tuo caso, {n}, serve un punto di partenza. Ecco come la gente divide il proprio tempo a ogni età, secondo i dati. Non lo sceglie nessuno: lo sceglie l'età che ha.",
   "in2t": "La divisione",
   "in3s": "Ora tu, {n}. Sottrarremo quello che hai già speso. Ogni quadrato è una settimana della tua vita: quelli pieni non tornano, e quelli vuoti sono l'unica cosa con cui puoi fare qualcosa.",
   "in3t": "Il conteggio",
@@ -2568,7 +2568,17 @@ function $(s){return document.querySelector(s);}
 function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s));}
 function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
 function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
-function nf(n){return new Intl.NumberFormat('es-ES').format(Math.round(n));}
+/* los números siguen el idioma elegido: 11.323 en castellano, 11,323 en inglés */
+var NF={};
+function nf(n,d){
+  d=d||0; var k=LANG+d;
+  if(!NF[k])NF[k]=new Intl.NumberFormat(LANG,{minimumFractionDigits:d,maximumFractionDigits:d,useGrouping:'always'});
+  return NF[k].format(d?n:Math.round(n));
+}
+function pf(x){
+  if(!NF[LANG+'%'])NF[LANG+'%']=new Intl.NumberFormat(LANG,{style:'percent',minimumFractionDigits:1,maximumFractionDigits:1});
+  return NF[LANG+'%'].format(x);
+}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){
   return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 var LANGS=['es','ca','en','fr','de','it','ja','zh'];
@@ -2596,7 +2606,7 @@ function tween(dur,fn,done){
   return function(){stop=true;};
 }
 function countTo(el,to,dur){
-  var from=parseFloat(String(el.textContent).replace(/\./g,''))||0;
+  var from=parseFloat(String(el.textContent).replace(/\D/g,''))||0;
   if(from===to){el.textContent=nf(to);return;}
   tween(dur||600,function(k){el.textContent=nf(from+(to-from)*easeOut(k));},
         function(){el.textContent=nf(to);});
@@ -2619,6 +2629,15 @@ function spread(map,start,span,cells,val){
   var st=span/cells;
   for(var k=0;k<cells;k++) map.set(start+Math.floor(k*st),val);
 }
+/* como spread, pero solo en casillas libres: varias personas comparten rejilla sin pisarse */
+function spreadFree(map,start,span,cells,val,busy){
+  var free=[],i,k,n;
+  for(i=start;i<start+span&&i<TOTAL;i++) if(!map.has(i)&&!(busy&&busy(i))) free.push(i);
+  n=Math.min(cells,free.length);
+  for(k=0;k<n;k++) map.set(free[Math.floor(k*free.length/n)],val);
+}
+/* primero quien menos tiempo compartido tiene: es quien menos huecos puede usar */
+function bySpan(a,b){return calc(a).shared-calc(b).shared;}
 
 /* ---------- sonido ---------- */
 /* ---------- música: se compone sola en el navegador ----------
@@ -2626,7 +2645,7 @@ function spread(map,start,span,cells,val){
    sonará ese en su lugar. Si no, suena la partitura generativa. */
 var Snd=(function(){
   var ctx,master,mus,ui,on=false,booted=false,file=null,useFile=false;
-  var chordT=null,bellT=null,ix=0;
+  var chordT=null,bellT=null,ix=0,airSrc=null;
   /* Am - F - G - Em, lento */
   var PROG=[[45,52,57,60],[41,48,53,57],[43,50,55,59],[40,47,52,55]];
   var BELL=[69,72,74,76,79,81];
@@ -2643,7 +2662,11 @@ var Snd=(function(){
     /* una pista propia, si existe */
     try{
       file=new Audio('ambient.mp3'); file.loop=true; file.volume=.45; file.preload='auto';
-      file.addEventListener('canplaythrough',function(){useFile=true;},{once:true});
+      /* la pista suele terminar de cargar con la música ya sonando: se cambia a ella en ese momento */
+      file.addEventListener('canplaythrough',function(){
+        useFile=true;
+        if(on){clearTimeout(chordT);clearTimeout(bellT);stopAir();playFile();}
+      },{once:true});
       file.addEventListener('error',function(){useFile=false;file=null;});
     }catch(e){file=null;}
   }
@@ -2688,13 +2711,15 @@ var Snd=(function(){
   }
 
   function air(){
+    if(airSrc)return;                         /* una sola fuente de aire, aunque se active el sonido varias veces */
     var len=ctx.sampleRate*3, buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0),i;
     for(i=0;i<len;i++) d[i]=(Math.random()*2-1)*.5;
     var s=ctx.createBufferSource(); s.buffer=buf; s.loop=true;
     var f=ctx.createBiquadFilter(); f.type='bandpass'; f.frequency.value=760; f.Q.value=.5;
     var g=ctx.createGain(); g.gain.value=.012;
-    s.connect(f); f.connect(g); g.connect(mus); s.start();
+    s.connect(f); f.connect(g); g.connect(mus); s.start(); airSrc=s;
   }
+  function stopAir(){ if(airSrc){try{airSrc.stop();}catch(e){} airSrc=null;} }
 
   function nextChord(){
     if(!on||!ctx||useFile)return;
@@ -2703,8 +2728,12 @@ var Snd=(function(){
     chordT=setTimeout(nextChord,BAR*1000);
   }
 
+  function playFile(){
+    var pr=file.play(); if(pr&&pr.catch)pr.catch(function(){useFile=false;if(on)startGen();});
+  }
   function startMusic(){
-    if(useFile&&file){ var pr=file.play(); if(pr&&pr.catch)pr.catch(function(){useFile=false;startGen();}); return; }
+    clearTimeout(chordT); clearTimeout(bellT);    /* nunca dos cadenas de acordes a la vez */
+    if(useFile&&file){ stopAir(); playFile(); return; }
     startGen();
   }
   function startGen(){
@@ -2712,7 +2741,9 @@ var Snd=(function(){
     bellT=setTimeout(bell,7000);
   }
   function stopMusic(){
+    if(on)return;                                 /* se volvió a activar antes de acabar el fundido */
     clearTimeout(chordT); clearTimeout(bellT); chordT=bellT=null;
+    stopAir();
     if(file&&!file.paused)file.pause();
   }
 
@@ -2797,10 +2828,10 @@ function makeGrid(canvasId,cfg){
   var canvas=$('#'+canvasId), wrap=canvas.parentElement;
   var gx=wrap.querySelector('.gx'), gy=wrap.querySelector('.gy');
   var pin=wrap.querySelector('.pin'), tip=cfg.tip?$(cfg.tip):null;
-  var st={colors:null,today:-1,tipFn:null,pin:-1}, view=null;
+  var st={colors:null,today:-1,tipFn:null,pin:-1,baseA:1}, view=null;
 
   function layout(){
-    var w=Math.max(240,wrap.clientWidth||600);
+    var w=gridW(wrap);
     var gm=geom(w), dpr=Math.min(2,window.devicePixelRatio||1);
     canvas.width=Math.round(w*dpr); canvas.height=Math.round(gm.h*dpr);
     canvas.style.height=Math.round(gm.h)+'px';
@@ -2818,7 +2849,7 @@ function makeGrid(canvasId,cfg){
       if(i>upto)break;
       var p=cellPos(i,gm), fill=st.colors?st.colors(i):null;
       if(fill){c.globalAlpha=1;c.fillStyle=fill;c.fillRect(p[0],p[1],size,size);}
-      else{c.globalAlpha=baseAlpha===undefined?1:baseAlpha;c.strokeStyle=rule;c.lineWidth=1;
+      else{c.globalAlpha=baseAlpha===undefined?st.baseA:baseAlpha;c.strokeStyle=rule;c.lineWidth=1;
            c.strokeRect(p[0]+.5,p[1]+.5,size-1,size-1);}
     }
     c.globalAlpha=1;
@@ -2841,7 +2872,7 @@ function makeGrid(canvasId,cfg){
     var yr=-1, wk=-1;
     if(gm.tall){
       for(a=0;a<HORIZON;a++){var y=yearPos(a,gm); if(sy>=y&&sy<y+gm.cell){yr=a;break;}}
-      wk=Math.floor((sx-gm.pad)/gm.cell);
+      for(a=0;a<WPY;a++){var x0=cellPos(a,gm)[0]; if(sx>=x0&&sx<x0+gm.cell){wk=a;break;}}   /* con los huecos de cada trimestre */
     }else{
       for(a=0;a<HORIZON;a++){var x=yearPos(a,gm); if(sx>=x&&sx<x+gm.cell){yr=a;break;}}
       wk=Math.floor(sy/gm.cell);
@@ -2880,21 +2911,25 @@ function makeGrid(canvasId,cfg){
   });
   return{
     render:function(colorFn,opts){
-      opts=opts||{}; st.colors=colorFn; st.today=opts.today===undefined?-1:opts.today;
+      opts=opts||{}; st.colors=colorFn; st.today=opts.today===undefined?-1:opts.today; st.baseA=1;
       view=layout();
       if(opts.reveal&&!RM) tween(opts.revealMs||700,function(k){paint(view,easeOut(k));},placePin);
       else{paint(view);placePin();}},
     quick:function(colorFn,today){ st.colors=colorFn;
       if(today!==undefined)st.today=today;
       if(!view)view=layout(); paint(view); placePin();},
+    /* al cambiar el ancho: recoloca y repinta como estaba, sin repetir la animación */
+    relayout:function(){ if(!st.colors)return; view=layout(); paint(view); placePin();},
     fadeBase:function(dur,done){ if(!view){if(done)done();return;}
-      tween(dur,function(k){paint(view,undefined,1-k);},done);},
+      tween(dur,function(k){paint(view,undefined,1-k);},function(){st.baseA=0; if(done)done();});},
     setTip:function(fn){st.tipFn=fn;},
     setPin:function(i){st.pin=i;placePin();}
   };
 }
+/* ancho del contenedor de la rejilla: lo usan la rejilla y su eje, para que siempre coincidan */
+function gridW(wrap){return Math.max(240,(wrap&&wrap.clientWidth)||600);}
 function axis(el){
-  if(window.innerWidth<620){
+  if(gridW(el.previousElementSibling)<620){
     el.innerHTML='<span>'+esc(t('axAge'))+' &darr;</span><span>52 &rarr;</span>'; return;
   }
   el.innerHTML=[0,10,20,30,40,50,60,70,80,90].map(function(y){return'<span>'+y+'</span>';}).join('');
@@ -3060,7 +3095,7 @@ function lifeUpdate(){
   $('#mW').textContent=nf(w);
   $('#mD').textContent=nf(a*365.25);
   $('#mR').textContent=nf(left);
-  $('#mP').textContent=(w/TOTAL*100).toFixed(1).replace('.',',')+' %';
+  $('#mP').textContent=pf(w/TOTAL);
 }
 function lifeFromEvent(e){
   var r=$('#lifebar').getBoundingClientRect();
@@ -3105,7 +3140,7 @@ function chart(first){
   /* retícula */
   for(v=0;v<=9;v+=1.5){
     o+='<line class="gl" x1="'+AX.x0+'" y1="'+py(v).toFixed(1)+'" x2="'+AX.x1+'" y2="'+py(v).toFixed(1)+'"/>'+
-       '<text x="'+(AX.x0-11)+'" y="'+(py(v)+4).toFixed(1)+'" text-anchor="end">'+v+' h</text>';
+       '<text x="'+(AX.x0-11)+'" y="'+(py(v)+4).toFixed(1)+'" text-anchor="end">'+nf(v,v%1?1:0)+' h</text>';
   }
   /* eje de edad: marca menor cada 5, etiqueta cada 10 */
   for(a=15;a<=85;a+=5){
@@ -3197,7 +3232,7 @@ function rail(){
   rows.sort(function(x,y){return y.val-x.val;});
   var max=rows[0].val;
   $('#cBars').innerHTML=rows.map(function(r){
-    return'<li data-s="'+r.id+'"><div class="brow"><span>'+r.label+'</span><b>'+r.val.toFixed(1)+' h</b></div>'+
+    return'<li data-s="'+r.id+'"><div class="brow"><span>'+r.label+'</span><b>'+nf(r.val,1)+' h</b></div>'+
       '<div class="btrack"><div class="bfill" style="width:'+(r.val/max*100).toFixed(1)+'%;background:'+css(r.v)+'"></div></div></li>';
   }).join('');
   $('#cBars').querySelectorAll('li').forEach(function(li){
@@ -3217,8 +3252,8 @@ function chartAt(e){
 function showCTip(){
   var tip=$('#cTip');
   tip.style.left=((px(S.chartAge)/AX.vbW)*100)+'%'; tip.style.top='5%';
-  tip.innerHTML='<b>'+S.chartAge+' años</b><br>'+SERIES.map(function(s){
-    return t('ser_'+s.id)+': '+sample(s.pts,S.chartAge).toFixed(1)+' h';}).join('<br>');
+  tip.innerHTML='<b>'+S.chartAge+' '+esc(t('years'))+'</b><br>'+SERIES.map(function(s){
+    return esc(t('ser_'+s.id))+': '+nf(sample(s.pts,S.chartAge),1)+' h';}).join('<br>');
   tip.setAttribute('data-on','');
 }
 function playLife(){
@@ -3302,7 +3337,7 @@ function mirrorPaint(reveal){
   $('#mIll').textContent=illusion(p);
   var run=r.meets<60?tf('runD',{n:nf(r.meets)})
         :(r.meets<730?tf('runM',{n:Math.round(r.meets/30.44)})
-        :tf('runY',{n:(r.meets/365.25).toFixed(1)}));
+        :tf('runY',{n:nf(r.meets/365.25,1)}));
   $('#mReal').textContent=r.shared===0?t('mReal0')
     :tf('mReal',{p:p.name,a:p.age,m:nf(r.meets),c:nf(r.cells),s:nf(r.shared),r:run});
   $('#mUnit').textContent=r.shared===0?'':tf('unitLine',{n:nf(r.meets),u:unitOf(p)});
@@ -3336,14 +3371,20 @@ function rescue(full){
   rescuePaint(full);
 }
 function rescuePaint(reveal){
-  var lived=clamp(S.age*WPY,0,TOTAL), myLeft=Math.max(0,(HORIZON-S.age)*WPY);
+  var lived=clamp(S.age*WPY,0,TOTAL);
   var base=new Map(), gain=new Map(), total=0;
   var soft=css('--blue-soft'), yel=css('--yellow'), ink=css('--ink');
+  /* cada persona solo dentro del tiempo que compartís; lo ganado va a huecos libres,
+     así cada casilla amarilla es de verdad una semana más */
+  var order=S.people.slice().sort(bySpan);
+  order.forEach(function(p){var now=calc(p,p.freq); spreadFree(base,lived,now.shared,now.cells,soft);});
+  order.forEach(function(p){
+    var now=calc(p,p.freq), next=calc(p,p.newFreq||p.freq);
+    spreadFree(gain,lived,next.shared,Math.max(0,next.cells-now.cells),yel,function(i){return base.has(i);});
+  });
   S.people.forEach(function(p){
     var now=calc(p,p.freq), next=calc(p,p.newFreq||p.freq);
     var d=Math.max(0,next.cells-now.cells); total+=d;
-    spread(gain,lived,myLeft,Math.min(next.cells,myLeft),yel);
-    spread(base,lived,myLeft,Math.min(now.cells,myLeft),soft);
     var du=$('[data-u="'+p.id+'"]');
     if(du)du.innerHTML=tf('unitLine',{n:'<b>'+nf(next.meets)+'</b>',u:esc(unitOf(p))});
     var el=$('[data-g="'+p.id+'"]');
@@ -3431,14 +3472,13 @@ function ics(p){
 var gEnd=makeGrid('gEnd',{tip:'#tEnd'});
 var REFLEX=['rf1','rf2','rf3','rf4','rf5'];
 function closing(){
-  var lived=clamp(S.age*WPY,0,TOTAL), myLeft=Math.max(0,(HORIZON-S.age)*WPY);
+  var lived=clamp(S.age*WPY,0,TOTAL);
   var marks=new Map(), owner=new Map(), cells=0;
-  S.people.forEach(function(p){
-    var r=calc(p,p.newFreq||p.freq); cells+=r.cells;
-    var before=marks.size;
-    spread(marks,lived,myLeft,Math.min(r.cells,myLeft),p.color);
-    marks.forEach(function(v,k){if(v===p.color)owner.set(k,p.name);});
-    if(before<0)return;
+  /* cada persona solo dentro del tiempo que compartís, sin pisar a las demás */
+  S.people.slice().sort(bySpan).forEach(function(p){
+    var r=calc(p,p.newFreq||p.freq), own=new Map(); cells+=r.cells;
+    spreadFree(own,lived,r.shared,r.cells,p.color,function(i){return marks.has(i);});
+    own.forEach(function(v,k){marks.set(k,v);owner.set(k,p.name);});
   });
   var ink=css('--ink');
   $('#t7').textContent=S.name?tf('t7n',{n:S.name}):t('t7');
@@ -3484,11 +3524,16 @@ function openModal(){
   setTimeout(function(){$('#pName').focus();},50);
 }
 function closeModal(){$('#modal').removeAttribute('data-on');}
+/* el primer color que no usa nadie: si borras a alguien, no se repite */
+function freeColor(){
+  var used=S.people.map(function(p){return p.color;});
+  return PALETTE.filter(function(c){return used.indexOf(c)<0;})[0]||PALETTE[0];
+}
 function saveModal(){
   var name=$('#pName').value.trim();
   if(!name){$('#e2').textContent=t('errName2');$('#pName').focus();return;}
   S.people.push({id:++uid,name:name,rel:draft.rel,age:+$('#pAge').value,freq:FREQ[+$('#pFreq').value].id,
-                 color:PALETTE[S.people.length%PALETTE.length],sent:false});
+                 color:freeColor(),sent:false});
   if(!S.mirror)S.mirror=uid;
   closeModal(); Snd.good(); people();
 }
@@ -3611,20 +3656,34 @@ $('#copy').onclick=function(){
   else $('#copy').textContent=t('copyFail');
   setTimeout(function(){$('#copy').textContent=t('copySum');},1800);};
 $('#restart').onclick=function(){
-  S.name='';S.age=30;S.chartAge=30;S.people=[];S.mirror=null;S.seen={};S.total=0;S.tone='calido';S.pin=-1;
-  uid=0; maxStep=0;
-  $('#fName').value=''; $('#fAge').value=30; lifeUpdate();
-  show(0); applyLang(LANG);};
+  function reset(){
+    S.name='';S.age=30;S.chartAge=30;S.people=[];S.mirror=null;S.seen={};S.total=0;S.tone='calido';S.pin=-1;
+    S.step=0; uid=0; maxStep=0;
+    $('#fName').value=''; $('#fAge').value=30; lifeUpdate();
+    gMine.setPin(-1); $('#heroAltMsg').removeAttribute('data-on');
+    $('#tone').querySelectorAll('[data-t]').forEach(function(x){
+      x.setAttribute('aria-pressed',String(x.dataset.t==='calido'));});
+    applyLang(LANG);                      /* repinta los textos y monta la portada con la barra bloqueada */
+  }
+  Snd.step();
+  if(RM){reset();return;}
+  wipeIn(2,165,function(){ reset(); wipeOut(2,165); });};
 $('#tone').querySelectorAll('[data-t]').forEach(function(b){
   b.onclick=function(){S.tone=b.dataset.t; Snd.tap();
     $('#tone').querySelectorAll('[data-t]').forEach(function(x){
       x.setAttribute('aria-pressed',String(x.dataset.t===S.tone));});
     commit();};});
 
-var rt;
+var rt, lastW=window.innerWidth;
 window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){
-  if(S.step===1)lifeUpdate(); if(S.step===2)chart(false); if(S.step===3)mine();
-  if(S.step===4)mirrorPaint(false); if(S.step===5)rescuePaint(false); if(S.step===7)closing();
+  /* en el móvil, esconder la barra de direcciones también lanza resize: solo cuenta si cambia el ancho */
+  if(window.innerWidth===lastW)return;
+  lastW=window.innerWidth;
+  if(S.step===1)lifeUpdate(); if(S.step===2)chart(false);
+  if(S.step===3){gMine.relayout();axis($('#aMine'));}
+  if(S.step===4){gTheirs.relayout();axis($('#aTheirs'));}
+  if(S.step===5){gRes.relayout();axis($('#aRes'));}
+  if(S.step===7)gEnd.relayout();
 },170);});
 })();
 </script>

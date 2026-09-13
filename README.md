@@ -14,7 +14,7 @@ Hecho por **Kai**.
 ## Cómo funciona
 
 Un solo archivo HTML. Sin dependencias, sin build, sin servidor, sin base de
-datos. Abres `veces.html` en un navegador y funciona.
+datos. Abres `index.html` en un navegador y funciona.
 
 Todo el cálculo ocurre en el navegador. No se envía nada a ningún sitio y no se
 guarda nada: al cerrar la pestaña desaparece.
