@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>QUEDAMOS — cuántas veces más vas a ver a la gente que quieres</title>
+<title>AETHERA — cuántas veces más vas a ver a la gente que quieres</title>
 <meta name="description" content="Una calculadora del tiempo compartido que os queda. Tu edad, la suya y cada cuánto os veis. Todo se calcula en tu navegador: no se envía ni se guarda nada.">
 <meta name="author" content="Kai">
 <meta name="theme-color" content="#E8EBED">
@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="mobile-web-app-capable" content="yes">
 <meta property="og:type" content="website">
-<meta property="og:title" content="QUEDAMOS">
+<meta property="og:title" content="AETHERA">
 <meta property="og:description" content="Cuántas veces más vas a ver a la gente que quieres. Una resta con tu edad, la suya y la frecuencia real.">
 <meta property="og:locale" content="es_ES">
 <meta property="og:locale:alternate" content="ca_ES">
@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://TU-DOMINIO/portada.png">
 <meta name="twitter:card" content="summary_large_image"> -->
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="QUEDAMOS">
+<meta name="twitter:title" content="AETHERA">
 <meta name="twitter:description" content="Cuántas veces más vas a ver a la gente que quieres.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Crect width='36' height='36' fill='%23E8EBED'/%3E%3Cpath d='M8 7v22M14 7v22M20 7v22M26 7v22M5 28 29 9' stroke='%230D1522' stroke-width='2.6' fill='none'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36'%3E%3Crect width='36' height='36' fill='%23E8EBED'/%3E%3Cpath d='M8 7v22M14 7v22M20 7v22M26 7v22M5 28 29 9' stroke='%230D1522' stroke-width='2.6' fill='none'/%3E%3C/svg%3E">
@@ -30,7 +30,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   QUEDAMOS — auditoría del tiempo que os queda · un proyecto de Kai
+   AETHERA — auditoría del tiempo que os queda · un proyecto de Kai
    Todo se calcula en el navegador. Nada sale de aquí.
    ============================================================ */
 :root{
@@ -453,7 +453,7 @@ h2{font-size:clamp(27px,4.1vw,46px)}
     <div class="gate__mark">
       <svg class="tally" viewBox="0 0 36 17" aria-hidden="true">
         <path d="M2 1.5v14M8 1.5v14M14 1.5v14M20 1.5v14M0 14.5 23 2.5" stroke="#0D1522" stroke-width="1.7" fill="none"/>
-      </svg><b>QUEDAMOS</b>
+      </svg><b>AETHERA</b>
     </div>
     <h2 data-i18n="gTitle"></h2>
     <p data-i18n="gBody"></p>
@@ -492,7 +492,7 @@ h2{font-size:clamp(27px,4.1vw,46px)}
   <div class="mark rise">
     <svg class="tally" viewBox="0 0 36 17" aria-hidden="true">
       <path d="M2 1.5v14M8 1.5v14M14 1.5v14M20 1.5v14M0 14.5 23 2.5" stroke="#0D1522" stroke-width="1.7" fill="none"/>
-    </svg><b>QUEDAMOS</b>
+    </svg><b>AETHERA</b>
   </div>
   <svg class="hrule" id="heroRule" viewBox="0 0 1000 54" preserveAspectRatio="none" aria-hidden="true"></svg>
   <h1 class="kin" id="heroT"></h1>
@@ -731,7 +731,7 @@ h2{font-size:clamp(27px,4.1vw,46px)}
 
 <script>
 /* ============================================================
-   QUEDAMOS · textos de la interfaz
+   AETHERA · textos de la interfaz
    Un solo sitio para editarlo todo. Cambia el valor y ya esta.
    {n} = nombre del usuario. Otras llaves: {p} persona, {a} edad,
    {s} semanas compartidas, {c} semanas juntos, {m} encuentros,
@@ -3458,7 +3458,7 @@ function ics(p){
     var d=new Date(); d.setDate(d.getDate()+7); d.setHours(19,0,0,0);
     var end=new Date(d.getTime()+90*60000);
     function f(x){return x.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';}
-    var body=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Quedamos//ES','BEGIN:VEVENT','UID:'+Date.now()+'@quedamos',
+    var body=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Aethera//ES','BEGIN:VEVENT','UID:'+Date.now()+'@aethera',
       'DTSTAMP:'+f(new Date()),'DTSTART:'+f(d),'DTEND:'+f(end),'SUMMARY:'+tf('icsTitle',{n:p.name}),
       'DESCRIPTION:'+String(p.msg).replace(/\n/g,' '),'END:VEVENT','END:VCALENDAR'].join('\r\n');
     var url=URL.createObjectURL(new Blob([body],{type:'text/calendar'}));
@@ -3499,7 +3499,7 @@ function closing(){
     setTimeout(function(){p.setAttribute('data-on','');},20);});
 }
 function summary(){
-  var L=['QUEDAMOS — '+(S.name||'—')+' ('+S.age+' '+t('years')+')',''];
+  var L=['AETHERA — '+(S.name||'—')+' ('+S.age+' '+t('years')+')',''];
   S.people.forEach(function(p){
     var a=calc(p,p.freq), b=calc(p,p.newFreq||p.freq);
     L.push(p.name+' ('+p.age+'): '+fL(p.freq)+' -> '+fL(p.newFreq||p.freq)+
