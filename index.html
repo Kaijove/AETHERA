@@ -217,7 +217,7 @@ h1,h2,h3,.wipe__t{text-wrap:balance}
 .people li{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--rule-soft);
   font-size:14px;animation:rise .45s var(--e) both}
 .pdot{width:9px;height:9px;flex:none}
-.pmeta{margin-left:auto;color:var(--muted);font-size:12.5px;text-align:right}
+.pmeta{margin-left:auto;color:var(--muted);font-size:12.5px;text-align:right;flex:1 1 0;min-width:40%}
 .people li>span:not(.pmeta){min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .people li button{background:none;border:0;color:var(--muted);cursor:pointer;font-size:12px;padding:3px 5px;transition:color .2s}
 .people li button:hover{color:var(--red)}
@@ -282,7 +282,7 @@ h1,h2,h3,.wipe__t{text-wrap:balance}
 .wipe[data-on]{display:block}
 .wipe[data-text]{pointer-events:auto}
 .wipe__bars{position:absolute;inset:-1px;display:flex}
-.wipe__bars i{flex:1;background:var(--ink);transform:scaleY(0);transform-origin:top;
+.wipe__bars i{flex:1;margin-right:-1px;background:var(--ink);transform:scaleY(0);transform-origin:top;
   transition:transform .38s cubic-bezier(.66,0,.24,1)}
 .wipe__in{position:relative;height:100%;max-width:var(--maxw);margin:0 auto;width:100%;
   padding:calc(56px + env(safe-area-inset-top)) var(--padR) clamp(28px,9vh,96px) var(--padL);
