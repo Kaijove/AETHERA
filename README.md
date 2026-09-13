@@ -52,7 +52,7 @@ The ancient Greeks had two words for time.
 **The time that passes.**
 
 Weeks, birthdays, calendars.<br>
-It runs whether you watch it or not.
+It keeps running either way.
 
 </td>
 <td width="50%" valign="top">
@@ -74,7 +74,7 @@ It ends in Kairós. With a message you can send today.
 
 <br>
 
-## 🫂 What AETHERA shows you
+## 👥 What AETHERA shows you
 
 **⌛ The time you've had, and the time that's left**<br>
 Ninety years drawn as a single sheet, one square per week. The filled squares don't come back. The empty ones are the only ones you can still do something with.
@@ -82,7 +82,7 @@ Ninety years drawn as a single sheet, one square per week. The filled squares do
 **🌊 How a life gets shared out**<br>
 Who people spend their hours with at every age. Family fades when you leave home. Friends start to depend on a calendar. Nobody chooses it. Age does.
 
-**🫂 The people who matter**<br>
+**👥 The people who matter**<br>
 Add up to five people. For each one you see the weeks you still share, and how many of those you'll actually spend together. Then you see it from their side: their whole life, and the room you take up in it.
 
 **🎚️ What happens if you change**<br>
@@ -133,7 +133,7 @@ The time-use curves follow the shape of population data. These are averages, not
 
 <br>
 
-### 🫂 The people who matter
+### 👥 The people who matter
 
 <img src="docs/assets/their-clock.webp" alt="Their life in weeks, with the weeks you will spend together" width="100%">
 
