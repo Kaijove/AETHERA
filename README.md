@@ -3,7 +3,7 @@
 <br>
 
 <a href="https://aethera-project.netlify.app/">
-  <img src="https://img.shields.io/badge/↗%20OPEN%20AETHERA-FFFFFF?style=for-the-badge&labelColor=FFFFFF&color=FFFFFF&logoColor=000000&fontColor=000000" alt="Open AETHERA">
+  <img src="https://img.shields.io/badge/↗%20LIVE%20PREVIEW-FFFFFF?style=for-the-badge&labelColor=FFFFFF&color=FFFFFF&logoColor=111111" alt="Live Preview">
 </a>
 
 <br><br>
@@ -23,15 +23,15 @@
 <br><br>
 
 <a href="https://aethera-project.netlify.app/">
-  <img src="https://img.shields.io/badge/ENTER%20THE%20EXPERIENCE-FFFFFF?style=for-the-badge&labelColor=FFFFFF&color=FFFFFF&logoColor=000000" alt="Enter the experience">
+  <img src="https://img.shields.io/badge/OPEN%20AETHERA%20↗-FFFFFF?style=flat-square&labelColor=FFFFFF&color=FFFFFF&logoColor=111111" alt="Open AETHERA">
 </a>
-&nbsp;&nbsp;
+&nbsp;
 <a href="https://github.com/Kaijove">
-  <img src="https://img.shields.io/badge/EXPLORE%20THE%20CODE-FFFFFF?style=for-the-badge&logo=github&logoColor=000000&labelColor=FFFFFF&color=FFFFFF" alt="Explore the code">
+  <img src="https://img.shields.io/badge/SOURCE%20CODE%20⌁-FFFFFF?style=flat-square&labelColor=FFFFFF&color=FFFFFF&logo=github&logoColor=111111" alt="Source Code">
 </a>
-&nbsp;&nbsp;
+&nbsp;
 <a href="https://aethera-project.netlify.app/">
-  <img src="https://img.shields.io/badge/↗%20WEBSITE-FFFFFF?style=for-the-badge&labelColor=FFFFFF&color=FFFFFF&logoColor=000000" alt="Website">
+  <img src="https://img.shields.io/badge/WEBSITE%20↗-FFFFFF?style=flat-square&labelColor=FFFFFF&color=FFFFFF&logoColor=111111" alt="Website">
 </a>
 
 <br><br>
@@ -41,8 +41,6 @@
 <br>
 
 </div>
-
-
 
 ## ✦ About
 
