@@ -84,7 +84,9 @@ input,textarea,.lede,.fine,.note__b,.reflect p,.msg__t,.prog,.src{
   color:var(--muted);display:flex;align-items:center;gap:8px;transition:border-color .2s,color .2s}
 .sound:hover,.sound[aria-pressed="true"]{border-color:var(--ink);color:var(--ink)}
 .wv{display:flex;align-items:flex-end;gap:2px;height:11px}
-.wv i{width:2px;height:3px;background:currentColor}
+.wv i{width:2px;height:4px;background:currentColor}
+.wv i:nth-child(2){height:7px}
+.wv i:nth-child(3){height:10px}
 .sound[aria-pressed="true"] .wv i{animation:wv 1.1s ease-in-out infinite}
 .sound[aria-pressed="true"] .wv i:nth-child(2){animation-delay:.16s}
 .sound[aria-pressed="true"] .wv i:nth-child(3){animation-delay:.32s}
@@ -98,13 +100,17 @@ input,textarea,.lede,.fine,.note__b,.reflect p,.msg__t,.prog,.src{
 .eyeline{font-size:12px;color:var(--muted);margin:0 0 8px;display:flex;align-items:center;gap:9px}
 .eyeline::before{content:"";width:22px;height:1px;background:var(--rule)}
 h1,h2{font-weight:800;letter-spacing:-.035em;line-height:1;margin:0}
-h1{font-size:clamp(38px,6.6vw,80px);max-width:15ch}
+h1{font-size:clamp(38px,min(6.6vw,11.5vh),120px);max-width:22ch}
 h2{font-size:clamp(27px,4.1vw,46px)}
 /* titulares en líneas parejas y párrafos sin una palabra suelta al final */
 h1,h2,h3,.wipe__t{text-wrap:balance}
 .lede,.fine,.hint,.sub,.railread,.note__b,.reflect p,.wipe__s .ln,.sign__s,.empty{text-wrap:pretty}
 .lede{font-size:clamp(16px,1.6vw,19px);color:var(--ink-soft);max-width:56ch;margin:20px 0 0}
 .fine{font-size:13px;color:var(--muted);max-width:62ch}
+/* portada: también crece con la pantalla */
+#s0 .lede{font-size:clamp(16px,min(1.6vw,2.7vh),26px)}
+#s0 .mark b{font-size:clamp(19px,min(1.3vw,2.4vh),26px)}
+#s0 .btn{font-size:clamp(15px,min(1.05vw,1.9vh),19px)}
 .kin span{display:inline-block;opacity:0;transform:translateY(.5em) rotate(2deg);animation:kin .7s var(--e) forwards}
 @keyframes kin{to{opacity:1;transform:none}}
 
@@ -126,7 +132,7 @@ h1,h2,h3,.wipe__t{text-wrap:balance}
 .tally{width:36px;height:17px}
 .tally path{stroke-dasharray:22;stroke-dashoffset:22;animation:draw .55s var(--e) forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
-.foot{margin-top:56px;border-top:1px solid var(--rule);padding-top:16px;display:flex;flex-wrap:wrap;
+.foot{margin-top:clamp(28px,6vh,56px);border-top:1px solid var(--rule);padding-top:16px;display:flex;flex-wrap:wrap;
   gap:6px 30px;font-size:12.5px;color:var(--muted)}
 
 .form{max-width:720px;margin-top:36px}
@@ -201,6 +207,9 @@ h1,h2,h3,.wipe__t{text-wrap:balance}
   background:var(--ink);color:var(--paper);padding:7px 11px;font-size:12px;white-space:nowrap;
   transition:opacity .12s;line-height:1.35}
 .tip[data-on]{opacity:1}
+/* el del gráfico va dentro, al lado de la línea; con el panel de datos al lado ya sobra */
+#cTip{transform:none}
+@media (min-width:881px){#cTip{display:none}}
 .axis{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:7px}
 
 /* personas */
@@ -307,7 +316,7 @@ h1,h2,h3,.wipe__t{text-wrap:balance}
 .wipe[data-text] .wipe__idx{opacity:1}
 .wipe__t{font-size:clamp(34px,min(9.4vw,12vh),112px);font-weight:800;letter-spacing:-.05em;line-height:.92;
   margin:0;color:var(--paper);position:relative}
-.wipe__s{font-size:clamp(17px,1.95vw,23px);color:#A6B8C6;max-width:44ch;margin:24px 0 42px;line-height:1.5;position:relative}
+.wipe__s{font-size:clamp(17px,min(1.95vw,3vh),28px);color:#A6B8C6;max-width:44ch;margin:24px 0 42px;line-height:1.5;position:relative}
 .wipe__s .ln{display:block;opacity:0;transform:translateY(16px);filter:blur(5px);
   animation:lnIn .95s var(--e) forwards}
 @keyframes lnIn{to{opacity:1;transform:none;filter:blur(0)}}
@@ -319,7 +328,7 @@ h1,h2,h3,.wipe__t{text-wrap:balance}
 .skip{background:none;border:0;color:#67798A;cursor:pointer;font-size:13px;padding:0;align-self:flex-start;position:relative}
 .skip:hover{color:var(--paper)}
 /* regla de portada — mide sin enseñar todavía */
-.hrule{width:100%;height:54px;display:block;margin:6px 0 30px;overflow:visible}
+.hrule{width:100%;height:54px;display:block;margin:6px 0 clamp(16px,3.3vh,30px);overflow:visible}
 .hrule line{stroke:var(--rule);stroke-width:1;vector-effect:non-scaling-stroke;
   stroke-dashoffset:var(--l);animation:tk .55s var(--e) both}
 .hrule line.d{stroke:var(--ink-soft)}
@@ -334,7 +343,7 @@ h1,h2,h3,.wipe__t{text-wrap:balance}
 .lifebar__ticks{position:absolute;inset:0;pointer-events:none}
 .lifebar__ticks i{position:absolute;top:19px;width:1px;height:7px;background:var(--rule)}
 .lifebar__ticks i.big{top:13px;height:13px;background:var(--ink-soft)}
-.lifebar__ticks span{position:absolute;top:33px;font-size:10px;color:var(--muted);transform:translateX(-50%)}
+.lifebar__ticks span{position:absolute;top:33px;font-size:11px;color:var(--muted);transform:translateX(-50%)}
 .lifebar__head{position:absolute;top:15px;width:2px;height:24px;background:var(--red)}
 .lifebar__head::after{content:"";position:absolute;left:-4px;top:-7px;width:10px;height:10px;background:var(--red)}
 
@@ -381,15 +390,18 @@ h1,h2,h3,.wipe__t{text-wrap:balance}
   transition:opacity .6s var(--e),visibility .6s}
 .gate[data-off]{opacity:0;visibility:hidden;pointer-events:none}
 /* margin:auto la centra; si no cabe (móvil en horizontal) se puede hacer scroll en vez de cortarse */
-.gate__in{max-width:560px;margin:auto;width:100%}
-.gate__mark{display:flex;align-items:baseline;gap:13px;margin-bottom:44px}
-.gate__mark b{font-size:17px;font-weight:900;letter-spacing:.2em}
-.gate h2{margin:0 0 18px;font-size:clamp(30px,4.2vw,56px)}
-.gate p{font-size:clamp(15.5px,1.6vw,18px);color:var(--ink-soft);line-height:1.55;margin:0 0 26px;max-width:52ch}
-.lock{display:flex;gap:10px;align-items:flex-start;font-size:13px !important;color:var(--muted) !important;max-width:none !important;
-  border-top:1px solid var(--rule);padding-top:14px;margin-bottom:30px !important}
-.lock svg{flex:none;margin-top:2px}
-.gate__tick{font-size:12.5px !important;color:var(--muted) !important;margin:24px 0 0 !important}
+.gate__in{--g:clamp(30px,min(5.2vw,10vh),104px);max-width:max(560px,calc(var(--g) * 8.8));margin:auto;width:100%}
+/* todo el bloque de entrada crece con la pantalla (ancho y alto): llena un monitor grande igual que un portátil */
+.gate__mark{display:flex;align-items:baseline;gap:max(13px,calc(var(--g) * .2));margin-bottom:max(36px,calc(var(--g) * .62))}
+.gate__mark b{font-size:max(17px,calc(var(--g) * .25));font-weight:900;letter-spacing:.2em}
+.gate__mark .tally{width:max(36px,calc(var(--g) * .52));height:auto}
+.gate h2{margin:0 0 max(16px,.3em);font-size:var(--g)}
+.gate p{font-size:max(15.5px,calc(var(--g) * .26));color:var(--ink-soft);line-height:1.55;margin:0 0 1.5em;max-width:52ch}
+.lock{display:flex;gap:.75em;align-items:flex-start;font-size:max(13px,calc(var(--g) * .19)) !important;color:var(--muted) !important;max-width:none !important;
+  border-top:1px solid var(--rule);padding-top:1.1em;margin-bottom:2.2em !important}
+.lock svg{flex:none;margin-top:.15em;width:1.05em;height:auto}
+.gate__tick{font-size:max(12.5px,calc(var(--g) * .17)) !important;color:var(--muted) !important;margin:1.9em 0 0 !important}
+.gate .btn{font-size:max(15px,calc(var(--g) * .21));padding:.95em 1.6em}
 .gate__tick b{color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums}
 
 /* alternativa del titular */
@@ -423,8 +435,8 @@ h1,h2,h3,.wipe__t{text-wrap:balance}
 @media (max-width:880px){
   .split{grid-template-columns:1fr;gap:26px}
   .rail{border-top:1px solid var(--rule)}
-  .seg{font-size:0;padding:0}
-  .seg[data-now]{font-size:11px;padding-left:8px;flex:2.6}
+  .seg{font-size:0;padding:0;flex:0 0 9px}
+  .seg[data-now]{font-size:11px;padding-left:8px;flex:1 1 auto}
 }
 @media (max-width:620px){
   :root{--pad:14px}
@@ -468,6 +480,11 @@ h1,h2,h3,.wipe__t{text-wrap:balance}
 }
 /* con el dedo: sliders con más superficie para agarrar */
 @media (pointer:coarse){
+  .icb{width:40px;height:40px}
+  .langb,.sound{min-height:40px}
+  .skip{padding:12px 16px 12px 0;margin:-12px 0}
+  .people li button{padding:12px 10px;margin:-10px -8px -10px 0}
+  .foot a,.srcnote a,.credits a{padding:12px 0}
   .rg{height:40px}
   .rg::-webkit-slider-thumb{width:22px;height:34px;margin-top:-16px}
   .rg::-moz-range-thumb{width:22px;height:34px}
@@ -3155,7 +3172,7 @@ var AX={x0:54,x1:752,y0:24,y1:372,a0:15,a1:85,vmax:9,vbW:900,vbH:440,narrow:fals
 var ANN=[{a:19,k:'ann1'},{a:34,k:'ann2'},{a:63,k:'ann3'}];
 function chartGeom(){
   var el=$('#chart'), w=(el.parentElement&&el.parentElement.clientWidth)||window.innerWidth||700;
-  if(w<640) AX={x0:36,x1:404,y0:30,y1:316,a0:15,a1:85,vmax:9,vbW:424,vbH:356,narrow:true};
+  if(w<640) AX={x0:48,x1:404,y0:30,y1:316,a0:15,a1:85,vmax:9,vbW:424,vbH:370,narrow:true};
   else      AX={x0:54,x1:752,y0:24,y1:372,a0:15,a1:85,vmax:9,vbW:900,vbH:440,narrow:false};
   el.setAttribute('viewBox','0 0 '+AX.vbW+' '+AX.vbH);
   el.classList.toggle('narrow',AX.narrow);
@@ -3173,9 +3190,9 @@ function chart(first){
     var mxr=Math.min(px(clamp(S.age,AX.a0,AX.a1)),AX.x1);
     o+='<rect class="past" x="'+AX.x0+'" y="'+AX.y0+'" width="'+(mxr-AX.x0).toFixed(1)+'" height="'+(AX.y1-AX.y0)+'"/>';
     if(mxr-AX.x0>70)
-      o+='<text class="zoneT" x="'+(AX.x0+7)+'" y="'+(AX.y1-8)+'">'+esc(t('zLived'))+'</text>';
+      o+='<text class="zoneT" x="'+(mxr-7).toFixed(1)+'" y="'+(AX.narrow?AX.y0+14:AX.y0+30)+'" text-anchor="end">'+esc(t('zLived'))+'</text>';
     if(AX.x1-mxr>70)
-      o+='<text class="zoneT" x="'+(mxr+7).toFixed(1)+'" y="'+(AX.y1-8)+'">'+esc(t('zToLive'))+'</text>';
+      o+='<text class="zoneT" x="'+(mxr+7).toFixed(1)+'" y="'+(AX.narrow?AX.y0+14:AX.y0+30)+'">'+esc(t('zToLive'))+'</text>';
   }
   /* retícula */
   for(v=0;v<=9;v+=1.5){
@@ -3189,7 +3206,7 @@ function chart(first){
     if(big)o+='<text x="'+px(a).toFixed(1)+'" y="'+(AX.y1+22)+'" text-anchor="middle">'+a+'</text>';
   }
   o+='<text x="'+((AX.x0+AX.x1)/2).toFixed(1)+'" y="'+(AX.y1+44)+'" text-anchor="middle">'+esc(t('axAge'))+'</text>'+
-     '<text x="'+(AX.x0-11)+'" y="'+(AX.y0-9)+'" text-anchor="end">'+esc(t('axH'))+'</text>';
+     '<text x="0" y="'+(AX.y0-9)+'">'+esc(t('axH'))+'</text>';
   /* anotaciones */
   if(!AX.narrow) ANN.forEach(function(n){
     var x=px(n.a);
@@ -3290,12 +3307,14 @@ function chartAt(e){
   showCTip();
 }
 function showCTip(){
-  var tip=$('#cTip');
-  tip.style.top='5%';
+  var tip=$('#cTip'), w=tip.parentElement.clientWidth;
   tip.innerHTML='<b>'+S.chartAge+' '+esc(t('years'))+'</b><br>'+SERIES.map(function(s){
     return esc(t('ser_'+s.id))+': '+nf(sample(s.pts,S.chartAge),1)+' h';}).join('<br>');
   tip.setAttribute('data-on','');
-  tipAt(tip,px(S.chartAge)/AX.vbW*tip.parentElement.clientWidth);
+  /* dentro del gráfico y al lado de la línea: no tapa el título ni la barra de arriba */
+  var x=px(S.chartAge)/AX.vbW*w, tw=tip.offsetWidth;
+  tip.style.left=(x+12+tw<=w?x+12:Math.max(0,x-12-tw))+'px';
+  tip.style.top=(AX.y0/AX.vbH*100)+'%';
 }
 function playLife(){
   if(stopPlay){stopPlay();stopPlay=null;$('#play').textContent=t('play');return;}
@@ -3461,6 +3480,7 @@ var TPL={
   amigos:function(n){return n+', basta de decir que a ver si quedamos. Dime un día de las próximas dos semanas y lo cierro.';},
   otros:function(n){return'Hola '+n+'. ¿Nos vemos este mes? Dime un día y lo dejo apuntado.';}}
 };
+function fitArea(el){el.style.height='auto'; el.style.height=(el.scrollHeight+2)+'px';}   /* el mensaje entero a la vista */
 function msgFor(p){return tf((S.tone==='calido'?'mw_':'md_')+p.rel,{n:p.name});}
 function commit(){
   $('#msgs').innerHTML=S.people.map(function(p,i){
@@ -3476,7 +3496,7 @@ function commit(){
       '<button class="tiny" data-sent="'+p.id+'" '+(p.sent?'data-active':'')+'>'+
         (p.sent?esc(t('sentB')):esc(t('mark')))+'</button></div></div>';}).join('');
   function get(id){return S.people.filter(function(x){return x.id===+id;})[0];}
-  $$('[data-txt]').forEach(function(t){t.oninput=function(){var p=get(t.dataset.txt);if(p)p.msg=t.value;};});
+  $$('[data-txt]').forEach(function(t){fitArea(t); t.oninput=function(){var p=get(t.dataset.txt);if(p)p.msg=t.value; fitArea(t);};});
   $$('[data-copy]').forEach(function(b){b.onclick=function(){
     var p=get(b.dataset.copy);
     if(navigator.clipboard&&navigator.clipboard.writeText)
@@ -3724,6 +3744,7 @@ window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(funct
   if(S.step===3){gMine.relayout();axis($('#aMine'));}
   if(S.step===4){gTheirs.relayout();axis($('#aTheirs'));}
   if(S.step===5){gRes.relayout();axis($('#aRes'));}
+  if(S.step===6)$$('.msg__t').forEach(fitArea);
   if(S.step===7)gEnd.relayout();
 },170);});
 })();
