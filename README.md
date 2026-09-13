@@ -1,7 +1,10 @@
 <a name="top"></a>
 
 <p align="center">
-  <a href="https://aethera-project.netlify.app/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-live-dark.png"><img src="docs/assets/readme/btn-live-light.png" height="34" alt="Live preview"></picture></a>
+  <a href="https://aethera-project.netlify.app/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-live-lg-dark.png"><img src="docs/assets/readme/btn-live-lg-light.png" height="52" alt="Live preview"></picture></a>
+</p>
+
+<p align="center">
   <a href="https://github.com/Kaijove/AETHERA/blob/main/index.html"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-source-dark.png"><img src="docs/assets/readme/btn-source-light.png" height="34" alt="Source code"></picture></a>
   <a href="#under-the-hood"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-docs-dark.png"><img src="docs/assets/readme/btn-docs-light.png" height="34" alt="Documentation"></picture></a>
 </p>
@@ -185,11 +188,11 @@ Key groups: `sec0`–`sec7` top-bar sections · `in2t`/`in2s` … `in7t`/`in7s` 
 <h2 align="center">How many more times will you see<br>the people you love?</h2>
 
 <p align="center">
-  <a href="https://aethera-project.netlify.app/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-live-dark.png"><img src="docs/assets/readme/btn-live-light.png" height="34" alt="Live preview"></picture></a>
-  <a href="https://github.com/Kaijove/AETHERA/blob/main/index.html"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-source-dark.png"><img src="docs/assets/readme/btn-source-light.png" height="34" alt="Source code"></picture></a>
+  <a href="https://aethera-project.netlify.app/"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-live-lg-dark.png"><img src="docs/assets/readme/btn-live-lg-light.png" height="52" alt="Live preview"></picture></a>
 </p>
 
 <p align="center">
+  <a href="https://github.com/Kaijove/AETHERA/blob/main/index.html"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-source-dark.png"><img src="docs/assets/readme/btn-source-light.png" height="34" alt="Source code"></picture></a>
   <a href="#top"><picture><source media="(prefers-color-scheme: dark)" srcset="docs/assets/readme/btn-top-dark.png"><img src="docs/assets/readme/btn-top-light.png" height="34" alt="Back to top"></picture></a>
 </p>
 
